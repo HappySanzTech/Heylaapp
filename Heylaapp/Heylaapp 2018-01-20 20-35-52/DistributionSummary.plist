@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Heylaapp.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>armv7</string>
+				<string>arm64</string>
+			</array>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>A7D8A9F6A152FE48418DA880136161A2A888F251</string>
+				<key>dateExpires</key>
+				<string>11/01/19</string>
+				<key>type</key>
+				<string>iOS Development</string>
+			</dict>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>257QV56PWA.com.palprotech.heylaapp</string>
+				<key>aps-environment</key>
+				<string>development</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>257QV56PWA</string>
+				<key>get-task-allow</key>
+				<true/>
+			</dict>
+			<key>name</key>
+			<string>Heylaapp.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>56105975-9e34-4f30-ae7f-d8931802bb75</string>
+				<key>name</key>
+				<string>iOS Team Provisioning Profile: com.palprotech.heylaapp</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>257QV56PWA</string>
+				<key>name</key>
+				<string>Vijaya Kumar</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>

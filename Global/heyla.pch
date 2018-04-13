@@ -1,0 +1,69 @@
+//
+//  heyla.pch
+//  Heylaapp
+//
+//  Created by HappySanz on 23/10/17.
+//  Copyright © 2017 Palpro Tech. All rights reserved.
+//
+
+#ifndef heyla_pch
+#define heyla_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+#import <QuartzCore/QuartzCore.h>
+#import "AFHTTPSessionManager.h"
+#import "HMSegmentedControl.h"
+#import "AppDelegate.h"
+#import "ACFloatingTextField.h"
+#import "ViewController.h"
+#import "ViewTwoController.h"
+#import "ViewThreeController.h"
+#import "LoginViewController.h"
+#import "ACFloatingTextField.h"
+#import "LoginViewController.h"
+#import "MBProgressHUD.h"
+#import "BaseUrl.h"
+#import "OTPViewController.h"
+#import "ChangeNumberViewController.h"
+#import "ProfileViewController.h"
+#import "SelectCityPageViewController.h"
+#import "SelectCityTableViewCell.h"
+#import "SelectCategoeryViewController.h"
+#import "SelectCategoeryCollectionViewCell.h"
+#import "UIImageView+AFNetworking.h"
+#import "ForgotPasswordViewController.h"
+#import "ConfirmPasswordViewController.h"
+#import "HomeViewController.h"
+#import "HomeViewTableCell.h"
+#import "MenuViewController.h"
+#import "EventDetailViewController.h"
+#import "BookingViewController.h"
+#import "BookingTableViewCell.h"
+#import "ReviewTicketBookingController.h"
+#import "AdvanceFilterResultViewController.h"
+#import "Base64.h"
+#import "CCInitViewController.h"
+#import "CCWebViewController.h"
+#import "CCResultViewController.h"
+#import "CCTool.h"
+#import "BookingHistoryViewController.h"
+#import "BookingHistoryTableViewCell.h"
+#import "BookingHistoryDetailsViewController.h"
+#import "BookingHistoryDetailsTableViewCell.h"
+#import "EventReviewViewController.h"
+#import "EventReviewTableViewCell.h"
+#import "AddingReviewViewController.h"
+#import "WhishListViewController.h"
+#import "LeaderBoardPointsViewController.h"
+#import "LeaderBoardTableViewCell.h"
+#import "LeaderBoardLoginPointsViewController.h"
+#import "EventImageViewController.h"
+#import "PageContentViewController.h"
+#import "EventImageTableViewCell.h"
+#import "SettingsViewController.h"
+#import "AttendeesViewController.h"
+#import "AttendeesTableViewCell.h"
+#import "NearbyViewController.h"
+#import "ForgotPasswordOTPViewController.h"
+#endif /* heyla_pch */
