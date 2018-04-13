@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface SelectCityTableViewCell : UITableViewCell
+
 @property (strong, nonatomic) IBOutlet UILabel *cityLabel;
 
 
