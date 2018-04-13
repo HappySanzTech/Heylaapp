@@ -26,6 +26,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {    
     [self registerForRemoteNotifications];
+    NSLog(@"%@",@"Check");
     NSString *splash = [[NSUserDefaults standardUserDefaults]objectForKey:@"showSplash"];
     NSString *status = [[NSUserDefaults standardUserDefaults]objectForKey:@"status"];
     if ([splash isEqualToString:@"hide"])
