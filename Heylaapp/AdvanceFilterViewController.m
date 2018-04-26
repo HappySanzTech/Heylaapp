@@ -26,12 +26,8 @@
     NSString *selectedDateToday;
     NSString *selectedDateTommorow;
     NSString *selectedDate;
-    NSMutableArray *eventListArray;
-
 }
-
 @end
-
 @implementation AdvanceFilterViewController
 
 - (void)viewDidLoad
@@ -72,7 +68,6 @@
     eventCategoeryArray = [[NSMutableArray alloc]init];
     preference = [[NSMutableArray alloc]init];
     eventCityArray = [[NSMutableArray alloc]init];
-    eventListArray = [[NSMutableArray alloc]init];
     
     [eventTypeArray addObject:@"Select Event Type"];
     [eventTypeArray addObject:@"Paid"];
@@ -381,6 +376,12 @@
 
 - (IBAction)searchBtn:(id)sender
 {
+    if ([selectedDateToday isEqualToString:@""] && [selectedDateTommorow isEqualToString:@""] && [selectedDate isEqualToString:@""] && [self.fromDate.text isEqualToString:@""] && [self.toDate.text isEqualToString:@""] && [self.eventCategoery.text isEqualToString:@""] && [self.eventPreference.text isEqualToString:@""] && [self.eventPreference.text isEqualToString:@""] && [self.eventCity.text isEqualToString:@""])
+    {
+        
+    }
+    else
+    {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
         NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
@@ -393,27 +394,28 @@
         [parameters setObject:self.eventCategoery.text forKey:@"event_type_category"];
         [parameters setObject:self.eventPreference.text forKey:@"selected_category"];
         [parameters setObject:self.eventCity.text forKey:@"selected_city"];
-
+        
         AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-         manager.requestSerializer = [AFJSONRequestSerializer serializer];
+        manager.requestSerializer = [AFJSONRequestSerializer serializer];
         [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         manager.responseSerializer.acceptableContentTypes = [manager.responseSerializer.acceptableContentTypes setByAddingObject:@"text/html"];
-
+        
         NSString *advanceSearch = @"apimain/advanceSearch";
         NSArray *components = [NSArray arrayWithObjects:baseUrl,advanceSearch, nil];
         NSString *api = [NSString pathWithComponents:components];
-
+        
         [manager POST:api parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
          {
-
+             
              NSLog(@"%@",responseObject);
              [MBProgressHUD hideHUDForView:self.view animated:YES];
              NSString *msg = [responseObject objectForKey:@"msg"];
              NSString *status = [responseObject objectForKey:@"status"];
-             [eventListArray removeAllObjects];
+             
              if ([msg isEqualToString:@"View Events"] && [status isEqualToString:@"success"])
              {
-                 eventListArray = [responseObject objectForKey:@"Eventdetails"];
+                 
+                 NSArray *eventListArray = [responseObject objectForKey:@"Eventdetails"];
                  [[NSUserDefaults standardUserDefaults]setObject:eventListArray forKey:@"eventList_AdvSearch"];
                  UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Booking" bundle:nil];
                  AdvanceFilterResultViewController *advanceFilterResultViewController = (AdvanceFilterResultViewController *)[storyboard instantiateViewControllerWithIdentifier:@"AdvanceFilterResultViewController"];
@@ -425,15 +427,15 @@
                                             alertControllerWithTitle:@"Heyla"
                                             message:msg
                                             preferredStyle:UIAlertControllerStyleAlert];
-
+                 
                  UIAlertAction *ok = [UIAlertAction
                                       actionWithTitle:@"OK"
                                       style:UIAlertActionStyleDefault
                                       handler:^(UIAlertAction * action)
                                       {
-
+                                          
                                       }];
-
+                 
                  [alert addAction:ok];
                  [self presentViewController:alert animated:YES completion:nil];
              }
@@ -442,6 +444,7 @@
          {
              NSLog(@"error: %@", error);
          }];
+    }
 }
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {

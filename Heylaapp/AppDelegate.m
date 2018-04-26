@@ -20,13 +20,13 @@
 
 @implementation AppDelegate
 
-//static NSString * const kClientID =
+//static NSString * const kClientID =  
 //@"322143328499-a9cu5r1s70idnt8c40mb641k37kctgsp.apps.googleusercontent.com";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {    
     [self registerForRemoteNotifications];
-    NSLog(@"%@",@"Check");
+    NSLog(@"%@",@"Check 2");
     NSString *splash = [[NSUserDefaults standardUserDefaults]objectForKey:@"showSplash"];
     NSString *status = [[NSUserDefaults standardUserDefaults]objectForKey:@"status"];
     if ([splash isEqualToString:@"hide"])

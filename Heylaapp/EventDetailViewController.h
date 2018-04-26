@@ -48,5 +48,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *poularityCount;
 - (IBAction)reviewBtn:(id)sender;
 - (IBAction)imageViewBtn:(id)sender;
+@property (weak, nonatomic) IBOutlet UIImageView *dateImage;
+@property (weak, nonatomic) IBOutlet UILabel *dateImageLabel;
 
 @end

@@ -85,116 +85,116 @@
     month_label = [[NSMutableArray alloc]init];
     
     
-                Eventdetails = [[NSUserDefaults standardUserDefaults]objectForKey:@"eventList_AdvSearch"];
-                
-                [adv_status removeAllObjects];
-                [booking_status removeAllObjects];
-                [category_id removeAllObjects];
-                [city_name removeAllObjects];
-                [contact_email removeAllObjects];
-                [contact_person removeAllObjects];
-                [country_name removeAllObjects];
-                [description removeAllObjects];
-                [end_date removeAllObjects];
-                [event_address removeAllObjects];
-                [event_banner removeAllObjects];
-                [event_city removeAllObjects];
-                [event_colour_scheme removeAllObjects];
-                [event_country removeAllObjects];
-                [event_id removeAllObjects];
-                [event_latitude removeAllObjects];
-                [event_longitude removeAllObjects];
-                [event_name removeAllObjects];
-                [event_status removeAllObjects];
-                [event_type removeAllObjects];
-                [event_venue removeAllObjects];
-                [hotspot_status removeAllObjects];
-                [popularity removeAllObjects];
-                [primary_contact_no removeAllObjects];
-                [secondary_contact_no removeAllObjects];
-                [start_date removeAllObjects];
-                [start_time removeAllObjects];
-                [end_time removeAllObjects];
-                [date_label removeAllObjects];
-                [month_label removeAllObjects];
-                
-                for(int i = 0;i < [Eventdetails count];i++)
-                {
-                    NSDictionary *dict = [Eventdetails objectAtIndex:i];
-                    NSString *strAdv_status = [dict objectForKey:@"adv_status"];
-                    NSString *strBooking_status = [dict objectForKey:@"booking_status"];
-                    NSString *strCategory_id = [dict objectForKey:@"category_id"];
-                    NSString *strCity_name = [dict objectForKey:@"city_name"];
-                    NSString *strContact_email = [dict objectForKey:@"contact_email"];
-                    NSString *strContact_person = [dict objectForKey:@"contact_person"];
-                    NSString *strCountry_name = [dict objectForKey:@"country_name"];
-                    NSString *strDescription = [dict objectForKey:@"description"];
-                    NSString *strEnd_date = [dict objectForKey:@"end_date"];
-                    NSString *strEvent_address = [dict objectForKey:@"event_address"];
-                    NSString *strEvent_banner = [dict objectForKey:@"event_banner"];
-                    NSString *strEvent_city = [dict objectForKey:@"event_city"];
-                    NSString *strEvent_colour_scheme = [dict objectForKey:@"event_colour_scheme"];
-                    NSString *strEvent_country = [dict objectForKey:@"event_country"];
-                    NSString *strEvent_id = [dict objectForKey:@"event_id"];
-                    NSString *strEvent_latitude = [dict objectForKey:@"event_latitude"];
-                    NSString *strEvent_longitude = [dict objectForKey:@"event_longitude"];
-                    NSString *strEvent_name = [dict objectForKey:@"event_name"];
-                    NSString *strEvent_status = [dict objectForKey:@"event_status"];
-                    NSString *strEvent_type = [dict objectForKey:@"event_type"];
-                    NSString *strEvent_venue = [dict objectForKey:@"event_venue"];
-                    NSString *stHotspot_status = [dict objectForKey:@"hotspot_status"];
-                    NSString *strPopularity = [dict objectForKey:@"popularity"];
-                    NSString *strPrimary_contact_no = [dict objectForKey:@"primary_contact_no"];
-                    NSString *strSecondary_contact_no = [dict objectForKey:@"secondary_contact_no"];
-                    NSString *strStart_date = [dict objectForKey:@"start_date"];
-                    NSString *strStart_time = [dict objectForKey:@"start_time"];
-                    NSString *strEnd_time = [dict objectForKey:@"end_time"];
-                    
-                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-                    NSDate *date = [[NSDate alloc] init];
-                    date = [dateFormatter dateFromString:strStart_date];
-                    // converting into our required date format
-                    [dateFormatter setDateFormat:@"EEEE, MMM dd, yyyy"];
-                    NSString *reqDateString = [dateFormatter stringFromDate:date];
-                    NSLog(@"date is %@", reqDateString);
-                    
-                    NSArray *testArray = [reqDateString componentsSeparatedByString:@" "];
-                    NSString *strdate = [testArray objectAtIndex:1];
-                    NSString *strMonth = [testArray objectAtIndex:2];
-                    
-                    [adv_status addObject:strAdv_status];
-                    [booking_status addObject:strBooking_status];
-                    [category_id addObject:strCategory_id];
-                    [city_name addObject:strCity_name];
-                    [contact_email addObject:strContact_email];
-                    [contact_person addObject:strContact_person];
-                    [country_name addObject:strCountry_name];
-                    [description addObject:strDescription];
-                    [end_date addObject:strEnd_date];
-                    [event_address addObject:strEvent_address];
-                    [event_banner addObject:strEvent_banner];
-                    [event_city addObject:strEvent_city];
-                    [event_colour_scheme addObject:strEvent_colour_scheme];
-                    [event_country addObject:strEvent_country];
-                    [event_id addObject:strEvent_id];
-                    [event_latitude addObject:strEvent_latitude];
-                    [event_longitude addObject:strEvent_longitude];
-                    [event_name addObject:strEvent_name];
-                    [event_status addObject:strEvent_status];
-                    [event_type addObject:strEvent_type];
-                    [event_venue addObject:strEvent_venue];
-                    [hotspot_status addObject:stHotspot_status];
-                    [popularity addObject:strPopularity];
-                    [primary_contact_no addObject:strPrimary_contact_no];
-                    [secondary_contact_no addObject:strSecondary_contact_no];
-                    [start_date addObject:strStart_date];
-                    [start_time addObject:strStart_time];
-                    [end_time addObject:strEnd_time];
-                    [date_label addObject:strdate];
-                    [month_label addObject:strMonth];
-                }
-                [self.tableView  reloadData];
+    Eventdetails = [[NSUserDefaults standardUserDefaults]objectForKey:@"eventList_AdvSearch"];
+    
+    [adv_status removeAllObjects];
+    [booking_status removeAllObjects];
+    [category_id removeAllObjects];
+    [city_name removeAllObjects];
+    [contact_email removeAllObjects];
+    [contact_person removeAllObjects];
+    [country_name removeAllObjects];
+    [description removeAllObjects];
+    [end_date removeAllObjects];
+    [event_address removeAllObjects];
+    [event_banner removeAllObjects];
+    [event_city removeAllObjects];
+    [event_colour_scheme removeAllObjects];
+    [event_country removeAllObjects];
+    [event_id removeAllObjects];
+    [event_latitude removeAllObjects];
+    [event_longitude removeAllObjects];
+    [event_name removeAllObjects];
+    [event_status removeAllObjects];
+    [event_type removeAllObjects];
+    [event_venue removeAllObjects];
+    [hotspot_status removeAllObjects];
+    [popularity removeAllObjects];
+    [primary_contact_no removeAllObjects];
+    [secondary_contact_no removeAllObjects];
+    [start_date removeAllObjects];
+    [start_time removeAllObjects];
+    [end_time removeAllObjects];
+    [date_label removeAllObjects];
+    [month_label removeAllObjects];
+    
+    for(int i = 0;i < [Eventdetails count];i++)
+    {
+        NSDictionary *dict = [Eventdetails objectAtIndex:i];
+        NSString *strAdv_status = [dict objectForKey:@"adv_status"];
+        NSString *strBooking_status = [dict objectForKey:@"booking_status"];
+        NSString *strCategory_id = [dict objectForKey:@"category_id"];
+        NSString *strCity_name = [dict objectForKey:@"city_name"];
+        NSString *strContact_email = [dict objectForKey:@"contact_email"];
+        NSString *strContact_person = [dict objectForKey:@"contact_person"];
+        NSString *strCountry_name = [dict objectForKey:@"country_name"];
+        NSString *strDescription = [dict objectForKey:@"description"];
+        NSString *strEnd_date = [dict objectForKey:@"end_date"];
+        NSString *strEvent_address = [dict objectForKey:@"event_address"];
+        NSString *strEvent_banner = [dict objectForKey:@"event_banner"];
+        NSString *strEvent_city = [dict objectForKey:@"event_city"];
+        NSString *strEvent_colour_scheme = [dict objectForKey:@"event_colour_scheme"];
+        NSString *strEvent_country = [dict objectForKey:@"event_country"];
+        NSString *strEvent_id = [dict objectForKey:@"event_id"];
+        NSString *strEvent_latitude = [dict objectForKey:@"event_latitude"];
+        NSString *strEvent_longitude = [dict objectForKey:@"event_longitude"];
+        NSString *strEvent_name = [dict objectForKey:@"event_name"];
+        NSString *strEvent_status = [dict objectForKey:@"event_status"];
+        NSString *strEvent_type = [dict objectForKey:@"event_type"];
+        NSString *strEvent_venue = [dict objectForKey:@"event_venue"];
+        NSString *stHotspot_status = [dict objectForKey:@"hotspot_status"];
+        NSString *strPopularity = [dict objectForKey:@"popularity"];
+        NSString *strPrimary_contact_no = [dict objectForKey:@"primary_contact_no"];
+        NSString *strSecondary_contact_no = [dict objectForKey:@"secondary_contact_no"];
+        NSString *strStart_date = [dict objectForKey:@"start_date"];
+        NSString *strStart_time = [dict objectForKey:@"start_time"];
+        NSString *strEnd_time = [dict objectForKey:@"end_time"];
+        
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+        NSDate *date = [[NSDate alloc] init];
+        date = [dateFormatter dateFromString:strStart_date];
+        // converting into our required date format
+        [dateFormatter setDateFormat:@"EEEE, MMM dd, yyyy"];
+        NSString *reqDateString = [dateFormatter stringFromDate:date];
+        NSLog(@"date is %@", reqDateString);
+        
+        NSArray *testArray = [reqDateString componentsSeparatedByString:@" "];
+        NSString *strdate = [testArray objectAtIndex:1];
+        NSString *strMonth = [testArray objectAtIndex:2];
+        
+        [adv_status addObject:strAdv_status];
+        [booking_status addObject:strBooking_status];
+        [category_id addObject:strCategory_id];
+        [city_name addObject:strCity_name];
+        [contact_email addObject:strContact_email];
+        [contact_person addObject:strContact_person];
+        [country_name addObject:strCountry_name];
+        [description addObject:strDescription];
+        [end_date addObject:strEnd_date];
+        [event_address addObject:strEvent_address];
+        [event_banner addObject:strEvent_banner];
+        [event_city addObject:strEvent_city];
+        [event_colour_scheme addObject:strEvent_colour_scheme];
+        [event_country addObject:strEvent_country];
+        [event_id addObject:strEvent_id];
+        [event_latitude addObject:strEvent_latitude];
+        [event_longitude addObject:strEvent_longitude];
+        [event_name addObject:strEvent_name];
+        [event_status addObject:strEvent_status];
+        [event_type addObject:strEvent_type];
+        [event_venue addObject:strEvent_venue];
+        [hotspot_status addObject:stHotspot_status];
+        [popularity addObject:strPopularity];
+        [primary_contact_no addObject:strPrimary_contact_no];
+        [secondary_contact_no addObject:strSecondary_contact_no];
+        [start_date addObject:strStart_date];
+        [start_time addObject:strStart_time];
+        [end_time addObject:strEnd_time];
+        [date_label addObject:strdate];
+        [month_label addObject:strMonth];
+    }
+    [self.tableView  reloadData];
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {

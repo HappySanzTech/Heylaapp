@@ -64,8 +64,33 @@
      }];
     self.eventNameLabel.text = appDel.event_Name;
     self.adressLabel.text = appDel.event_Address;
-    self.dateLabel.text = [NSString stringWithFormat:@"%@ - %@",appDel.event_StartDate,appDel.event_EndDate];
-    NSLog(@"%@%@",appDel.event_StartDate,appDel.event_EndDate);
+    NSDateFormatter *startdateFormatter = [[NSDateFormatter alloc] init];
+    [startdateFormatter setDateFormat:@"yyyy-MM-dd"];
+    NSDate *startdate  = [startdateFormatter dateFromString:appDel.event_StartDate];
+    [startdateFormatter setDateFormat:@"dd-MM-yyyy"];
+    NSString *startDate = [startdateFormatter stringFromDate:startdate];
+    
+    NSDateFormatter *enddateFormatter = [[NSDateFormatter alloc] init];
+    [enddateFormatter setDateFormat:@"yyyy-MM-dd"];
+    NSDate *enddate  = [enddateFormatter dateFromString:appDel.event_EndDate];
+    [startdateFormatter setDateFormat:@"dd-MM-yyyy"];
+    NSString *endDate = [startdateFormatter stringFromDate:enddate];
+    
+    if ([appDel.event_type isEqualToString:@"Hotspot"])
+    {
+        self.dateLabel.hidden = YES;
+        self.dateImage.hidden = YES;
+        self.dateImageLabel.hidden = YES;
+    }
+    else
+    {
+        self.dateLabel.hidden = NO;
+        self.dateImage.hidden = NO;
+        self.dateImageLabel.hidden = NO;
+        self.dateLabel.text = [NSString stringWithFormat:@"%@ - %@",startDate,endDate];
+        NSLog(@"%@%@",appDel.event_StartDate,appDel.event_EndDate);
+
+    }
     self.timeLabel.text = [NSString stringWithFormat:@"%@-%@",appDel.event_StartTime,appDel.event_EndTime];
     NSLog(@"%@%@%@",appDel.event_StartTime,appDel.event_EndTime,self.timeLabel.text);
     self.despTextView.text = appDel.event_description;

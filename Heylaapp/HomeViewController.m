@@ -894,7 +894,6 @@
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
-    
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
     {
         if(UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication.statusBarOrientation))
@@ -1282,7 +1281,18 @@
             [_segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
         }
     }
+    
 }
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    CGFloat pageWidth = scrollView.frame.size.width;
+    NSInteger page = scrollView.contentOffset.x / pageWidth;    
+    [self.segmentedControl setSelectedSegmentIndex:page animated:YES];
+}
+
 -(void)segmentAction:(UISegmentedControl *)sender
 {
     if (_segmentedControl.selectedSegmentIndex == 0)
