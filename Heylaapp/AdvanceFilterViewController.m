@@ -77,11 +77,8 @@
     [eventCategoeryArray addObject:@"General"];
     [eventCategoeryArray addObject:@"Hotspot"];
 
-    [preference insertObject:@"Select Preference" atIndex:0];
-    [eventCityArray insertObject:@"Select Your City" atIndex:0];
     preference = [[NSUserDefaults standardUserDefaults]objectForKey:@"preferenceName_Array"];
     eventCityArray = [[NSUserDefaults standardUserDefaults]objectForKey:@"cityName_Array"];
-
     datePicker=[[UIDatePicker alloc]init];
     datePicker.datePickerMode=UIDatePickerModeDate;
     [self.fromDate setInputView:datePicker];
@@ -106,6 +103,7 @@
     [self.eventPreference setInputView:listpickerView];
     [self.eventCity setInputView:listpickerView];
 
+    
     listToolBar=[[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 44)];
     [listToolBar setTintColor:[UIColor grayColor]];
     UIBarButtonItem *done=[[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(SelectedDate)];
@@ -119,6 +117,7 @@
     selectedDate =@"";
     selectedDateToday =@"";
     selectedDateTommorow =@"";
+    
 }
 -(void)ShowSelectedDate
 {
@@ -128,7 +127,6 @@
         [formatter setDateFormat:@"YYYY-MM-dd"];
         self.fromDate.text=[NSString stringWithFormat:@"%@",[formatter stringFromDate:datePicker.date]];
         [self.fromDate resignFirstResponder];
-        
     }
     else if([self.toDate isFirstResponder])
     {
@@ -177,7 +175,6 @@
     
     return 0;
 }
-
 -(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
     if (pickerView == listpickerView)
@@ -253,23 +250,30 @@
     if ([self.eventType isFirstResponder])
     {
         self.eventType.text = streventType;
+        [listpickerView reloadAllComponents];
+        [listpickerView selectRow:0 inComponent:0 animated:YES];
         [self.eventType resignFirstResponder];
     }
     else if ([self.eventCategoery isFirstResponder])
     {
         self.eventCategoery.text = streventCategoery;
+        [listpickerView reloadAllComponents];
+        [listpickerView selectRow:0 inComponent:0 animated:YES];
         [self.eventCategoery resignFirstResponder];
     }
     else if ([self.eventPreference isFirstResponder])
     {
         self.eventPreference.text = streventPrefernce;
+        [listpickerView reloadAllComponents];
+        [listpickerView selectRow:0 inComponent:0 animated:YES];
         [self.eventPreference resignFirstResponder];
     }
     else if ([self.eventCity isFirstResponder])
     {
         self.eventCity.text = streventcity;
+        [listpickerView reloadAllComponents];
+        [listpickerView selectRow:0 inComponent:0 animated:YES];
         [self.eventCity resignFirstResponder];
-        
     }
 }
 -(void)CancelButton
@@ -376,12 +380,6 @@
 
 - (IBAction)searchBtn:(id)sender
 {
-    if ([selectedDateToday isEqualToString:@""] && [selectedDateTommorow isEqualToString:@""] && [selectedDate isEqualToString:@""] && [self.fromDate.text isEqualToString:@""] && [self.toDate.text isEqualToString:@""] && [self.eventCategoery.text isEqualToString:@""] && [self.eventPreference.text isEqualToString:@""] && [self.eventPreference.text isEqualToString:@""] && [self.eventCity.text isEqualToString:@""])
-    {
-        
-    }
-    else
-    {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
         NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
@@ -444,7 +442,7 @@
          {
              NSLog(@"error: %@", error);
          }];
-    }
+
 }
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
