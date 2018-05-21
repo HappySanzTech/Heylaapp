@@ -14,19 +14,18 @@
 
 @implementation SettingsViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
 
 }
-
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
 /*
 #pragma mark - Navigation
 
@@ -36,33 +35,28 @@
     // Pass the selected object to the new view controller.
 }
 */
-
 - (IBAction)backBtn:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
 - (IBAction)editProfBtn:(id)sender
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     ProfileViewController *profile = [storyboard instantiateViewControllerWithIdentifier:@"ProfileViewController"];
     [self presentViewController:profile animated:YES completion:nil];
 }
-
 - (IBAction)changeNumBtn:(id)sender
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     ChangeNumberViewController *changeNumberViewController = [storyboard instantiateViewControllerWithIdentifier:@"ChangeNumberViewController"];
     [self.navigationController pushViewController:changeNumberViewController animated:YES];
 }
-
 - (IBAction)chNgePaswrdBtn:(id)sender
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     ForgotPasswordViewController *forgotPasswordViewController = [storyboard instantiateViewControllerWithIdentifier:@"ForgotPasswordViewController"];
     [self.navigationController pushViewController:forgotPasswordViewController animated:YES];
 }
-
 - (IBAction)verifyMailBtn:(id)sender
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];

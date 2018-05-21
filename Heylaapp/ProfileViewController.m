@@ -598,7 +598,8 @@
     alert.popoverPresentationController.sourceView = self.imageBtnOtlet;
     [self presentViewController:alert animated:YES completion:nil];
 }
--(UIImage *)scaleAndRotateImage:(UIImage *)image{
+-(UIImage *)scaleAndRotateImage:(UIImage *)image
+{
     // No-op if the orientation is already correct
     if (image.imageOrientation == UIImageOrientationUp) return image;
     
@@ -1184,9 +1185,9 @@
     [_addressLineTwo resignFirstResponder];
     [_addressLineThree resignFirstResponder];
     [_pincode resignFirstResponder];
-
 }
 - (IBAction)profImgBtn:(id)sender
 {
+    
 }
 @end

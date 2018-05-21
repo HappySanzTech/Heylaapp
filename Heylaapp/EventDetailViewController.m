@@ -47,6 +47,7 @@
     }
     else
     {
+        self.check.frame = CGRectMake(247, 10, 118, 34);
         self.bookNow.hidden = YES;
 
     }

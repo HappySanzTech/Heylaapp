@@ -74,7 +74,8 @@
          }];
     }
 }
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
@@ -210,17 +211,12 @@
     UIActivityViewController *controller = [[UIActivityViewController alloc]initWithActivityItems:items applicationActivities:nil];
     // and present it
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-
     [self presentActivityController:controller];
-
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
 
 }
 - (void)presentActivityController:(UIActivityViewController *)controller
 {
     // for iPad: make the presentation a Popover
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-
     controller.modalPresentationStyle = UIModalPresentationPopover;
     [self presentViewController:controller animated:YES completion:nil];
 
@@ -234,17 +230,21 @@
                                               NSArray *returnedItems,
                                               NSError *error){
         // react to the completion
-        if (completed) {
+        if (completed)
+        {
             // user shared an item
             NSLog(@"We used activity type%@", activityType);
             [MBProgressHUD hideHUDForView:self.view animated:YES];
 
-        } else {
+        }
+        else
+        {
             // user cancelled
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
             NSLog(@"We didn't want to share anything after all.");
         }
-
-        if (error) {
+        if (error)
+        {
             NSLog(@"An Error occured: %@, %@", error.localizedDescription, error.localizedFailureReason);
         }
     };
@@ -253,15 +253,22 @@
 {
     
 }
-
 - (IBAction)rateAppBtn:(id)sender
 {
+    UIApplication *application = [UIApplication sharedApplication];
+    NSURL *URL = [NSURL URLWithString:@"https://itunes.apple.com/us/app/heyla/id1328232644?ls=1&mt=8"];
+    [application openURL:URL options:@{} completionHandler:^(BOOL success)
+    {
+        if (success)
+        {
+            NSLog(@"Opened url");
+        }
+    }];
 }
 - (IBAction)backBtn:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
 - (IBAction)profImgBtn:(id)sender
 {
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;

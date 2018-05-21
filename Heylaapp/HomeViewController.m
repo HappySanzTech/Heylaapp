@@ -150,6 +150,8 @@
     _lbViewFive.layer.cornerRadius = 8;
     _lbViewFive.layer.masksToBounds = true;
     self.leaderBoardView.hidden =YES;
+  
+    self.navigationItem.title = @"Heyla";
     NSArray *city;
     city = [NSArray arrayWithArray:[[NSUserDefaults standardUserDefaults]objectForKey:@"cityName_Array"]];
     NSString *locatedCity = [[NSUserDefaults standardUserDefaults]objectForKey:@"locatedCity"];
@@ -182,12 +184,12 @@
                 
                 [alert addAction:ok];
                 UIAlertAction *cancel = [UIAlertAction
-                                     actionWithTitle:@"Cancel"
-                                     style:UIAlertActionStyleDefault
-                                     handler:^(UIAlertAction * action)
-                                     {
-                                         [self generalEventsList];
-                                     }];
+                                         actionWithTitle:@"Cancel"
+                                         style:UIAlertActionStyleDefault
+                                         handler:^(UIAlertAction * action)
+                                         {
+                                             [self generalEventsList];
+                                         }];
                 
                 [alert addAction:cancel];
                 [self presentViewController:alert animated:YES completion:nil];
@@ -198,10 +200,6 @@
             }
         }
     }
-}
--(void)viewWillAppear:(BOOL)animated
-{
-    self.navigationItem.title = @"Heyla";
 }
 - (void)loadUserLocation
 {
@@ -898,24 +896,24 @@
     {
         if(UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication.statusBarOrientation))
         {
-            _segmentedControl.frame = CGRectMake(0,650,self.view.bounds.size.width, 55);
+            _segmentedControl.frame = CGRectMake(self.segmentView.bounds.origin.x,self.segmentView.bounds.origin.y,self.segmentView.bounds.size.width, self.segmentView.bounds.size.height);
             _segmentedControl.selectionIndicatorHeight = 2.0f;
             _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
             _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
             _segmentedControl.selectionStyle  = HMSegmentedControlSelectionStyleBox;
             _segmentedControl.selectionIndicatorColor = [UIColor whiteColor];
-            [self.view addSubview:_segmentedControl];
+            [self.segmentView addSubview:_segmentedControl];
             [_segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
         }
         else
         {
-            _segmentedControl.frame = CGRectMake(0,905,self.view.bounds.size.width, 55);
+            _segmentedControl.frame = CGRectMake(self.segmentView.bounds.origin.x,self.segmentView.bounds.origin.y,self.segmentView.bounds.size.width, self.segmentView.bounds.size.height);
             _segmentedControl.selectionIndicatorHeight = 2.0f;
             _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
             _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
             _segmentedControl.selectionStyle  = HMSegmentedControlSelectionStyleBox;
             _segmentedControl.selectionIndicatorColor = [UIColor whiteColor];
-            [self.view addSubview:_segmentedControl];
+            [self.segmentView addSubview:_segmentedControl];
             [_segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
         }
     }
@@ -943,7 +941,6 @@
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     HomeViewTableCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     if([hotspotFlag isEqualToString:@"YES"])
     {
@@ -970,7 +967,6 @@
             NSString *strendTime = [end_time objectAtIndex:indexPath.row];
             cell.eventTime.text = [NSString stringWithFormat:@"%@ - %@",strStartTime,strendTime];
             cell.dateView.hidden = YES;
-            [MBProgressHUD hideHUDForView:self.view animated:YES];
             
         }
         else
@@ -1000,7 +996,6 @@
             NSString *strStartTime = [start_time objectAtIndex:indexPath.row];
             NSString *strendTime = [end_time objectAtIndex:indexPath.row];
             cell.eventTime.text = [NSString stringWithFormat:@"%@ - %@",strStartTime,strendTime];
-            [MBProgressHUD hideHUDForView:self.view animated:YES];
             
         }
     }
@@ -1030,7 +1025,6 @@
             NSString *strendTime = [end_time objectAtIndex:indexPath.row];
             cell.eventTime.text = [NSString stringWithFormat:@"%@ - %@",strStartTime,strendTime];
             cell.dateView.hidden = NO;
-            [MBProgressHUD hideHUDForView:self.view animated:YES];
             
         }
         else
@@ -1060,12 +1054,9 @@
             NSString *strStartTime = [start_time objectAtIndex:indexPath.row];
             NSString *strendTime = [end_time objectAtIndex:indexPath.row];
             cell.eventTime.text = [NSString stringWithFormat:@"%@ - %@",strStartTime,strendTime];
-            [MBProgressHUD hideHUDForView:self.view animated:YES];
             
         }
     }
-    cell.paidView.layer.cornerRadius = 3.0;
-
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1147,139 +1138,59 @@
     {
         if(UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication.statusBarOrientation))
         {
-            NSString *str = [[NSUserDefaults standardUserDefaults]objectForKey:@"Hotspot_nav"];
-            if ([str isEqualToString:@"YES"])
-            {
-                _segmentedControl.frame = CGRectMake(0,650,self.view.bounds.size.width, 55);
-                _segmentedControl.selectionIndicatorHeight = 2.0f;
-                _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
-                _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
-                _segmentedControl.selectionStyle  = HMSegmentedControlSelectionStyleBox;
-                _segmentedControl.selectionIndicatorColor = [UIColor whiteColor];
-                [self.view addSubview:_segmentedControl];
-                [_segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-            }
-            else
-            {
-                _segmentedControl.frame = CGRectMake(0,650,self.view.bounds.size.width, 55);
-                _segmentedControl.selectionIndicatorHeight = 2.0f;
-                _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
-                _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
-                _segmentedControl.selectionStyle  = HMSegmentedControlSelectionStyleBox;
-                _segmentedControl.selectionIndicatorColor = [UIColor whiteColor];
-                [self.view addSubview:_segmentedControl];
-                [_segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-            }
-            
+            _segmentedControl.frame = CGRectMake(self.segmentView.bounds.origin.x,self.segmentView.bounds.origin.y,self.segmentView.bounds.size.width, 55);
+            _segmentedControl.selectionIndicatorHeight = 2.0f;
+            _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
+            _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
+            _segmentedControl.selectionStyle  = HMSegmentedControlSelectionStyleBox;
+            _segmentedControl.selectionIndicatorColor = [UIColor whiteColor];
+            [self.segmentView addSubview:_segmentedControl];
+            [_segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
         }
         else
         {
-            NSString *str = [[NSUserDefaults standardUserDefaults]objectForKey:@"Hotspot_nav"];
-            if ([str isEqualToString:@"YES"])
-            {
-                _segmentedControl.frame = CGRectMake(0,705,self.view.bounds.size.width, 55);
-                _segmentedControl.selectionIndicatorHeight = 2.0f;
-                _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
-                _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
-                _segmentedControl.selectionStyle  = HMSegmentedControlSelectionStyleBox;
-                _segmentedControl.selectionIndicatorColor = [UIColor whiteColor];
-                [self.view addSubview:_segmentedControl];
-                [_segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-            }
-            else
-            {
-                _segmentedControl.frame = CGRectMake(0,705,self.view.bounds.size.width, 55);
-                _segmentedControl.selectionIndicatorHeight = 2.0f;
-                _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
-                _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
-                _segmentedControl.selectionStyle  = HMSegmentedControlSelectionStyleBox;
-                _segmentedControl.selectionIndicatorColor = [UIColor whiteColor];
-                [self.view addSubview:_segmentedControl];
-                [_segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-            }
+            _segmentedControl.frame = CGRectMake(self.segmentView.bounds.origin.x,self.segmentView.bounds.origin.y,self.segmentView.bounds.size.width, 55);
+            _segmentedControl.selectionIndicatorHeight = 2.0f;
+            _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
+            _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
+            _segmentedControl.selectionStyle  = HMSegmentedControlSelectionStyleBox;
+            _segmentedControl.selectionIndicatorColor = [UIColor whiteColor];
+            [self.segmentView addSubview:_segmentedControl];
+            [_segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
         }
     }
     else if ([[UIScreen mainScreen] bounds].size.height == 667)
     {
-        NSString *str = [[NSUserDefaults standardUserDefaults]objectForKey:@"Hotspot_nav"];
-        if ([str isEqualToString:@"YES"])
-        {
-            _segmentedControl.frame = CGRectMake(0,528,self.view.bounds.size.width, 55);
-            _segmentedControl.selectionIndicatorHeight = 2.0f;
-            _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
-            _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
-            _segmentedControl.selectionStyle  = HMSegmentedControlSelectionStyleBox;
-            _segmentedControl.selectionIndicatorColor = [UIColor whiteColor];
-            [self.view addSubview:_segmentedControl];
-            [_segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-        }
-        else
-        {
-        _segmentedControl.frame = CGRectMake(0,548,self.view.bounds.size.width, 55);
+        _segmentedControl.frame = CGRectMake(self.segmentView.bounds.origin.x,self.segmentView.bounds.origin.y,self.segmentView.bounds.size.width,self.segmentView.bounds.size.height);
         _segmentedControl.selectionIndicatorHeight = 2.0f;
         _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
         _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
         _segmentedControl.selectionStyle  = HMSegmentedControlSelectionStyleBox;
         _segmentedControl.selectionIndicatorColor = [UIColor whiteColor];
-        [self.view addSubview:_segmentedControl];
+        [self.segmentView addSubview:_segmentedControl];
         [_segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-            
-        }
     }
     else if ([[UIScreen mainScreen] bounds].size.height == 736)
     {
-        NSString *str = [[NSUserDefaults standardUserDefaults]objectForKey:@"Hotspot_nav"];
-        if ([str isEqualToString:@"YES"])
-        {
-            _segmentedControl.frame = CGRectMake(0,595,self.view.bounds.size.width, 60);
-            _segmentedControl.selectionIndicatorHeight = 2.0f;
-            _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
-            _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
-            _segmentedControl.selectionStyle  = HMSegmentedControlSelectionStyleBox;
-            _segmentedControl.selectionIndicatorColor = [UIColor whiteColor];
-            [self.view addSubview:_segmentedControl];
-            [_segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-
-        }
-        else
-        {
-        _segmentedControl.frame = CGRectMake(0,615,self.view.bounds.size.width, 60);
+        _segmentedControl.frame = CGRectMake(self.segmentView.bounds.origin.x,self.segmentView.bounds.origin.y,self.segmentView.bounds.size.width,self.segmentView.bounds.size.height);
         _segmentedControl.selectionIndicatorHeight = 2.0f;
         _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
         _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
         _segmentedControl.selectionStyle  = HMSegmentedControlSelectionStyleBox;
         _segmentedControl.selectionIndicatorColor = [UIColor whiteColor];
-        [self.view addSubview:_segmentedControl];
+        [self.segmentView addSubview:_segmentedControl];
         [_segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-            
-        }
-        
     }
     else
     {
-        NSString *str = [[NSUserDefaults standardUserDefaults]objectForKey:@"Hotspot_nav"];
-        if ([str isEqualToString:@"YES"])
-        {
-            _segmentedControl.frame = CGRectMake(0,430,self.view.bounds.size.width,55);
-            _segmentedControl.selectionIndicatorHeight = 2.0f;
-            _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
-            _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
-            _segmentedControl.selectionStyle  = HMSegmentedControlSelectionStyleBox;
-            _segmentedControl.selectionIndicatorColor = [UIColor whiteColor];
-            [self.view addSubview:_segmentedControl];
-            [_segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-        }
-        else
-        {
-            _segmentedControl.frame = CGRectMake(0,450,self.view.bounds.size.width,55);
-            _segmentedControl.selectionIndicatorHeight = 2.0f;
-            _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
-            _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
-            _segmentedControl.selectionStyle  = HMSegmentedControlSelectionStyleBox;
-            _segmentedControl.selectionIndicatorColor = [UIColor whiteColor];
-            [self.view addSubview:_segmentedControl];
-            [_segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-        }
+        _segmentedControl.frame = CGRectMake(self.segmentView.bounds.origin.x,self.segmentView.bounds.origin.y,self.segmentView.bounds.size.width,self.segmentView.bounds.size.height);
+        _segmentedControl.selectionIndicatorHeight = 2.0f;
+        _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
+        _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
+        _segmentedControl.selectionStyle  = HMSegmentedControlSelectionStyleBox;
+        _segmentedControl.selectionIndicatorColor = [UIColor whiteColor];
+        [self.segmentView addSubview:_segmentedControl];
+        [_segmentedControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
     }
     
 }
@@ -1354,8 +1265,8 @@
         }
         else
         {
-            self.search.tintColor = [UIColor colorWithRed:68/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
-            self.advanceFilter.tintColor = [UIColor colorWithRed:68/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
+            self.search.tintColor = [UIColor clearColor];
+            self.advanceFilter.tintColor = [UIColor clearColor];
             [self loadLeaderBoardPoints];
             self.leaderBoardView.hidden =NO;
         }
@@ -1366,7 +1277,9 @@
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
     self.userName.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"statUser_Name"];;
     self.fullName.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"fullName"];
-    self.imageView.layer.cornerRadius = 60;
+    self.imageView.layer.cornerRadius = 55;
+    self.imageView.layer.borderWidth = 5.0;
+    self.imageView.layer.borderColor = [UIColor whiteColor].CGColor;
     self.imageView.clipsToBounds = YES;
     if ([appDel.login_type isEqualToString:@"FB"])
     {
@@ -1400,7 +1313,7 @@
              
              // Add a clip before drawing anything, in the shape of an rounded rect
              [[UIBezierPath bezierPathWithRoundedRect:menu.imageView.bounds
-                                         cornerRadius:60.0] addClip];
+                                         cornerRadius:50.0] addClip];
              // Draw your image
              [image drawInRect:menu.imageView.bounds];
              
@@ -1909,5 +1822,10 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Booking" bundle:nil];
     LeaderBoardLoginPointsViewController *leaderBoardLoginPointsViewController = (LeaderBoardLoginPointsViewController *)[storyboard instantiateViewControllerWithIdentifier:@"LeaderBoardLoginPointsViewController"];
     [self presentViewController:leaderBoardLoginPointsViewController animated:YES completion:Nil];
+}
+- (IBAction)profileButton:(id)sender
+{
+    ProfileViewController *profileViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ProfileViewController"];
+    [self presentViewController:profileViewController animated:NO completion:nil];
 }
 @end

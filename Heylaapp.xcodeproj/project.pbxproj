@@ -327,6 +327,7 @@
 		6BD299FC2010EB090064FD8F /* ticket@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BD299F92010EB070064FD8F /* ticket@2x.png */; };
 		6BD299FD2010EB090064FD8F /* ticket@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BD299FA2010EB080064FD8F /* ticket@1x.png */; };
 		6BD299FE2010EB090064FD8F /* ticket@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BD299FB2010EB080064FD8F /* ticket@3x.png */; };
+		6BEA206620B2EAF7006E4B3A /* Main 2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6BEA206520B2EAF7006E4B3A /* Main 2.storyboard */; };
 		6BFFA77C200F5CA9001B5FBC /* heylasplashscreenios-01.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BFFA77B200F5CA9001B5FBC /* heylasplashscreenios-01.png */; };
 		6BFFA77F200F5F9A001B5FBC /* BookingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BFFA77E200F5F9A001B5FBC /* BookingViewController.m */; };
 		6BFFA783200F6186001B5FBC /* Heyla@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BFFA780200F617F001B5FBC /* Heyla@2x.png */; };
@@ -742,6 +743,7 @@
 		6BD299F92010EB070064FD8F /* ticket@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ticket@2x.png"; sourceTree = "<group>"; };
 		6BD299FA2010EB080064FD8F /* ticket@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ticket@1x.png"; sourceTree = "<group>"; };
 		6BD299FB2010EB080064FD8F /* ticket@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ticket@3x.png"; sourceTree = "<group>"; };
+		6BEA206520B2EAF7006E4B3A /* Main 2.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Main 2.storyboard"; sourceTree = "<group>"; };
 		6BFFA77B200F5CA9001B5FBC /* heylasplashscreenios-01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "heylasplashscreenios-01.png"; sourceTree = "<group>"; };
 		6BFFA77D200F5F9A001B5FBC /* BookingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BookingViewController.h; sourceTree = "<group>"; };
 		6BFFA77E200F5F9A001B5FBC /* BookingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BookingViewController.m; sourceTree = "<group>"; };
@@ -939,6 +941,7 @@
 				6B4EE2A520209E2D006E9E8C /* SettingsViewController.h */,
 				6B4EE2A620209E2D006E9E8C /* SettingsViewController.m */,
 				68EC70AC1FAC506200ABB427 /* Main.storyboard */,
+				6BEA206520B2EAF7006E4B3A /* Main 2.storyboard */,
 				6BFFA78E200F79B5001B5FBC /* Booking.storyboard */,
 				68F6EC611FA36F9B00FB64CF /* Launch Screen.storyboard */,
 				6801D60B1F9E155D000946A2 /* Assets.xcassets */,
@@ -1312,7 +1315,7 @@
 		6801D5F41F9E155D000946A2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "Palpro Tech";
 				TargetAttributes = {
 					6801D5FB1F9E155D000946A2 = {
@@ -1421,6 +1424,7 @@
 				6B51EA6220120A55003A2B72 /* star icon@2x.png in Resources */,
 				6B51EA6920120A55003A2B72 /* star icon@3x.png in Resources */,
 				683AAE121FCCA10900A6A4A5 /* Addpeople@1x.png in Resources */,
+				6BEA206620B2EAF7006E4B3A /* Main 2.storyboard in Resources */,
 				6B4CA2722016088800D04856 /* Pointsunselectlarge@1x.png in Resources */,
 				683AAE131FCCA10900A6A4A5 /* Addpeople@2x.png in Resources */,
 				6B51EA6520120A55003A2B72 /* star icon_plus@2x.png in Resources */,
@@ -1756,6 +1760,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -1763,6 +1768,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -1812,6 +1818,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -1819,6 +1826,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;

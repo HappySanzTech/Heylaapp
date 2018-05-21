@@ -112,13 +112,13 @@
     [tracker set:kGAIScreenName value:@"cityPage"];
     [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
 
+    self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
 }
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
 /*
 #pragma mark - Navigation
 
@@ -132,12 +132,10 @@
 {
     return 1;
 }
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return [city_Latitude count];
 }
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     SelectCityTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];

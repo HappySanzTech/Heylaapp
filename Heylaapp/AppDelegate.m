@@ -190,7 +190,6 @@
         
     }
     
-
 }
 -(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler{
     
@@ -226,20 +225,27 @@
 }
 - (void)application:(UIApplication *)application willChangeStatusBarFrame:(CGRect)newStatusBarFrame
 {
-    [UIView animateWithDuration:0.35 animations:^{
-        CGRect windowFrame = ((UINavigationController *)((UITabBarController *)self.window.rootViewController).viewControllers[0]).view.frame;
-        if (newStatusBarFrame.size.height > 20)
-        {
-            [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"Hotspot_nav"];
-            windowFrame.origin.y = newStatusBarFrame.size.height - 20 ;
-        }
-        else
-        {
-            [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"Hotspot_nav"];
-            windowFrame.origin.y = 0.0;
-
-        }
-        ((UINavigationController *)((UITabBarController *)self.window.rootViewController).viewControllers[0]).view.frame = windowFrame;
-    }];
+    @try
+    {
+        [UIView animateWithDuration:0.35 animations:^{
+            CGRect windowFrame = ((UINavigationController *)((UITabBarController *)self.window.rootViewController).viewControllers[0]).view.frame;
+            if (newStatusBarFrame.size.height > 20)
+            {
+                [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"Hotspot_nav"];
+                windowFrame.origin.y = newStatusBarFrame.size.height - 20 ;
+            }
+            else
+            {
+                [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"Hotspot_nav"];
+                windowFrame.origin.y = 0.0;
+                
+            }
+            ((UINavigationController *)((UITabBarController *)self.window.rootViewController).viewControllers[0]).view.frame = windowFrame;
+        }];
+    }
+    @catch (NSException *exception)
+    {
+       
+    }
 }
 @end

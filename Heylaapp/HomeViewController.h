@@ -15,6 +15,8 @@
 {
     NSArray *searchResultsArray;
 }
+- (IBAction)profileButton:(id)sender;
+@property (weak, nonatomic) IBOutlet UIView *segmentView;
 @property (weak, nonatomic) IBOutlet UILabel *fullName;
 - (IBAction)leaderBoardReviewBtn:(id)sender;
 - (IBAction)leaderbookingBtn:(id)sender;

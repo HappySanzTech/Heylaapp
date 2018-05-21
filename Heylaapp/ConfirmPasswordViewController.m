@@ -22,27 +22,20 @@
     // Do any additional setup after loading the view.
     
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
-    
     _submit.layer.cornerRadius = 8;
     _submit.clipsToBounds = YES;
-    
     _newpassword.delegate = self;
-    
     eyeFlag = @"0";
-    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                           action:@selector(dismissKeyboard)];
     
     [self.view addGestureRecognizer:tap];
-    
-   
 }
-
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
 /*
 #pragma mark - Navigation
 
@@ -52,7 +45,6 @@
     // Pass the selected object to the new view controller.
 }
 */
-
 - (IBAction)eyeBtn:(id)sender
 {
     if ([eyeFlag isEqualToString:@"0"])
@@ -60,7 +52,6 @@
         self.imageView.image = [UIImage imageNamed:@"hide.png"];
         eyeFlag = @"1";
         self.newpassword.secureTextEntry = YES;
-        
     }
     else
     {
@@ -68,10 +59,9 @@
         eyeFlag = @"0";
         self.newpassword.secureTextEntry = NO;
     }
-    
 }
 - (IBAction)submitBtn:(id)sender
-{
+{ 
     if ([self.newpassword.text isEqualToString:@""])
     {
         [_newpassword showErrorWithText:@"Enter new password"];
