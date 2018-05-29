@@ -196,16 +196,16 @@
              if ([msg isEqualToString:@"View Countries"] && [status isEqualToString:@"success"])
              {
                  NSArray *responseObj = [responseObject objectForKey:@"Countries"];
-                 [country_Name removeAllObjects];
-                 [country_id removeAllObjects];
+                 [self->country_Name removeAllObjects];
+                 [self->country_id removeAllObjects];
                  for (int i = 0; i < [responseObj count]; i++)
                  {
                      NSDictionary *dict = [responseObj objectAtIndex:i];
                      NSString *str_CountryName = [dict objectForKey:@"country_name"];
                      NSString *str_id = [dict objectForKey:@"id"];
                      
-                     [country_Name addObject:str_CountryName];
-                     [country_id addObject:str_id];
+                     [self->country_Name addObject:str_CountryName];
+                     [self->country_id addObject:str_id];
 
                  }
                  
@@ -930,7 +930,7 @@
                                                   NSLog(@"%@", result);
                                                   NSString *img = result[@"picture_url"];
                                                   NSLog(@"%@%@",result,img);
-                                                  appDel.picture_url = img;                                                  
+                                                  self->appDel.picture_url = img;                                                  
                                                   [[NSUserDefaults standardUserDefaults]setObject:img forKey:@"picture_Url"];
 
                                               }
@@ -1034,9 +1034,9 @@
              if ([msg isEqualToString:@"View Cities"] && [status isEqualToString:@"success"])
              {
                  NSArray *responseObj = [responseObject objectForKey:@"Cities"];
-                 [city_Name removeAllObjects];
-                 [city_id removeAllObjects];
-                 [city_Name insertObject:@"Select Your City" atIndex:0];
+                 [self->city_Name removeAllObjects];
+                 [self->city_id removeAllObjects];
+                 [self->city_Name insertObject:@"Select Your City" atIndex:0];
                  
                  for (int i = 0; i < [responseObj count]; i++)
                  {
@@ -1044,9 +1044,9 @@
                      NSString *str_cityName= [dict objectForKey:@"city_name"];
                      NSString *cityId = [dict objectForKey:@"id"];
                      
-                     [city_Name addObject:str_cityName];
-                     [city_id addObject:cityId];
-                     [listpickerView selectRow:0 inComponent:0 animated:YES];
+                     [self->city_Name addObject:str_cityName];
+                     [self->city_id addObject:cityId];
+                     [self->listpickerView selectRow:0 inComponent:0 animated:YES];
 
                  }
                  [self.city becomeFirstResponder];
@@ -1130,9 +1130,9 @@
                  if ([msg isEqualToString:@"View States"] && [status isEqualToString:@"success"])
                  {
                      NSArray *responseObj = [responseObject objectForKey:@"States"];
-                     [state_Name removeAllObjects];
-                     [state_id removeAllObjects];
-                     [state_Name insertObject:@"Select Your State" atIndex:0];
+                     [self->state_Name removeAllObjects];
+                     [self->state_id removeAllObjects];
+                     [self->state_Name insertObject:@"Select Your State" atIndex:0];
 
                      for (int i = 0; i < [responseObj count]; i++)
                      {
@@ -1140,9 +1140,9 @@
                          NSString *str_stateName = [dict objectForKey:@"state_name"];
                          NSString *str_stateid = [dict objectForKey:@"id"];
     
-                         [state_Name addObject:str_stateName];
-                         [state_id addObject:str_stateid];
-                         [listpickerView selectRow:0 inComponent:0 animated:YES];
+                         [self->state_Name addObject:str_stateName];
+                         [self->state_id addObject:str_stateid];
+                         [self->listpickerView selectRow:0 inComponent:0 animated:YES];
 
     
                      }

@@ -13,8 +13,6 @@
 {
     CLLocationManager *objLocationManager;
     double latitude_UserLocation, longitude_UserLocation;
-
-
 }
 @property (strong, nonatomic) IBOutlet UIButton *favImageOtlet;
 @property (strong, nonatomic) IBOutlet UIButton *eyeImageOtlet;

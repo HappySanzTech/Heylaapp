@@ -53,7 +53,7 @@
     
     if (![NSData instancesRespondToSelector:@selector(base64EncodedStringWithOptions:)])
     {
-        encoded = [self base64Encoding];
+        encoded = [self base64EncodedString];
     }
     else
         

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface MenuViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UIButton *shareOutlet;
 - (IBAction)signOutBtn:(id)sender;
 - (IBAction)settingsBtn:(id)sender;
 - (IBAction)notificationBellBtn:(id)sender;

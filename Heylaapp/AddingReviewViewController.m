@@ -65,12 +65,12 @@
          
          NSLog(@"%@",responseObject);
          [MBProgressHUD hideHUDForView:self.view animated:YES];
-         msg = [responseObject objectForKey:@"msg"];
-         status = [responseObject objectForKey:@"status"];
-         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-         appDel.review_id = [responseObject objectForKey:@"review_id"];
+         self->msg = [responseObject objectForKey:@"msg"];
+         self->status = [responseObject objectForKey:@"status"];
+         self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+         self->appDel.review_id = [responseObject objectForKey:@"review_id"];
          
-         if ([msg isEqualToString:@"Already Exist"] && [status isEqualToString:@"exist"])
+         if ([self->msg isEqualToString:@"Already Exist"] && [self->status isEqualToString:@"exist"])
          {
              
              NSArray *Reviewdetails = [responseObject objectForKey:@"Reviewdetails"];
@@ -78,92 +78,92 @@
              for (int i = 0; i < [Reviewdetails count];i++)
              {
                  NSDictionary *dict = [Reviewdetails objectAtIndex:i];
-                 strComments = [dict objectForKey:@"comments"];
-                 _id = [dict objectForKey:@"id"];
+                 self->strComments = [dict objectForKey:@"comments"];
+                 self->_id = [dict objectForKey:@"id"];
                  event_rating = [dict objectForKey:@"event_rating"];
              }
-             self.commentTxtfiled.text =strComments;
+             self.commentTxtfiled.text =self->strComments;
              
              if ([event_rating isEqualToString:@"0"])
              {
-                 [_firstStar setSelected:NO];
-                 [_secondStar setSelected:NO];
-                 [_thiredStar setSelected:NO];
-                 [_fourthStar setSelected:NO];
-                 [_fivethStar setSelected:NO];
+                 [self->_firstStar setSelected:NO];
+                 [self->_secondStar setSelected:NO];
+                 [self->_thiredStar setSelected:NO];
+                 [self->_fourthStar setSelected:NO];
+                 [self->_fivethStar setSelected:NO];
                  
-                 selectedStars = @"0";
+                 self->selectedStars = @"0";
 
              }
              else if ([event_rating isEqualToString:@"1"])
              {
-                 [_firstStar setSelected:YES];
-                 [_secondStar setSelected:NO];
-                 [_thiredStar setSelected:NO];
-                 [_fourthStar setSelected:NO];
-                 [_fivethStar setSelected:NO];
+                 [self->_firstStar setSelected:YES];
+                 [self->_secondStar setSelected:NO];
+                 [self->_thiredStar setSelected:NO];
+                 [self->_fourthStar setSelected:NO];
+                 [self->_fivethStar setSelected:NO];
                  
-                 selectedStars = @"1";
-                 first = @"1";
+                 self->selectedStars = @"1";
+                 self->first = @"1";
 
 
              }
              else if ([event_rating isEqualToString:@"2"])
              {
-                 [_firstStar setSelected:YES];
-                 [_secondStar setSelected:YES];
-                 [_thiredStar setSelected:NO];
-                 [_fourthStar setSelected:NO];
-                 [_fivethStar setSelected:NO];
+                 [self->_firstStar setSelected:YES];
+                 [self->_secondStar setSelected:YES];
+                 [self->_thiredStar setSelected:NO];
+                 [self->_fourthStar setSelected:NO];
+                 [self->_fivethStar setSelected:NO];
                  
-                 selectedStars = @"2";
-                 first = @"1";
-                 second = @"1";
+                 self->selectedStars = @"2";
+                 self->first = @"1";
+                 self->second = @"1";
 
              }
              else if ([event_rating isEqualToString:@"3"])
              {
-                 [_firstStar setSelected:YES];
-                 [_secondStar setSelected:YES];
-                 [_thiredStar setSelected:YES];
-                 [_fourthStar setSelected:NO];
-                 [_fivethStar setSelected:NO];
+                 [self->_firstStar setSelected:YES];
+                 [self->_secondStar setSelected:YES];
+                 [self->_thiredStar setSelected:YES];
+                 [self->_fourthStar setSelected:NO];
+                 [self->_fivethStar setSelected:NO];
                  
-                 selectedStars = @"3";
-                 first = @"1";
-                 second = @"1";
-                 third = @"1";
+                 self->selectedStars = @"3";
+                 self->first = @"1";
+                 self->second = @"1";
+                 self->third = @"1";
 
              }
              else if ([event_rating isEqualToString:@"4"])
              {
-                 [_firstStar setSelected:YES];
-                 [_secondStar setSelected:YES];
-                 [_thiredStar setSelected:YES];
-                 [_fourthStar setSelected:YES];
-                 [_fivethStar setSelected:NO];
+                 [self->_firstStar setSelected:YES];
+                 [self->_secondStar setSelected:YES];
+                 [self->_thiredStar setSelected:YES];
+                 [self->_fourthStar setSelected:YES];
+                 [self->_fivethStar setSelected:NO];
                  
-                 selectedStars = @"4";
-                 first = @"1";
-                 second = @"1";
-                 third = @"1";
-                 four = @"1";
+                 self->selectedStars = @"4";
+                 self->first = @"1";
+                 self->second = @"1";
+                 self->third = @"1";
+                 self->four = @"1";
 
              }
              else if ([event_rating isEqualToString:@"5"])
              {
-                 [_firstStar setSelected:YES];
-                 [_secondStar setSelected:YES];
-                 [_thiredStar setSelected:YES];
-                 [_fourthStar setSelected:YES];
-                 [_fivethStar setSelected:YES];
+                 [self->_firstStar setSelected:YES];
+                 [self->_secondStar setSelected:YES];
+                 [self->_thiredStar setSelected:YES];
+                 [self->_fourthStar setSelected:YES];
+                 [self->_fivethStar setSelected:YES];
                  
-                 selectedStars = @"5";
-                 first = @"1";
-                 second = @"1";
-                 third = @"1";
-                 four = @"1";
-                 five = @"1";
+                 self->selectedStars = @"5";
+                 self->first = @"1";
+                 self->second = @"1";
+                 self->third = @"1";
+                 self->four = @"1";
+                 self->five = @"1";
 
              }
          }
@@ -394,8 +394,8 @@
          [MBProgressHUD hideHUDForView:self.view animated:YES];
          NSString *msg = [responseObject objectForKey:@"msg"];
          NSString *status = [responseObject objectForKey:@"status"];
-         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-         appDel.review_id = [responseObject objectForKey:@"review_id"];
+         self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+         self->appDel.review_id = [responseObject objectForKey:@"review_id"];
          
          if ([msg isEqualToString:@"Review Added"] && [status isEqualToString:@"success"])
          {
@@ -465,8 +465,8 @@
          [MBProgressHUD hideHUDForView:self.view animated:YES];
          NSString *msg = [responseObject objectForKey:@"msg"];
          NSString *status = [responseObject objectForKey:@"status"];
-         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-         appDel.review_id = [responseObject objectForKey:@"review_id"];
+         self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+         self->appDel.review_id = [responseObject objectForKey:@"review_id"];
          
          if ([msg isEqualToString:@"Review Added"] && [status isEqualToString:@"success"])
          {

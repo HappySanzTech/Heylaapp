@@ -72,20 +72,20 @@
          NSString *status = [responseObject objectForKey:@"status"];
          if ([msg isEqualToString:@"View Booking History"] && [status isEqualToString:@"success"])
          {
-             [category_name removeAllObjects];
-             [created_at removeAllObjects];
-             [event_address removeAllObjects];
-             [event_colour_scheme removeAllObjects];
-             [event_id removeAllObjects];
-             [event_name removeAllObjects];
-             [event_venue removeAllObjects];
-             [_id removeAllObjects];
-             [number_of_seats removeAllObjects];
-             [order_id removeAllObjects];
-             [plan_name removeAllObjects];
-             [show_date removeAllObjects];
-             [show_time removeAllObjects];
-             [total_amount removeAllObjects];
+             [self->category_name removeAllObjects];
+             [self->created_at removeAllObjects];
+             [self->event_address removeAllObjects];
+             [self->event_colour_scheme removeAllObjects];
+             [self->event_id removeAllObjects];
+             [self->event_name removeAllObjects];
+             [self->event_venue removeAllObjects];
+             [self->_id removeAllObjects];
+             [self->number_of_seats removeAllObjects];
+             [self->order_id removeAllObjects];
+             [self->plan_name removeAllObjects];
+             [self->show_date removeAllObjects];
+             [self->show_time removeAllObjects];
+             [self->total_amount removeAllObjects];
              
              NSArray *Bookinghistory = [responseObject objectForKey:@"Bookinghistory"];
              for (int i = 0; i < [Bookinghistory count]; i++)
@@ -116,20 +116,20 @@
                  NSString *reqDateString = [dateFormatter stringFromDate:date];
                  NSLog(@"date is %@", reqDateString);
                  
-                 [category_name addObject:strcategry_name];
-                 [created_at addObject:strcreated_at];
-                 [event_address addObject:strcategry_event_addressname];
-                 [event_colour_scheme addObject:strevent_colour_scheme];
-                 [event_id addObject:strevent_id];
-                 [event_name addObject:strevent_name];
-                 [event_venue addObject:strevent_venue];
-                 [_id addObject:strid];
-                 [number_of_seats addObject:strnumber_of_seats];
-                 [order_id addObject:strorder_id];
-                 [plan_name addObject:strplan_name];
-                 [show_date addObject:reqDateString];
-                 [show_time addObject:strshow_time];
-                 [total_amount addObject:strtotal_amount];
+                 [self->category_name addObject:strcategry_name];
+                 [self->created_at addObject:strcreated_at];
+                 [self->event_address addObject:strcategry_event_addressname];
+                 [self->event_colour_scheme addObject:strevent_colour_scheme];
+                 [self->event_id addObject:strevent_id];
+                 [self->event_name addObject:strevent_name];
+                 [self->event_venue addObject:strevent_venue];
+                 [self->_id addObject:strid];
+                 [self->number_of_seats addObject:strnumber_of_seats];
+                 [self->order_id addObject:strorder_id];
+                 [self->plan_name addObject:strplan_name];
+                 [self->show_date addObject:reqDateString];
+                 [self->show_time addObject:strshow_time];
+                 [self->total_amount addObject:strtotal_amount];
                  
              }
              

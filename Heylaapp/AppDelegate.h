@@ -13,6 +13,8 @@
 #import <Google/Analytics.h>
 #import <Firebase/Firebase.h>
 
+#define SYSTEM_VERSION_GRATERTHAN_OR_EQUALTO(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate,UNUserNotificationCenterDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
@@ -92,6 +94,7 @@
 @property (strong, nonatomic) NSString *user_currentLongitude;
 @property (strong, nonatomic) NSString *event_type;
 @property (strong, nonatomic) NSString *login_type;
+@property (strong, nonatomic) NSString *wishlist_id;
 @property (nonatomic, strong) UINavigationController *navController;
 - (void)saveContext;
 

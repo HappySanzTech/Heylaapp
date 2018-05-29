@@ -15,6 +15,8 @@
 {
     NSArray *searchResultsArray;
 }
+- (IBAction)daySegmentButton:(id)sender;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *daySegment;
 - (IBAction)profileButton:(id)sender;
 @property (weak, nonatomic) IBOutlet UIView *segmentView;
 @property (weak, nonatomic) IBOutlet UILabel *fullName;

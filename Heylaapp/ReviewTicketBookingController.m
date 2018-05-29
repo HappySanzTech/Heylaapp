@@ -295,7 +295,7 @@
                  
                  if ([msg isEqualToString:@"Bookingprocess"] && [status isEqualToString:@"success"])
                  {
-                     [[NSUserDefaults standardUserDefaults]setObject:ticketCountadd forKey:@"tickcount_arr"];
+                     [[NSUserDefaults standardUserDefaults]setObject:self->ticketCountadd forKey:@"tickcount_arr"];
                      UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Booking" bundle:nil];
                      AttendeesViewController *attendees = [storyboard instantiateViewControllerWithIdentifier:@"AttendeesViewController"];
                      [self.navigationController pushViewController:attendees animated:YES];

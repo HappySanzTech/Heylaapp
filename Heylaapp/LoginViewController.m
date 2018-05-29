@@ -245,13 +245,13 @@
          {
              NSLog(@"fetched user:%@  and Email : %@", result,result[@"email"]);
              NSLog(@"fetched user:%@  and Email : %@", result,result[@"first_name"]);
-             fbID=[result objectForKey:@"id"];
+             self->fbID=[result objectForKey:@"id"];
              NSString *firstName = [result objectForKey:@"first_name"];
              NSString *lastName = [result objectForKey:@"last_name"];
-             facebookEmail_id = [result objectForKey:@"email"];
-             facebookName = [NSString stringWithFormat:@"%@%@",firstName,lastName];
-             fbprofilePic= [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large",fbID];
-             NSURL *fbPicURL = [NSURL URLWithString:fbprofilePic];
+             self->facebookEmail_id = [result objectForKey:@"email"];
+             self->facebookName = [NSString stringWithFormat:@"%@%@",firstName,lastName];
+             self->fbprofilePic= [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large",self->fbID];
+             NSURL *fbPicURL = [NSURL URLWithString:self->fbprofilePic];
              NSData *imgData = [NSData dataWithContentsOfURL:fbPicURL];
              [[NSUserDefaults standardUserDefaults]setObject:imgData forKey:@"picture_Url"];
              [self facebookLogin];
@@ -285,73 +285,73 @@
          NSString *status = [responseObject objectForKey:@"status"];
          if ([msg isEqualToString:@"Login Successfully"] && [status isEqualToString:@"Success"])
          {
-             appDel.user_name = [[NSUserDefaults standardUserDefaults]objectForKey:@"statUser_Name"];
-             appDel.mobile_no = [[NSUserDefaults standardUserDefaults]objectForKey:@"statemobile_no"];
+             self->appDel.user_name = [[NSUserDefaults standardUserDefaults]objectForKey:@"statUser_Name"];
+             self->appDel.mobile_no = [[NSUserDefaults standardUserDefaults]objectForKey:@"statemobile_no"];
              NSDictionary *dict = [responseObject objectForKey:@"userData"];
-             appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+             self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
              NSString *user_id = [dict objectForKey:@"user_id"];
-             appDel.user_Id = [dict objectForKey:@"user_id"];
-             appDel.address_line_1 = [dict objectForKey:@"address_line_1"];
-             appDel.address_line_2 = [dict objectForKey:@"address_line_2"];
-             appDel.address_line_3 = [dict objectForKey:@"address_line_3"];
-             appDel.birth_date = [dict objectForKey:@"birth_date"];
-             appDel.city_id = [dict objectForKey:@"city_id"];
-             appDel.city_name = [dict objectForKey:@"city_name"];
-             appDel.country_id = [dict objectForKey:@"country_id"];
-             appDel.country_name = [dict objectForKey:@"country_name"];
+             self->appDel.user_Id = [dict objectForKey:@"user_id"];
+             self->appDel.address_line_1 = [dict objectForKey:@"address_line_1"];
+             self->appDel.address_line_2 = [dict objectForKey:@"address_line_2"];
+             self->appDel.address_line_3 = [dict objectForKey:@"address_line_3"];
+             self->appDel.birth_date = [dict objectForKey:@"birth_date"];
+             self->appDel.city_id = [dict objectForKey:@"city_id"];
+             self->appDel.city_name = [dict objectForKey:@"city_name"];
+             self->appDel.country_id = [dict objectForKey:@"country_id"];
+             self->appDel.country_name = [dict objectForKey:@"country_name"];
              NSString *emailId = [dict objectForKey:@"email_id"];
-             appDel.email_id = [[NSUserDefaults standardUserDefaults]objectForKey:@"statemail_id"];
-             appDel.email_verify_status = [dict objectForKey:@"email_verify_status"];
-             appDel.full_name = [dict objectForKey:@"full_name"];
-             appDel.gender = [dict objectForKey:@"gender"];
+             self->appDel.email_id = [[NSUserDefaults standardUserDefaults]objectForKey:@"statemail_id"];
+             self->appDel.email_verify_status = [dict objectForKey:@"email_verify_status"];
+             self->appDel.full_name = [dict objectForKey:@"full_name"];
+             self->appDel.gender = [dict objectForKey:@"gender"];
              NSString *mobile_no = [dict objectForKey:@"mobile_no"];
-             appDel.mobile_no = [[NSUserDefaults standardUserDefaults]objectForKey:@"statemobile_no"];
-             appDel.newsletter_status = [dict objectForKey:@"newsletter_status"];
-             appDel.occupation = [dict objectForKey:@"occupation"];
-             appDel.picture_url = [dict objectForKey:@"picture_url"];
-             appDel.referal_code = [dict objectForKey:@"referal_code"];
-             appDel.state_id = [dict objectForKey:@"state_id"];
-             appDel.state_name = [dict objectForKey:@"state_name"];
+             self->appDel.mobile_no = [[NSUserDefaults standardUserDefaults]objectForKey:@"statemobile_no"];
+             self->appDel.newsletter_status = [dict objectForKey:@"newsletter_status"];
+             self->appDel.occupation = [dict objectForKey:@"occupation"];
+             self->appDel.picture_url = [dict objectForKey:@"picture_url"];
+             self->appDel.referal_code = [dict objectForKey:@"referal_code"];
+             self->appDel.state_id = [dict objectForKey:@"state_id"];
+             self->appDel.state_name = [dict objectForKey:@"state_name"];
              NSString *userName = [dict objectForKey:@"user_name"];
-             appDel.user_name = [[NSUserDefaults standardUserDefaults]objectForKey:@"statUser_Name"];
-             appDel.user_role = [dict objectForKey:@"user_role"];
-             appDel.user_role_name = [dict objectForKey:@"user_role_name"];
-             appDel.zip = [dict objectForKey:@"zip"];
-             appDel.user_type = @"1";
-             NSLog(@"%@",appDel.picture_url);
-             if (!appDel.picture_url.length)
+             self->appDel.user_name = [[NSUserDefaults standardUserDefaults]objectForKey:@"statUser_Name"];
+             self->appDel.user_role = [dict objectForKey:@"user_role"];
+             self->appDel.user_role_name = [dict objectForKey:@"user_role_name"];
+             self->appDel.zip = [dict objectForKey:@"zip"];
+             self->appDel.user_type = @"1";
+             NSLog(@"%@",self->appDel.picture_url);
+             if (!self->appDel.picture_url.length)
              {
-                 appDel.login_type = @"FB";
-                 fbprofilePic= [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large",fbID];
-                 NSURL *fbPicURL = [NSURL URLWithString:fbprofilePic];
+                 self->appDel.login_type = @"FB";
+                 self->fbprofilePic= [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large",self->fbID];
+                 NSURL *fbPicURL = [NSURL URLWithString:self->fbprofilePic];
                  NSData *imgData = [NSData dataWithContentsOfURL:fbPicURL];
                  [[NSUserDefaults standardUserDefaults]setObject:imgData forKey:@"picture_Url"];
              }
              else
              {
-                 appDel.login_type = @"";
-                 [[NSUserDefaults standardUserDefaults]setObject:appDel.picture_url forKey:@"picture_Url"];
+                 self->appDel.login_type = @"";
+                 [[NSUserDefaults standardUserDefaults]setObject:self->appDel.picture_url forKey:@"picture_Url"];
              }
              [[NSUserDefaults standardUserDefaults]setObject:userName forKey:@"statUser_Name"];
              [[NSUserDefaults standardUserDefaults]setObject:mobile_no forKey:@"statemobile_no"];
              [[NSUserDefaults standardUserDefaults]setObject:emailId forKey:@"statemail_id"];
              [[NSUserDefaults standardUserDefaults]setObject:user_id forKey:@"stat_user_id"];
              [[NSUserDefaults standardUserDefaults]setObject:@"1" forKey:@"stat_user_type"];
-             [[NSUserDefaults standardUserDefaults]setObject:appDel.full_name forKey:@"fullName"];
+             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.full_name forKey:@"fullName"];
              [[NSUserDefaults standardUserDefaults]setObject:userName forKey:@"statUser_Name"];
-             [[NSUserDefaults standardUserDefaults]setObject:appDel.birth_date forKey:@"dobTextFiled"];
-             [[NSUserDefaults standardUserDefaults]setObject:appDel.occupation forKey:@"occupation"];
-             [[NSUserDefaults standardUserDefaults]setObject:appDel.gender forKey:@"gender"];
-             [[NSUserDefaults standardUserDefaults]setObject:appDel.address_line_1 forKey:@"addressLine"];
-             [[NSUserDefaults standardUserDefaults]setObject:appDel.address_line_2 forKey:@"addressLineTwo"];
-             [[NSUserDefaults standardUserDefaults]setObject:appDel.address_line_3 forKey:@"addressLineThree"];
-             [[NSUserDefaults standardUserDefaults]setObject:appDel.country_name forKey:@"country"];
-             [[NSUserDefaults standardUserDefaults]setObject:appDel.state_name forKey:@"state"];
-             [[NSUserDefaults standardUserDefaults]setObject:appDel.city_name forKey:@"city"];
-             [[NSUserDefaults standardUserDefaults]setObject:appDel.zip forKey:@"pincode"];
-             [[NSUserDefaults standardUserDefaults]setObject:appDel.country_id forKey:@"country_id"];
-             [[NSUserDefaults standardUserDefaults]setObject:appDel.state_id forKey:@"state_id"];
-             [[NSUserDefaults standardUserDefaults]setObject:appDel.city_id forKey:@"city_id"];
+             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.birth_date forKey:@"dobTextFiled"];
+             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.occupation forKey:@"occupation"];
+             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.gender forKey:@"gender"];
+             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.address_line_1 forKey:@"addressLine"];
+             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.address_line_2 forKey:@"addressLineTwo"];
+             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.address_line_3 forKey:@"addressLineThree"];
+             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.country_name forKey:@"country"];
+             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.state_name forKey:@"state"];
+             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.city_name forKey:@"city"];
+             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.zip forKey:@"pincode"];
+             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.country_id forKey:@"country_id"];
+             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.state_id forKey:@"state_id"];
+             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.city_id forKey:@"city_id"];
              [[NSUserDefaults standardUserDefaults]setObject:@"signIn" forKey:@"status"];
              [self performSegueWithIdentifier:@"facebook_CityPage" sender:self];
          }
@@ -482,14 +482,15 @@
                  [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"state_id"];
                  [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"city_id"];
                  [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"new_Letter"];
-                 appDel.login_type = @"";
-                 appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                 appDel.user_type = @"1";
+                 self->appDel.login_type = @"";
+                 self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                 self->appDel.user_type = @"1";
                  [[NSUserDefaults standardUserDefaults]setObject:@"1" forKey:@"stat_user_type"];
                  [[NSUserDefaults standardUserDefaults]setObject:@"signIn" forKey:@"status"];
                  OTPViewController *oTPViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"OTPViewController"];
                  [self presentViewController:oTPViewController animated:NO completion:nil];
                  UINavigationController *navigationController = [[UINavigationController alloc]initWithRootViewController:oTPViewController];
+                 [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"for_Alert"];
                  [self.navigationController pushViewController:navigationController animated:YES];
              }
              else
@@ -638,7 +639,7 @@
                  {
         
                      NSLog(@"%@",responseObject);
-                     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                     self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
                      [MBProgressHUD hideHUDForView:self.view animated:YES];
                      NSString *msg = [responseObject objectForKey:@"msg"];
                      NSString *status = [responseObject objectForKey:@"status"];
@@ -647,37 +648,37 @@
                      {
                          NSDictionary *dict = [responseObject objectForKey:@"userData"];
                          NSString *user_id = [dict objectForKey:@"user_id"];
-                         appDel.user_Id = [dict objectForKey:@"user_id"];
-                         appDel.address_line_1 = [dict objectForKey:@"address_line_1"];
-                         appDel.address_line_2 = [dict objectForKey:@"address_line_2"];
-                         appDel.address_line_3 = [dict objectForKey:@"address_line_3"];
-                         appDel.birth_date = [dict objectForKey:@"birth_date"];
-                         appDel.city_id = [dict objectForKey:@"city_id"];
-                         appDel.city_name = [dict objectForKey:@"city_name"];
-                         appDel.country_id = [dict objectForKey:@"country_id"];
-                         appDel.country_name = [dict objectForKey:@"country_name"];
-                         appDel.email_verify_status = [dict objectForKey:@"email_verify_status"];
-                         appDel.full_name = [dict objectForKey:@"full_name"];
-                         appDel.gender = [dict objectForKey:@"gender"];
-                         appDel.newsletter_status = [dict objectForKey:@"newsletter_status"];
-                         appDel.occupation = [dict objectForKey:@"occupation"];
-                         appDel.picture_url = [dict objectForKey:@"picture_url"];
+                         self->appDel.user_Id = [dict objectForKey:@"user_id"];
+                         self->appDel.address_line_1 = [dict objectForKey:@"address_line_1"];
+                         self->appDel.address_line_2 = [dict objectForKey:@"address_line_2"];
+                         self->appDel.address_line_3 = [dict objectForKey:@"address_line_3"];
+                         self->appDel.birth_date = [dict objectForKey:@"birth_date"];
+                         self->appDel.city_id = [dict objectForKey:@"city_id"];
+                         self->appDel.city_name = [dict objectForKey:@"city_name"];
+                         self->appDel.country_id = [dict objectForKey:@"country_id"];
+                         self->appDel.country_name = [dict objectForKey:@"country_name"];
+                         self->appDel.email_verify_status = [dict objectForKey:@"email_verify_status"];
+                         self->appDel.full_name = [dict objectForKey:@"full_name"];
+                         self->appDel.gender = [dict objectForKey:@"gender"];
+                         self->appDel.newsletter_status = [dict objectForKey:@"newsletter_status"];
+                         self->appDel.occupation = [dict objectForKey:@"occupation"];
+                         self->appDel.picture_url = [dict objectForKey:@"picture_url"];
                          NSString *picture = [dict objectForKey:@"picture_url"];
-                         appDel.referal_code = [dict objectForKey:@"referal_code"];
-                         appDel.state_id = [dict objectForKey:@"state_id"];
-                         appDel.state_name = [dict objectForKey:@"state_name"];
-                         appDel.user_role = [dict objectForKey:@"user_role"];
-                         appDel.user_role_name = [dict objectForKey:@"user_role_name"];
-                         appDel.zip = [dict objectForKey:@"zip"];
+                         self->appDel.referal_code = [dict objectForKey:@"referal_code"];
+                         self->appDel.state_id = [dict objectForKey:@"state_id"];
+                         self->appDel.state_name = [dict objectForKey:@"state_name"];
+                         self->appDel.user_role = [dict objectForKey:@"user_role"];
+                         self->appDel.user_role_name = [dict objectForKey:@"user_role_name"];
+                         self->appDel.zip = [dict objectForKey:@"zip"];
                          NSString *emailId = [dict objectForKey:@"user_name"];
-                         appDel.email_id = [[NSUserDefaults standardUserDefaults]objectForKey:@"statemail_id"];
+                         self->appDel.email_id = [[NSUserDefaults standardUserDefaults]objectForKey:@"statemail_id"];
                          NSString *mobile_no = [dict objectForKey:@"mobile_no"];
-                         appDel.mobile_no = [[NSUserDefaults standardUserDefaults]objectForKey:@"statemobile_no"];
+                         self->appDel.mobile_no = [[NSUserDefaults standardUserDefaults]objectForKey:@"statemobile_no"];
                          NSString *userName = [dict objectForKey:@"user_name"];
-                         appDel.user_name = [[NSUserDefaults standardUserDefaults]objectForKey:@"statUser_Name"];
-                         appDel.login_type = @"";
-                         appDel.user_type = @"1";
-                         NSLog(@"%@",appDel.user_Id);
+                         self->appDel.user_name = [[NSUserDefaults standardUserDefaults]objectForKey:@"statUser_Name"];
+                         self->appDel.login_type = @"";
+                         self->appDel.user_type = @"1";
+                         NSLog(@"%@",self->appDel.user_Id);
                          
                          [[NSUserDefaults standardUserDefaults]setObject:userName forKey:@"statUser_Name"];
                          [[NSUserDefaults standardUserDefaults]setObject:@"1" forKey:@"stat_user_type"];
@@ -686,21 +687,22 @@
                          [[NSUserDefaults standardUserDefaults]setObject:picture forKey:@"picture_Url"];
                          [[NSUserDefaults standardUserDefaults]setObject:user_id forKey:@"stat_user_id"];
                          [[NSUserDefaults standardUserDefaults]setObject:mobile_no forKey:@"statemobile_no"];
-                         [[NSUserDefaults standardUserDefaults]setObject:appDel.full_name forKey:@"fullName"];
+                         [[NSUserDefaults standardUserDefaults]setObject:self->appDel.full_name forKey:@"fullName"];
                          [[NSUserDefaults standardUserDefaults]setObject:userName forKey:@"statUser_Name"];
-                         [[NSUserDefaults standardUserDefaults]setObject:appDel.birth_date forKey:@"dob"];
-                         [[NSUserDefaults standardUserDefaults]setObject:appDel.occupation forKey:@"occupation"];
-                         [[NSUserDefaults standardUserDefaults]setObject:appDel.gender forKey:@"gender"];
-                         [[NSUserDefaults standardUserDefaults]setObject:appDel.address_line_1 forKey:@"addressLine"];
-                         [[NSUserDefaults standardUserDefaults]setObject:appDel.address_line_2 forKey:@"addressLineTwo"];
-                         [[NSUserDefaults standardUserDefaults]setObject:appDel.address_line_3 forKey:@"addressLineThree"];
-                         [[NSUserDefaults standardUserDefaults]setObject:appDel.country_name forKey:@"country"];
-                         [[NSUserDefaults standardUserDefaults]setObject:appDel.state_name forKey:@"state"];
-                         [[NSUserDefaults standardUserDefaults]setObject:appDel.city_name forKey:@"city"];
-                         [[NSUserDefaults standardUserDefaults]setObject:appDel.zip forKey:@"pincode"];
-                         [[NSUserDefaults standardUserDefaults]setObject:appDel.country_id forKey:@"country_id"];
-                         [[NSUserDefaults standardUserDefaults]setObject:appDel.state_id forKey:@"state_id"];
-                         [[NSUserDefaults standardUserDefaults]setObject:appDel.city_id forKey:@"city_id"];
+                         [[NSUserDefaults standardUserDefaults]setObject:self->appDel.birth_date forKey:@"dob"];
+                         [[NSUserDefaults standardUserDefaults]setObject:self->appDel.occupation forKey:@"occupation"];
+                         [[NSUserDefaults standardUserDefaults]setObject:self->appDel.gender forKey:@"gender"];
+                         [[NSUserDefaults standardUserDefaults]setObject:self->appDel.address_line_1 forKey:@"addressLine"];
+                         [[NSUserDefaults standardUserDefaults]setObject:self->appDel.address_line_2 forKey:@"addressLineTwo"];
+                         [[NSUserDefaults standardUserDefaults]setObject:self->appDel.address_line_3 forKey:@"addressLineThree"];
+                         [[NSUserDefaults standardUserDefaults]setObject:self->appDel.country_name forKey:@"country"];
+                         [[NSUserDefaults standardUserDefaults]setObject:self->appDel.state_name forKey:@"state"];
+                         [[NSUserDefaults standardUserDefaults]setObject:self->appDel.city_name forKey:@"city"];
+                         [[NSUserDefaults standardUserDefaults]setObject:self->appDel.zip forKey:@"pincode"];
+                         [[NSUserDefaults standardUserDefaults]setObject:self->appDel.country_id forKey:@"country_id"];
+                         [[NSUserDefaults standardUserDefaults]setObject:self->appDel.state_id forKey:@"state_id"];
+                         [[NSUserDefaults standardUserDefaults]setObject:self->appDel.city_id forKey:@"city_id"];
+                         [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"for_Alert"];
                          [self performSegueWithIdentifier:@"to_countryPage" sender:self];
                      }
                      else
@@ -756,7 +758,7 @@
      {
          
          NSLog(@"%@",responseObject);
-         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+         self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
          [MBProgressHUD hideHUDForView:self.view animated:YES];
          NSString *msg = [responseObject objectForKey:@"msg"];
          NSString *status = [responseObject objectForKey:@"status"];
@@ -766,9 +768,10 @@
              NSDictionary *dict = [responseObject objectForKey:@"userData"];
              NSString *user_id = [dict objectForKey:@"user_id"];
              [[NSUserDefaults standardUserDefaults]setObject:user_id forKey:@"stat_user_id"];
-             appDel.user_Id = user_id;
-             appDel.user_type = @"2";
+             self->appDel.user_Id = user_id;
+             self->appDel.user_type = @"2";
              [[NSUserDefaults standardUserDefaults]setObject:@"2" forKey:@"stat_user_type"];
+             [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"for_Alert"];
              [self performSegueWithIdentifier:@"to_countryPage" sender:self];
          }
          else

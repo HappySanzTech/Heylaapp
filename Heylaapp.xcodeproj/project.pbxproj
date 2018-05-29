@@ -290,6 +290,7 @@
 		6B51EA6D2012119F003A2B72 /* EventReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B51EA6C2012119E003A2B72 /* EventReviewViewController.m */; };
 		6B51EA70201211B6003A2B72 /* EventReviewTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B51EA6F201211B6003A2B72 /* EventReviewTableViewCell.m */; };
 		6B51EA73201211CE003A2B72 /* AddingReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B51EA72201211CE003A2B72 /* AddingReviewViewController.m */; };
+		6B5240C520BC1FFE0086FA09 /* Sample.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B5240C420BC1FFE0086FA09 /* Sample.storyboard */; };
 		6B5910A120135E7000CCDF37 /* WhishListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5910A020135E7000CCDF37 /* WhishListViewController.m */; };
 		6B5910A72013721900CCDF37 /* LeaderBoardTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5910A62013721900CCDF37 /* LeaderBoardTableViewCell.m */; };
 		6B5910AA2013724100CCDF37 /* LeaderBoardPointsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5910A92013724100CCDF37 /* LeaderBoardPointsViewController.m */; };
@@ -315,6 +316,15 @@
 		6B9117C82063FD9D0049580B /* PageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B9117C62063FD9C0049580B /* PageContentViewController.m */; };
 		6BA7214820247580000617D4 /* NearbyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BA7214720247580000617D4 /* NearbyViewController.m */; };
 		6BA72151202481C0000617D4 /* Nearbymap.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BA72150202481C0000617D4 /* Nearbymap.png */; };
+		6BB586E120BD8EAA00D459AF /* LGSideMenuHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB586D420BD8EA300D459AF /* LGSideMenuHelper.m */; };
+		6BB586E220BD8EAA00D459AF /* LGSideMenuBorderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB586D620BD8EA400D459AF /* LGSideMenuBorderView.m */; };
+		6BB586E320BD8EAA00D459AF /* LGSideMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB586D720BD8EA500D459AF /* LGSideMenuController.m */; };
+		6BB586E420BD8EAA00D459AF /* UIViewController+LGSideMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB586D920BD8EA600D459AF /* UIViewController+LGSideMenuController.m */; };
+		6BB586E520BD8EAA00D459AF /* LGSideMenuGesturesHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB586DC20BD8EA800D459AF /* LGSideMenuGesturesHandler.m */; };
+		6BB586E620BD8EAA00D459AF /* LGSideMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB586DE20BD8EA900D459AF /* LGSideMenuView.m */; };
+		6BB586E720BD8EAA00D459AF /* LGSideMenuSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB586DF20BD8EA900D459AF /* LGSideMenuSegue.m */; };
+		6BB586ED20BD915400D459AF /* SideMenuMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB586EC20BD915400D459AF /* SideMenuMainViewController.m */; };
+		6BB586F020BD934900D459AF /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB586EF20BD934900D459AF /* NavigationController.m */; };
 		6BD299D920106DE50064FD8F /* ReviewTicketBookingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD299D820106DE50064FD8F /* ReviewTicketBookingController.m */; };
 		6BD299DF2010C5120064FD8F /* AdvanceFilterResultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD299DE2010C5120064FD8F /* AdvanceFilterResultViewController.m */; };
 		6BD299EE2010D46F0064FD8F /* Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD299E52010D46D0064FD8F /* Base64.m */; };
@@ -327,7 +337,6 @@
 		6BD299FC2010EB090064FD8F /* ticket@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BD299F92010EB070064FD8F /* ticket@2x.png */; };
 		6BD299FD2010EB090064FD8F /* ticket@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BD299FA2010EB080064FD8F /* ticket@1x.png */; };
 		6BD299FE2010EB090064FD8F /* ticket@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BD299FB2010EB080064FD8F /* ticket@3x.png */; };
-		6BEA206620B2EAF7006E4B3A /* Main 2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6BEA206520B2EAF7006E4B3A /* Main 2.storyboard */; };
 		6BFFA77C200F5CA9001B5FBC /* heylasplashscreenios-01.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BFFA77B200F5CA9001B5FBC /* heylasplashscreenios-01.png */; };
 		6BFFA77F200F5F9A001B5FBC /* BookingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BFFA77E200F5F9A001B5FBC /* BookingViewController.m */; };
 		6BFFA783200F6186001B5FBC /* Heyla@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BFFA780200F617F001B5FBC /* Heyla@2x.png */; };
@@ -686,6 +695,7 @@
 		6B51EA6F201211B6003A2B72 /* EventReviewTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EventReviewTableViewCell.m; sourceTree = "<group>"; };
 		6B51EA71201211CE003A2B72 /* AddingReviewViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddingReviewViewController.h; sourceTree = "<group>"; };
 		6B51EA72201211CE003A2B72 /* AddingReviewViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AddingReviewViewController.m; sourceTree = "<group>"; };
+		6B5240C420BC1FFE0086FA09 /* Sample.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Sample.storyboard; sourceTree = "<group>"; };
 		6B59109F20135E7000CCDF37 /* WhishListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhishListViewController.h; sourceTree = "<group>"; };
 		6B5910A020135E7000CCDF37 /* WhishListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhishListViewController.m; sourceTree = "<group>"; };
 		6B5910A52013721900CCDF37 /* LeaderBoardTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LeaderBoardTableViewCell.h; sourceTree = "<group>"; };
@@ -722,6 +732,24 @@
 		6BA7214620247580000617D4 /* NearbyViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NearbyViewController.h; sourceTree = "<group>"; };
 		6BA7214720247580000617D4 /* NearbyViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NearbyViewController.m; sourceTree = "<group>"; };
 		6BA72150202481C0000617D4 /* Nearbymap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Nearbymap.png; sourceTree = "<group>"; };
+		6BB586D320BD8EA300D459AF /* LGSideMenuGesturesHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LGSideMenuGesturesHandler.h; sourceTree = "<group>"; };
+		6BB586D420BD8EA300D459AF /* LGSideMenuHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LGSideMenuHelper.m; sourceTree = "<group>"; };
+		6BB586D520BD8EA400D459AF /* LGSideMenuBorderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LGSideMenuBorderView.h; sourceTree = "<group>"; };
+		6BB586D620BD8EA400D459AF /* LGSideMenuBorderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LGSideMenuBorderView.m; sourceTree = "<group>"; };
+		6BB586D720BD8EA500D459AF /* LGSideMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LGSideMenuController.m; sourceTree = "<group>"; };
+		6BB586D820BD8EA500D459AF /* UIViewController+LGSideMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+LGSideMenuController.h"; sourceTree = "<group>"; };
+		6BB586D920BD8EA600D459AF /* UIViewController+LGSideMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+LGSideMenuController.m"; sourceTree = "<group>"; };
+		6BB586DA20BD8EA700D459AF /* LGSideMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LGSideMenuView.h; sourceTree = "<group>"; };
+		6BB586DB20BD8EA700D459AF /* LGSideMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LGSideMenuController.h; sourceTree = "<group>"; };
+		6BB586DC20BD8EA800D459AF /* LGSideMenuGesturesHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LGSideMenuGesturesHandler.m; sourceTree = "<group>"; };
+		6BB586DD20BD8EA800D459AF /* LGSideMenuHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LGSideMenuHelper.h; sourceTree = "<group>"; };
+		6BB586DE20BD8EA900D459AF /* LGSideMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LGSideMenuView.m; sourceTree = "<group>"; };
+		6BB586DF20BD8EA900D459AF /* LGSideMenuSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LGSideMenuSegue.m; sourceTree = "<group>"; };
+		6BB586E020BD8EAA00D459AF /* LGSideMenuSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LGSideMenuSegue.h; sourceTree = "<group>"; };
+		6BB586EB20BD915400D459AF /* SideMenuMainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SideMenuMainViewController.h; sourceTree = "<group>"; };
+		6BB586EC20BD915400D459AF /* SideMenuMainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SideMenuMainViewController.m; sourceTree = "<group>"; };
+		6BB586EE20BD934900D459AF /* NavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
+		6BB586EF20BD934900D459AF /* NavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		6BD299D720106DE50064FD8F /* ReviewTicketBookingController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReviewTicketBookingController.h; sourceTree = "<group>"; };
 		6BD299D820106DE50064FD8F /* ReviewTicketBookingController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReviewTicketBookingController.m; sourceTree = "<group>"; };
 		6BD299DD2010C5120064FD8F /* AdvanceFilterResultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdvanceFilterResultViewController.h; sourceTree = "<group>"; };
@@ -743,7 +771,6 @@
 		6BD299F92010EB070064FD8F /* ticket@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ticket@2x.png"; sourceTree = "<group>"; };
 		6BD299FA2010EB080064FD8F /* ticket@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ticket@1x.png"; sourceTree = "<group>"; };
 		6BD299FB2010EB080064FD8F /* ticket@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ticket@3x.png"; sourceTree = "<group>"; };
-		6BEA206520B2EAF7006E4B3A /* Main 2.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Main 2.storyboard"; sourceTree = "<group>"; };
 		6BFFA77B200F5CA9001B5FBC /* heylasplashscreenios-01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "heylasplashscreenios-01.png"; sourceTree = "<group>"; };
 		6BFFA77D200F5F9A001B5FBC /* BookingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BookingViewController.h; sourceTree = "<group>"; };
 		6BFFA77E200F5F9A001B5FBC /* BookingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BookingViewController.m; sourceTree = "<group>"; };
@@ -831,6 +858,7 @@
 		6801D5F31F9E155D000946A2 = {
 			isa = PBXGroup;
 			children = (
+				6BB586D220BD8E8C00D459AF /* LGSideMenu */,
 				6BD299E32010D43E0064FD8F /* CCAvenue */,
 				685006661FCEEED0001352BD /* Fonts */,
 				6818BF9B1FA4700A0013B4D9 /* Google Plist */,
@@ -886,6 +914,10 @@
 				68EADC5F1FBAD138008750B2 /* SelectCategoeryViewController.m */,
 				68EADC611FBAD189008750B2 /* SelectCategoeryCollectionViewCell.h */,
 				68EADC621FBAD189008750B2 /* SelectCategoeryCollectionViewCell.m */,
+				6BB586EB20BD915400D459AF /* SideMenuMainViewController.h */,
+				6BB586EC20BD915400D459AF /* SideMenuMainViewController.m */,
+				6BB586EE20BD934900D459AF /* NavigationController.h */,
+				6BB586EF20BD934900D459AF /* NavigationController.m */,
 				68FA39D61FC1AB23004C90E2 /* HomeViewController.h */,
 				68FA39D71FC1AB23004C90E2 /* HomeViewController.m */,
 				68F9BC651FC5A16B006702A2 /* HomeViewTableCell.h */,
@@ -941,7 +973,7 @@
 				6B4EE2A520209E2D006E9E8C /* SettingsViewController.h */,
 				6B4EE2A620209E2D006E9E8C /* SettingsViewController.m */,
 				68EC70AC1FAC506200ABB427 /* Main.storyboard */,
-				6BEA206520B2EAF7006E4B3A /* Main 2.storyboard */,
+				6B5240C420BC1FFE0086FA09 /* Sample.storyboard */,
 				6BFFA78E200F79B5001B5FBC /* Booking.storyboard */,
 				68F6EC611FA36F9B00FB64CF /* Launch Screen.storyboard */,
 				6801D60B1F9E155D000946A2 /* Assets.xcassets */,
@@ -1268,6 +1300,27 @@
 			path = FloatingTextFiled;
 			sourceTree = "<group>";
 		};
+		6BB586D220BD8E8C00D459AF /* LGSideMenu */ = {
+			isa = PBXGroup;
+			children = (
+				6BB586D520BD8EA400D459AF /* LGSideMenuBorderView.h */,
+				6BB586D620BD8EA400D459AF /* LGSideMenuBorderView.m */,
+				6BB586DB20BD8EA700D459AF /* LGSideMenuController.h */,
+				6BB586D720BD8EA500D459AF /* LGSideMenuController.m */,
+				6BB586D320BD8EA300D459AF /* LGSideMenuGesturesHandler.h */,
+				6BB586DC20BD8EA800D459AF /* LGSideMenuGesturesHandler.m */,
+				6BB586DD20BD8EA800D459AF /* LGSideMenuHelper.h */,
+				6BB586D420BD8EA300D459AF /* LGSideMenuHelper.m */,
+				6BB586E020BD8EAA00D459AF /* LGSideMenuSegue.h */,
+				6BB586DF20BD8EA900D459AF /* LGSideMenuSegue.m */,
+				6BB586DA20BD8EA700D459AF /* LGSideMenuView.h */,
+				6BB586DE20BD8EA900D459AF /* LGSideMenuView.m */,
+				6BB586D820BD8EA500D459AF /* UIViewController+LGSideMenuController.h */,
+				6BB586D920BD8EA600D459AF /* UIViewController+LGSideMenuController.m */,
+			);
+			path = LGSideMenu;
+			sourceTree = "<group>";
+		};
 		6BD299E32010D43E0064FD8F /* CCAvenue */ = {
 			isa = PBXGroup;
 			children = (
@@ -1409,6 +1462,7 @@
 				68B19CAD1FD018890088F3C8 /* Leaderboardselected@1x.png in Resources */,
 				68B19CAE1FD018890088F3C8 /* Leaderboardselected@2x.png in Resources */,
 				68B19CAF1FD018890088F3C8 /* Leaderboardselected@3x.png in Resources */,
+				6B5240C520BC1FFE0086FA09 /* Sample.storyboard in Resources */,
 				68B19CB01FD018890088F3C8 /* Advfilterdropdown@1x.png in Resources */,
 				68B19CB11FD018890088F3C8 /* Advfilterdropdown@2x.png in Resources */,
 				68B19CB21FD018890088F3C8 /* Advfilterdropdown@3x.png in Resources */,
@@ -1424,7 +1478,6 @@
 				6B51EA6220120A55003A2B72 /* star icon@2x.png in Resources */,
 				6B51EA6920120A55003A2B72 /* star icon@3x.png in Resources */,
 				683AAE121FCCA10900A6A4A5 /* Addpeople@1x.png in Resources */,
-				6BEA206620B2EAF7006E4B3A /* Main 2.storyboard in Resources */,
 				6B4CA2722016088800D04856 /* Pointsunselectlarge@1x.png in Resources */,
 				683AAE131FCCA10900A6A4A5 /* Addpeople@2x.png in Resources */,
 				6B51EA6520120A55003A2B72 /* star icon_plus@2x.png in Resources */,
@@ -1680,6 +1733,8 @@
 			files = (
 				6884D7BE1FA89DFA000BB968 /* ChangeNumberViewController.m in Sources */,
 				6B8CB2EF201B0BFF00821B89 /* EventImageTableViewCell.m in Sources */,
+				6BB586E620BD8EAA00D459AF /* LGSideMenuView.m in Sources */,
+				6BB586E320BD8EAA00D459AF /* LGSideMenuController.m in Sources */,
 				68BD56911FB9D7B9004FA846 /* SelectCityPageViewController.m in Sources */,
 				68F062E81FA261B100690483 /* ACFloatingTextField.m in Sources */,
 				6801D6041F9E155D000946A2 /* ViewController.m in Sources */,
@@ -1688,11 +1743,15 @@
 				68E0DFF21F9FD00B00CDBF6E /* LoginViewController.m in Sources */,
 				6B5910D12013887600CCDF37 /* LeaderBoardLoginPointsViewController.m in Sources */,
 				6801D60A1F9E155D000946A2 /* Heylaapp.xcdatamodeld in Sources */,
+				6BB586E720BD8EAA00D459AF /* LGSideMenuSegue.m in Sources */,
 				6BD299F52010E9D10064FD8F /* BookingHistoryViewController.m in Sources */,
 				6B51EA73201211CE003A2B72 /* AddingReviewViewController.m in Sources */,
 				6B4EE2A720209E2D006E9E8C /* SettingsViewController.m in Sources */,
 				68EADC601FBAD138008750B2 /* SelectCategoeryViewController.m in Sources */,
+				6BB586E120BD8EAA00D459AF /* LGSideMenuHelper.m in Sources */,
 				6B5910A72013721900CCDF37 /* LeaderBoardTableViewCell.m in Sources */,
+				6BB586E420BD8EAA00D459AF /* UIViewController+LGSideMenuController.m in Sources */,
+				6BB586ED20BD915400D459AF /* SideMenuMainViewController.m in Sources */,
 				6BD299D920106DE50064FD8F /* ReviewTicketBookingController.m in Sources */,
 				6BFFA77F200F5F9A001B5FBC /* BookingViewController.m in Sources */,
 				6811F94F1FCB54EA008D7EAD /* EventDetailViewController.m in Sources */,
@@ -1718,6 +1777,8 @@
 				6B51EA432011ED9A003A2B72 /* BookingHistoryDetailsTableViewCell.m in Sources */,
 				68F8C4471FBEECB300E17912 /* ForgotPasswordViewController.m in Sources */,
 				6BD299F22010D46F0064FD8F /* CCResultViewController.m in Sources */,
+				6BB586E520BD8EAA00D459AF /* LGSideMenuGesturesHandler.m in Sources */,
+				6BB586E220BD8EAA00D459AF /* LGSideMenuBorderView.m in Sources */,
 				6B51EA70201211B6003A2B72 /* EventReviewTableViewCell.m in Sources */,
 				6818707D1FB04754009B1E5A /* ProfileViewController.m in Sources */,
 				68FA39D81FC1AB23004C90E2 /* HomeViewController.m in Sources */,
@@ -1727,6 +1788,7 @@
 				6BD299EF2010D46F0064FD8F /* CCInitViewController.m in Sources */,
 				6B8CB2EC201B0BE900821B89 /* EventImageViewController.m in Sources */,
 				6BD299F82010E9F20064FD8F /* BookingHistoryTableViewCell.m in Sources */,
+				6BB586F020BD934900D459AF /* NavigationController.m in Sources */,
 				6B88945B2022032A00ADA598 /* AttendeesViewController.m in Sources */,
 				68FA94AB1FCD7CAF006652FE /* AdvanceFilterViewController.m in Sources */,
 			);
@@ -1864,6 +1926,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_ENTITLEMENTS = Heylaapp/Heylaapp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 257QV56PWA;
@@ -1917,6 +1980,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_ENTITLEMENTS = Heylaapp/Heylaapp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 257QV56PWA;

@@ -7,6 +7,7 @@
 //
 
 #import "SelectCategoeryViewController.h"
+#import "SideMenuMainViewController.h"
 
 @interface SelectCategoeryViewController ()
 {
@@ -21,9 +22,6 @@
     NSString *imageOne;
     NSString *imageTwo;
     NSUInteger size;
-    CLLocationManager *objLocationManager;
-    double latitude_UserLocation, longitude_UserLocation;
-    NSString *address;
 }
 @end
 
@@ -46,43 +44,6 @@
     self.collectionView.allowsMultipleSelection = YES;
     [self User];
     setValue= @"2";
-    objLocationManager = [[CLLocationManager alloc] init];
-    objLocationManager.delegate = self;
-    objLocationManager.distanceFilter = kCLDistanceFilterNone;
-    objLocationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
-    if ([objLocationManager respondsToSelector:@selector(requestWhenInUseAuthorization)])
-    {
-        [objLocationManager requestWhenInUseAuthorization];
-    }
-    [objLocationManager startUpdatingLocation];
-//    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    CLGeocoder *geocoder = [[CLGeocoder alloc] init] ;
-    [geocoder reverseGeocodeLocation:objLocationManager.location
-                   completionHandler:^(NSArray *placemarks, NSError *error)
-    {
-               NSLog(@"reverseGeocodeLocation:completionHandler: Completion Handler called!");
-               if (error)
-               {
-                   NSLog(@"Geocode failed with error: %@", error);
-                   return;
-               }
-               CLPlacemark *placemark = [placemarks objectAtIndex:0];
-               address = [NSString stringWithFormat:@"%@,%@,%@,%@,%@,%@",
-                     placemark.thoroughfare,
-                     placemark.locality,
-                     placemark.subLocality,
-                     placemark.administrativeArea,
-                     placemark.postalCode,
-                     placemark.country];
-                NSLog(@"%@", address);
-                NSArray *splitArray = [address componentsSeparatedByString:@","];
-                NSString *locatedCity = [splitArray objectAtIndex:1];
-                [[NSUserDefaults standardUserDefaults]setObject:locatedCity forKey:@"locatedCity"];
-//                [MBProgressHUD hideHUDForView:self.view animated:YES];
-
-           }];
-    
-    
 }
 -(void)User
 {
@@ -111,13 +72,13 @@
          if ([msg isEqualToString:@"View Categories"] && [status isEqualToString:@"success"])
          {
              NSArray *Categories = [responseObject objectForKey:@"Categories"];
-             size = [Categories count];
+             self->size = [Categories count];
              
-             [category_id removeAllObjects];
-             [category_name removeAllObjects];
-             [category_pic removeAllObjects];
-             [user_preference removeAllObjects];
-             [selectedValue removeAllObjects];
+             [self->category_id removeAllObjects];
+             [self->category_name removeAllObjects];
+             [self->category_pic removeAllObjects];
+             [self->user_preference removeAllObjects];
+             [self->selectedValue removeAllObjects];
              
              for (int i = 0; i < [Categories count]; i++)
              {
@@ -127,12 +88,12 @@
                  NSString *strCategory_pic = [dict objectForKey:@"category_pic"];
                  NSString *strUser_preference = [dict objectForKey:@"user_preference"];
                  
-                 [category_id addObject:strCategory_id];
-                 [category_name addObject:strCategory_name];
-                 [category_pic addObject:strCategory_pic];
-                 [user_preference addObject:strUser_preference];
+                 [self->category_id addObject:strCategory_id];
+                 [self->category_name addObject:strCategory_name];
+                 [self->category_pic addObject:strCategory_pic];
+                 [self->user_preference addObject:strUser_preference];
              }
-             [[NSUserDefaults standardUserDefaults]setObject:category_name forKey:@"preferenceName_Array"];
+             [[NSUserDefaults standardUserDefaults]setObject:self->category_name forKey:@"preferenceName_Array"];
              [self.collectionView reloadData];
          }
          else
@@ -355,7 +316,7 @@
 }
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
 {
-    return 0;
+    return -1;
 }
 - (IBAction)backBtn:(id)sender
 {
@@ -449,14 +410,30 @@
      {
 
          NSLog(@"%@",responseObject);
+         [MBProgressHUD hideHUDForView:self.view animated:YES];
          NSString *msg = [responseObject objectForKey:@"msg"];
          NSString *status = [responseObject objectForKey:@"status"];
-         [MBProgressHUD hideHUDForView:self.view animated:YES];
 
          if ([msg isEqualToString:@"Preference Updated"] && [status isEqualToString:@"success"])
          {
+             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+             UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"NavigationController"];
+             [navigationController setViewControllers:@[[storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"]]];
              
-             [self performSegueWithIdentifier:@"to_home" sender:self];
+             SideMenuMainViewController *sideMenuMainViewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"SideMenuMainViewController"]; //or
+             sideMenuMainViewController.rootViewController = navigationController;
+             [sideMenuMainViewController setupWithType:0];
+             self.window.rootViewController = navigationController;
+             [self.window makeKeyAndVisible];
+             
+             UIWindow *window = UIApplication.sharedApplication.delegate.window;
+             window.rootViewController = sideMenuMainViewController;
+             
+             [UIView transitionWithView:window
+                               duration:0.3
+                                options:UIViewAnimationOptionTransitionCrossDissolve
+                             animations:nil
+                             completion:nil];
          }
          else
          {

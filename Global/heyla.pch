@@ -66,4 +66,6 @@
 #import "AttendeesTableViewCell.h"
 #import "NearbyViewController.h"
 #import "ForgotPasswordOTPViewController.h"
+#import "SideMenuMainViewController.h"
+#import "NavigationController.h"
 #endif /* heyla_pch */

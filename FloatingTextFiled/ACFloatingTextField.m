@@ -211,8 +211,8 @@
         self.labelErrorPlaceholder.frame = frame;
 
         [UIView animateWithDuration:0.2 animations:^{
-            bottomLineView.frame  =  bottmLineFrame;
-            bottomLineView.backgroundColor = _errorLineColor;
+            self->bottomLineView.frame  =  bottmLineFrame;
+            self->bottomLineView.backgroundColor = self->_errorLineColor;
             CGRect labelFrame = self.labelErrorPlaceholder.frame;
             labelFrame.origin.y = 0;
             self.labelErrorPlaceholder.frame = labelFrame;
@@ -221,8 +221,8 @@
     }else{
     
         [UIView animateWithDuration:0.2 animations:^{
-            bottomLineView.frame  =  bottmLineFrame;
-            bottomLineView.backgroundColor = _errorLineColor;
+            self->bottomLineView.frame  =  bottmLineFrame;
+            self->bottomLineView.backgroundColor = self->_errorLineColor;
         }];
 
     }
@@ -282,7 +282,7 @@
         
         _labelPlaceholder.hidden = YES;
         [UIView animateWithDuration:0.2 animations:^{
-            bottomLineView.frame  =  bottmLineFrame;
+            self->bottomLineView.frame  =  bottmLineFrame;
         }];
         
         return;
@@ -293,9 +293,9 @@
     frame.size.height = 12;
 
     [UIView animateWithDuration:0.2 animations:^{
-        _labelPlaceholder.frame = frame;
-        _labelPlaceholder.font = [UIFont fontWithName:self.font.fontName size:15];
-        bottomLineView.frame  =  bottmLineFrame;
+        self->_labelPlaceholder.frame = frame;
+        self->_labelPlaceholder.font = [UIFont fontWithName:self.font.fontName size:15];
+        self->bottomLineView.frame  =  bottmLineFrame;
         
     }];
     
@@ -314,7 +314,7 @@
         self.labelPlaceholder.hidden = YES;
         self.labelPlaceholder.textColor = self.placeHolderColor;
         [UIView animateWithDuration:0.2 animations:^{
-            bottomLineView.frame  =  bottmLineFrame;
+            self->bottomLineView.frame  =  bottmLineFrame;
         }];
         
         return;
@@ -325,10 +325,10 @@
     CGRect frame = CGRectMake(5, 0, self.frame.size.width-5, self.frame.size.height);
     
     [UIView animateWithDuration:0.3 animations:^{
-        _labelPlaceholder.frame = frame;
-        _labelPlaceholder.font = self.font;
-        _labelPlaceholder.textColor = _placeHolderColor;
-        bottomLineView.frame  =  bottmLineFrame;
+        self->_labelPlaceholder.frame = frame;
+        self->_labelPlaceholder.font = self.font;
+        self->_labelPlaceholder.textColor = self->_placeHolderColor;
+        self->bottomLineView.frame  =  bottmLineFrame;
     } completion:^(BOOL finished) {
         self.labelPlaceholder.hidden = YES;
         self.placeholder = self.labelPlaceholder.text;

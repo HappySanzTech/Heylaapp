@@ -61,11 +61,11 @@
          NSString *status = [responseObject objectForKey:@"status"];
          if ([msg isEqualToString:@"View Booking attendees"] && [status isEqualToString:@"success"])
          {
-             [name removeAllObjects];
-             [email_id removeAllObjects];
-             [order_id removeAllObjects];
-             [mobile_no removeAllObjects];
-             [_id removeAllObjects];
+             [self->name removeAllObjects];
+             [self->email_id removeAllObjects];
+             [self->order_id removeAllObjects];
+             [self->mobile_no removeAllObjects];
+             [self->_id removeAllObjects];
              
              NSArray *Bookingattendees = [responseObject objectForKey:@"Bookingattendees"];
              for (int i = 0; i < [Bookingattendees count]; i++)
@@ -77,11 +77,11 @@
                  NSString *strorder_id = [dict objectForKey:@"order_id"];
                  NSString *strId = [dict objectForKey:@"id"];
                  
-                 [name addObject:strName];
-                 [email_id addObject:strEmail_id];
-                 [order_id addObject:strorder_id];
-                 [mobile_no addObject:strMobile_no];
-                 [_id addObject:strId];
+                 [self->name addObject:strName];
+                 [self->email_id addObject:strEmail_id];
+                 [self->order_id addObject:strorder_id];
+                 [self->mobile_no addObject:strMobile_no];
+                 [self->_id addObject:strId];
                  
              }
              

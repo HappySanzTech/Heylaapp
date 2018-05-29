@@ -79,8 +79,8 @@
             rsaKey = [NSString stringWithFormat:@"-----BEGIN PUBLIC KEY-----\n%@\n-----END PUBLIC KEY-----\n",rsaKey];
             NSLog(@"%@",rsaKey);
             
-            NSString *myRequestString = [NSString stringWithFormat:@"amount=%@&currency=%@",amount,currency];
-            NSLog(@"%@",amount);
+            NSString *myRequestString = [NSString stringWithFormat:@"amount=%@&currency=%@",self->amount,self->currency];
+            NSLog(@"%@",self->amount);
             CCTool *ccTool = [[CCTool alloc] init];
             NSString *encVal = [ccTool encryptRSA:myRequestString key:rsaKey];
             encVal = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL,
@@ -90,7 +90,7 @@
                                                                                            kCFStringEncodingUTF8 ));
             
             NSString *urlAsString = [NSString stringWithFormat:@"https://secure.ccavenue.com/transaction/initTrans"];
-            NSString *encryptedStr = [NSString stringWithFormat:@"merchant_id=%@&order_id=%@&redirect_url=%@&cancel_url=%@&enc_val=%@&access_code=%@",merchantId,orderId,redirectUrl,cancelUrl,encVal,accessCode];
+            NSString *encryptedStr = [NSString stringWithFormat:@"merchant_id=%@&order_id=%@&redirect_url=%@&cancel_url=%@&enc_val=%@&access_code=%@",self->merchantId,self->orderId,self->redirectUrl,self->cancelUrl,encVal,self->accessCode];
             
             NSData *myRequestData = [NSData dataWithBytes: [encryptedStr UTF8String] length: [encryptedStr length]];
             NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL: [NSURL URLWithString: urlAsString]];
@@ -101,7 +101,7 @@
             dispatch_async(dispatch_get_main_queue(),
                            ^{
                                [MBProgressHUD hideHUDForView:self.view animated:YES];
-                               [_viewWeb loadRequest:request];
+                               [self->_viewWeb loadRequest:request];
                            });
             
         }

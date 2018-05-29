@@ -75,7 +75,7 @@
     
     [eventCategoeryArray addObject:@"Select Event Category"];
     [eventCategoeryArray addObject:@"General"];
-    [eventCategoeryArray addObject:@"Hotspot"];
+    [eventCategoeryArray addObject:@"Popular"];
 
     preference = [[NSUserDefaults standardUserDefaults]objectForKey:@"preferenceName_Array"];
     eventCityArray = [[NSUserDefaults standardUserDefaults]objectForKey:@"cityName_Array"];

@@ -68,12 +68,12 @@
                  NSString *strid = [dict objectForKey:@"id"];
                  NSString *struser_name = [dict objectForKey:@"user_name"];
                  
-                 [comments addObject:strComments];
-                 [event_id addObject:strevent_id];
-                 [event_name addObject:strevent_name];
-                 [event_rating addObject:strevent_rating];
-                 [_id addObject:strid];
-                 [user_name addObject:struser_name];
+                 [self->comments addObject:strComments];
+                 [self->event_id addObject:strevent_id];
+                 [self->event_name addObject:strevent_name];
+                 [self->event_rating addObject:strevent_rating];
+                 [self->_id addObject:strid];
+                 [self->user_name addObject:struser_name];
 
              }
              [self.tableView reloadData];

@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <MapKit/MapKit.h>
-#import <CoreLocation/CoreLocation.h>
+#import "SideMenuMainViewController.h"
+
 @interface SelectCategoeryViewController : UIViewController<UICollectionViewDelegate,UICollectionViewDataSource,CLLocationManagerDelegate,MKMapViewDelegate>
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (nonatomic, strong) NSIndexPath *selectedItemIndexPath;
@@ -18,5 +18,6 @@
 - (IBAction)getStartBtn:(id)sender;
 @property (strong, nonatomic) IBOutlet UIButton *selectAll;
 @property (strong, nonatomic) IBOutlet UIImageView *selectAllImageView;
+@property (strong, nonatomic) UIWindow *window;
 
 @end

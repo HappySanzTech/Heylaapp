@@ -431,7 +431,7 @@
          {
              
              NSLog(@"%@",responseObject);
-             appDel.mobileNumber = newMobileNumber;
+             self->appDel.mobileNumber = newMobileNumber;
 
              [MBProgressHUD hideHUDForView:self.view animated:YES];
              NSString *msg = [responseObject objectForKey:@"msg"];

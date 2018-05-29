@@ -58,9 +58,9 @@
          {
              NSArray *Eventgallery = [responseObject objectForKey:@"Eventgallery"];
              
-             [event_banner removeAllObjects];
-             [event_id removeAllObjects];
-             [gallery_id removeAllObjects];
+             [self->event_banner removeAllObjects];
+             [self->event_id removeAllObjects];
+             [self->gallery_id removeAllObjects];
              
              for (int i = 0; i < [Eventgallery count]; i++)
              {
@@ -69,9 +69,9 @@
                  NSString *strevent_id = [dict objectForKey:@"event_id"];
                  NSString *strgallery_id = [dict objectForKey:@"gallery_id"];
                  
-                 [event_banner addObject:strImage];
-                 [event_id addObject:strevent_id];
-                 [gallery_id addObject:strgallery_id];
+                 [self->event_banner addObject:strImage];
+                 [self->event_id addObject:strevent_id];
+                 [self->gallery_id addObject:strgallery_id];
 
              }
              
@@ -90,8 +90,8 @@
              // Change the size of page view controller
              self.PageViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 30);
              
-             [self addChildViewController:PageViewController];
-             [self.view addSubview:PageViewController.view];
+             [self addChildViewController:self->PageViewController];
+             [self.view addSubview:self->PageViewController.view];
              [self.PageViewController didMoveToParentViewController:self];
           
          }

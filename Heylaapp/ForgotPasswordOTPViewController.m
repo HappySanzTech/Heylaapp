@@ -226,8 +226,8 @@
              
              if ([msg isEqualToString:@"Verification Successfully"] && [status isEqualToString:@"Success"])
              {
-                 appDel.user_Id = [responseObject objectForKey:@"user_id"];
-                 NSLog(@"%@",appDel.user_Id);
+                 self->appDel.user_Id = [responseObject objectForKey:@"user_id"];
+                 NSLog(@"%@",self->appDel.user_Id);
                  
                  
                      [self performSegueWithIdentifier:@"to_passwordPage" sender:self];

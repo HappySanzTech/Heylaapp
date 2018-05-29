@@ -401,44 +401,44 @@
              
              if ([msg isEqualToString:@"View Events"] && [status isEqualToString:@"success"])
              {
-                 Eventdetails = [responseObject objectForKey:@"Eventdetails"];
-                 [adv_status removeAllObjects];
-                 [advertisement removeAllObjects];
-                 [booking_status removeAllObjects];
-                 [category_id removeAllObjects];
-                 [city_name removeAllObjects];
-                 [contact_email removeAllObjects];
-                 [contact_person removeAllObjects];
-                 [country_name removeAllObjects];
-                 [description removeAllObjects];
-                 [end_date removeAllObjects];
-                 [event_address removeAllObjects];
-                 [event_banner removeAllObjects];
-                 [event_city removeAllObjects];
-                 [event_colour_scheme removeAllObjects];
-                 [event_country removeAllObjects];
-                 [event_id removeAllObjects];
-                 [event_latitude removeAllObjects];
-                 [event_longitude removeAllObjects];
-                 [event_name removeAllObjects];
-                 [event_status removeAllObjects];
-                 [event_type removeAllObjects];
-                 [event_venue removeAllObjects];
-                 [hotspot_status removeAllObjects];
-                 [popularity removeAllObjects];
-                 [primary_contact_no removeAllObjects];
-                 [secondary_contact_no removeAllObjects];
-                 [start_date removeAllObjects];
-                 [start_time removeAllObjects];
-                 [end_time removeAllObjects];
-                 [date_label removeAllObjects];
-                 [month_label removeAllObjects];
-                 [to_date_label removeAllObjects];
-                 [to_month_label removeAllObjects];
+                 self->Eventdetails = [responseObject objectForKey:@"Eventdetails"];
+                 [self->adv_status removeAllObjects];
+                 [self->advertisement removeAllObjects];
+                 [self->booking_status removeAllObjects];
+                 [self->category_id removeAllObjects];
+                 [self->city_name removeAllObjects];
+                 [self->contact_email removeAllObjects];
+                 [self->contact_person removeAllObjects];
+                 [self->country_name removeAllObjects];
+                 [self->description removeAllObjects];
+                 [self->end_date removeAllObjects];
+                 [self->event_address removeAllObjects];
+                 [self->event_banner removeAllObjects];
+                 [self->event_city removeAllObjects];
+                 [self->event_colour_scheme removeAllObjects];
+                 [self->event_country removeAllObjects];
+                 [self->event_id removeAllObjects];
+                 [self->event_latitude removeAllObjects];
+                 [self->event_longitude removeAllObjects];
+                 [self->event_name removeAllObjects];
+                 [self->event_status removeAllObjects];
+                 [self->event_type removeAllObjects];
+                 [self->event_venue removeAllObjects];
+                 [self->hotspot_status removeAllObjects];
+                 [self->popularity removeAllObjects];
+                 [self->primary_contact_no removeAllObjects];
+                 [self->secondary_contact_no removeAllObjects];
+                 [self->start_date removeAllObjects];
+                 [self->start_time removeAllObjects];
+                 [self->end_time removeAllObjects];
+                 [self->date_label removeAllObjects];
+                 [self->month_label removeAllObjects];
+                 [self->to_date_label removeAllObjects];
+                 [self->to_month_label removeAllObjects];
                  
-                 for(int i = 0;i < [Eventdetails count];i++)
+                 for(int i = 0;i < [self->Eventdetails count];i++)
                  {
-                     NSDictionary *dict = [Eventdetails objectAtIndex:i];
+                     NSDictionary *dict = [self->Eventdetails objectAtIndex:i];
                      NSString *strAdv_status = [dict objectForKey:@"adv_status"];
                      NSString *strAdvertisement = [dict objectForKey:@"advertisement"];
                      NSString *strBooking_status = [dict objectForKey:@"booking_status"];
@@ -470,75 +470,75 @@
                      NSString *strStart_time = [dict objectForKey:@"start_time"];
                      NSString *strEnd_time = [dict objectForKey:@"end_time"];
                      
-                     dateFormatter = [[NSDateFormatter alloc] init];
-                     [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-                     date = [[NSDate alloc] init];
-                     date = [dateFormatter dateFromString:strStart_date];
+                     self->dateFormatter = [[NSDateFormatter alloc] init];
+                     [self->dateFormatter setDateFormat:@"yyyy-MM-dd"];
+                     self->date = [[NSDate alloc] init];
+                     self->date = [self->dateFormatter dateFromString:strStart_date];
                      // converting into our required date format
-                     [dateFormatter setDateFormat:@"EEEE, MMM dd, yyyy"];
-                     reqDateString = [dateFormatter stringFromDate:date];
-                     NSLog(@"date is %@", reqDateString);
+                     [self->dateFormatter setDateFormat:@"EEEE, MMM dd, yyyy"];
+                     self->reqDateString = [self->dateFormatter stringFromDate:self->date];
+                     NSLog(@"date is %@",self->reqDateString);
                      
-                     testArray = [reqDateString componentsSeparatedByString:@" "];
-                     strdate = [testArray objectAtIndex:1];
-                     str = [testArray objectAtIndex:2];
-                     samp = [str componentsSeparatedByString:@","];
-                     strMonth = [samp objectAtIndex:0];
+                     self->testArray = [self->reqDateString componentsSeparatedByString:@" "];
+                     self->strdate = [self->testArray objectAtIndex:1];
+                     self->str = [self->testArray objectAtIndex:2];
+                     self->samp = [self->str componentsSeparatedByString:@","];
+                     self->strMonth = [self->samp objectAtIndex:0];
                      
-                     dateFormatter = [[NSDateFormatter alloc] init];
-                     [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-                     date = [[NSDate alloc] init];
-                     date = [dateFormatter dateFromString:strend_date];
+                     self->dateFormatter = [[NSDateFormatter alloc] init];
+                     [self->dateFormatter setDateFormat:@"yyyy-MM-dd"];
+                     self->date = [[NSDate alloc] init];
+                     self->date = [self->dateFormatter dateFromString:strend_date];
                      // converting into our required date format
-                     [dateFormatter setDateFormat:@"EEEE, MMM dd, yyyy"];
-                     reqDateString = [dateFormatter stringFromDate:date];
-                     NSLog(@"date is %@", reqDateString);
+                     [self->dateFormatter setDateFormat:@"EEEE, MMM dd, yyyy"];
+                     self->reqDateString = [self->dateFormatter stringFromDate:self->date];
+                     NSLog(@"date is %@",self->reqDateString);
                      
-                     to_testArray = [reqDateString componentsSeparatedByString:@" "];
-                     strtodate = [to_testArray objectAtIndex:1];
-                     str = [to_testArray objectAtIndex:2];
-                     samp = [str componentsSeparatedByString:@","];
-                     strToMonth = [samp objectAtIndex:0];
+                     self->to_testArray = [self->reqDateString componentsSeparatedByString:@" "];
+                     self->strtodate = [self->to_testArray objectAtIndex:1];
+                     self->str = [self->to_testArray objectAtIndex:2];
+                     self->samp = [self->str componentsSeparatedByString:@","];
+                     self->strToMonth = [self->samp objectAtIndex:0];
                      
-                     [adv_status addObject:strAdv_status];
-                     [advertisement addObject:strAdvertisement];
-                     [booking_status addObject:strBooking_status];
-                     [category_id addObject:strCategory_id];
-                     [city_name addObject:strCity_name];
-                     [contact_email addObject:strContact_email];
-                     [contact_person addObject:strContact_person];
-                     [country_name addObject:strCountry_name];
-                     [description addObject:strDescription];
-                     [end_date addObject:strEnd_date];
-                     [event_address addObject:strEvent_address];
-                     [event_banner addObject:strEvent_banner];
-                     [event_city addObject:strEvent_city];
-                     [event_colour_scheme addObject:strEvent_colour_scheme];
-                     [event_country addObject:strEvent_country];
-                     [event_id addObject:strEvent_id];
-                     [event_latitude addObject:strEvent_latitude];
-                     [event_longitude addObject:strEvent_longitude];
-                     [event_name addObject:strEvent_name];
-                     [event_status addObject:strEvent_status];
-                     [event_type addObject:strEvent_type];
-                     [event_venue addObject:strEvent_venue];
-                     [hotspot_status addObject:stHotspot_status];
-                     [popularity addObject:strPopularity];
-                     [primary_contact_no addObject:strPrimary_contact_no];
-                     [secondary_contact_no addObject:strSecondary_contact_no];
-                     [start_date addObject:strStart_date];
-                     [start_time addObject:strStart_time];
-                     [end_time addObject:strEnd_time];
-                     [date_label addObject:strdate];
-                     [month_label addObject:strMonth];
-                     [to_date_label addObject:strtodate];
-                     [to_month_label addObject:strToMonth];
+                     [self->adv_status addObject:strAdv_status];
+                     [self->advertisement addObject:strAdvertisement];
+                     [self->booking_status addObject:strBooking_status];
+                     [self->category_id addObject:strCategory_id];
+                     [self->city_name addObject:strCity_name];
+                     [self->contact_email addObject:strContact_email];
+                     [self->contact_person addObject:strContact_person];
+                     [self->country_name addObject:strCountry_name];
+                     [self->description addObject:strDescription];
+                     [self->end_date addObject:strEnd_date];
+                     [self->event_address addObject:strEvent_address];
+                     [self->event_banner addObject:strEvent_banner];
+                     [self->event_city addObject:strEvent_city];
+                     [self->event_colour_scheme addObject:strEvent_colour_scheme];
+                     [self->event_country addObject:strEvent_country];
+                     [self->event_id addObject:strEvent_id];
+                     [self->event_latitude addObject:strEvent_latitude];
+                     [self->event_longitude addObject:strEvent_longitude];
+                     [self->event_name addObject:strEvent_name];
+                     [self->event_status addObject:strEvent_status];
+                     [self->event_type addObject:strEvent_type];
+                     [self->event_venue addObject:strEvent_venue];
+                     [self->hotspot_status addObject:stHotspot_status];
+                     [self->popularity addObject:strPopularity];
+                     [self->primary_contact_no addObject:strPrimary_contact_no];
+                     [self->secondary_contact_no addObject:strSecondary_contact_no];
+                     [self->start_date addObject:strStart_date];
+                     [self->start_time addObject:strStart_time];
+                     [self->end_time addObject:strEnd_time];
+                     [self->date_label addObject:self->strdate];
+                     [self->month_label addObject:self->strMonth];
+                     [self->to_date_label addObject:self->strtodate];
+                     [self->to_month_label addObject:self->strToMonth];
                  }
                  
-                 if ([mapViewFlag isEqualToString:@"YES"])
+                 if ([self->mapViewFlag isEqualToString:@"YES"])
                  {
-                     _mapView = [[MKMapView alloc]initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,self.view.bounds.size.height)];
-                     [self.tableView addSubview:_mapView];
+                     self->_mapView = [[MKMapView alloc]initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,self.view.bounds.size.height)];
+                     [self.tableView addSubview:self->_mapView];
                      [self loadUserLocation];
                  }
                  else
@@ -744,13 +744,13 @@
                                else
                                {
                                    self.tipsLabel.text = [NSString stringWithFormat:@"Click at index %d", (int)index];
-                                   mapViewFlag = @"NO";
+                                   self->mapViewFlag = @"NO";
                                    [self loadUserLocation];
                                }
                            }
                            else if (index == 2)
                            {
-                               if (selectedDistance.length == 0)
+                               if (self->selectedDistance.length == 0)
                                {
                                    
                                    UIAlertController *alert= [UIAlertController
@@ -772,8 +772,8 @@
                                else
                                {
                                    self.tipsLabel.text = [NSString stringWithFormat:@"Click at index %d", (int)index];
-                                   [_mapView setMapType:MKMapTypeStandard];
-                                   mapViewFlag = @"YES";
+                                   [self->_mapView setMapType:MKMapTypeStandard];
+                                   self->mapViewFlag = @"YES";
                                    [self loadUserLocation];
                                }
 

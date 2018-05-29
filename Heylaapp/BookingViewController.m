@@ -110,9 +110,9 @@
                  [dfTwo setDateFormat:@"MMMM dd YYYY"];
                  NSString *strDate = [dfTwo stringFromDate:date];
                  
-                 [monthName addObject:strDate];
+                 [self->monthName addObject:strDate];
              }
-                 [monthName insertObject:@"Select the Date" atIndex:0];
+             [self->monthName insertObject:@"Select the Date" atIndex:0];
          }
          else
          {
@@ -309,8 +309,8 @@
              NSString *msg = [responseObject objectForKey:@"msg"];
              NSString *status = [responseObject objectForKey:@"status"];
              
-             [Eventtime removeAllObjects];
-             [Event_time_id removeAllObjects];
+             [self->Eventtime removeAllObjects];
+             [self->Event_time_id removeAllObjects];
              if ([msg isEqualToString:@"View Booking Timings"] && [status isEqualToString:@"success"])
              {
                  NSArray *Eventtiming = [responseObject objectForKey:@"Eventtiming"];
@@ -319,10 +319,10 @@
                      NSDictionary *dict = [Eventtiming objectAtIndex:i];
                      NSString *str = [dict objectForKey:@"show_time"];
                      NSString *id_time = [dict objectForKey:@"id"];
-                     [Eventtime addObject:str];
-                     [Event_time_id addObject:id_time];
+                     [self->Eventtime addObject:str];
+                     [self->Event_time_id addObject:id_time];
                  }
-                 [Eventtime insertObject:@"Select Time" atIndex:0];
+                 [self->Eventtime insertObject:@"Select Time" atIndex:0];
                  
              }
              else
@@ -416,8 +416,8 @@
              
              if ([msg isEqualToString:@"Booking Plans"] && [status isEqualToString:@"success"])
              {
-                 [plan_name removeAllObjects];
-                 [seat_rate removeAllObjects];
+                 [self->plan_name removeAllObjects];
+                 [self->seat_rate removeAllObjects];
                  NSArray *Plandetails = [responseObject objectForKey:@"Plandetails"];
                  for (int i = 0; i < [Plandetails count]; i++)
                  {
@@ -430,10 +430,10 @@
                      NSString *strshow_date = [dict objectForKey:@"show_date"];
                      NSString *strshow_time = [dict objectForKey:@"show_time"];
                      NSLog(@"%@%@%@",strevent_id,strshow_date,strshow_time);
-                     [plan_id addObject:strplan_id];
-                     [plan_name addObject:strplan_name];
-                     [seat_available addObject:strseat_available];
-                     [seat_rate addObject:strseat_rate];
+                     [self->plan_id addObject:strplan_id];
+                     [self->plan_name addObject:strplan_name];
+                     [self->seat_available addObject:strseat_available];
+                     [self->seat_rate addObject:strseat_rate];
                  }
                  self.tableView.hidden = NO;
                  [self.tableView reloadData];

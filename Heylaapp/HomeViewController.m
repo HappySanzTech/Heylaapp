@@ -56,7 +56,8 @@
     
     NSDateFormatter *dateFormatter;
     NSDate *date;
-    NSString *reqDateString;
+    NSString *reqStartDateString;
+    NSString *reqEndDateString;
     NSArray *testArray;
     NSArray *to_testArray;
     NSString *strdate;
@@ -124,6 +125,15 @@
     mapViewFlag = @"0";
     searchFlag = @"NO";
     hotspotFlag = @"NO";
+    CGRect frame = CGRectMake (self.daySegment.frame.origin.x,self.daySegment.frame.origin.y,self.daySegment.frame.size.width,35);
+    self.daySegment.frame = frame;
+    self.daySegment.backgroundColor = [UIColor whiteColor];
+    [[UISegmentedControl appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor blackColor]} forState:UIControlStateSelected];
+    self.daySegment.tintColor = [UIColor grayColor];
+    self.daySegment.selectedSegmentIndex = 0;
+    self.daySegment.layer.cornerRadius = 5.0;
+    self.daySegment.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.daySegment.layer.masksToBounds = YES;
     [self setupSegmentControl];
     self.searchController.searchBar.hidden = NO;
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:Nil];
@@ -163,36 +173,46 @@
         {
             if (![appDel.selected_City isEqualToString:locatedCity])
             {
-                NSString *alertMsg = [NSString stringWithFormat:@"%@ %@ %@",@"New events are available for",locatedCity,@"would you like to change city?"];
-                UIAlertController *alert= [UIAlertController
-                                           alertControllerWithTitle:@"City change"
-                                           message:alertMsg
-                                           preferredStyle:UIAlertControllerStyleAlert];
-                
-                UIAlertAction *ok = [UIAlertAction
-                                     actionWithTitle:@"OK"
-                                     style:UIAlertActionStyleDefault
-                                     handler:^(UIAlertAction * action)
-                                     {
-                                         appDel.selected_City = locatedCity;
-                                         NSArray *Cityid_Arr = [[NSUserDefaults standardUserDefaults] objectForKey:@"cityID_Array"];
-                                         NSUInteger city_Id_Index = [city indexOfObject:locatedCity];
-                                         appDel.selected_City_Id = Cityid_Arr[city_Id_Index];
-                                         [[NSUserDefaults standardUserDefaults]setObject:appDel.selected_City_Id forKey:@"stat_city_id"];
-                                         [self generalEventsList];
-                                     }];
-                
-                [alert addAction:ok];
-                UIAlertAction *cancel = [UIAlertAction
-                                         actionWithTitle:@"Cancel"
+                NSString *firstTime = [[NSUserDefaults standardUserDefaults]objectForKey:@"for_Alert"];
+                if ([firstTime isEqualToString:@"YES"])
+                {
+                    NSString *alertMsg = [NSString stringWithFormat:@"%@ %@ %@",@"New events are available for",locatedCity,@"would you like to change city?"];
+                    UIAlertController *alert= [UIAlertController
+                                               alertControllerWithTitle:@"City change"
+                                               message:alertMsg
+                                               preferredStyle:UIAlertControllerStyleAlert];
+                    
+                    UIAlertAction *ok = [UIAlertAction
+                                         actionWithTitle:@"OK"
                                          style:UIAlertActionStyleDefault
                                          handler:^(UIAlertAction * action)
                                          {
+                                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"for_Alert"];
+                                             self->appDel.selected_City = locatedCity;
+                                             NSArray *Cityid_Arr = [[NSUserDefaults standardUserDefaults] objectForKey:@"cityID_Array"];
+                                             NSUInteger city_Id_Index = [city indexOfObject:locatedCity];
+                                             self->appDel.selected_City_Id = Cityid_Arr[city_Id_Index];
+                                             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.selected_City_Id forKey:@"stat_city_id"];
                                              [self generalEventsList];
                                          }];
-                
-                [alert addAction:cancel];
-                [self presentViewController:alert animated:YES completion:nil];
+                    
+                    [alert addAction:ok];
+                    UIAlertAction *cancel = [UIAlertAction
+                                             actionWithTitle:@"Cancel"
+                                             style:UIAlertActionStyleDefault
+                                             handler:^(UIAlertAction * action)
+                                             {
+                                                 [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"for_Alert"];
+                                                 [self generalEventsList];
+                                             }];
+                    
+                    [alert addAction:cancel];
+                    [self presentViewController:alert animated:YES completion:nil];
+                }
+                else
+                {
+                    [self generalEventsList];
+                }
             }
             else
             {
@@ -200,6 +220,8 @@
             }
         }
     }
+    self.search.tintColor = [UIColor whiteColor];
+    self.advanceFilter.tintColor = [UIColor whiteColor];
 }
 - (void)loadUserLocation
 {
@@ -272,12 +294,12 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSString *user_id = [[NSUserDefaults standardUserDefaults]objectForKey:@"stat_user_id"];
-    appDel.user_Id = user_id;
+    self->appDel.user_Id = user_id;
     NSString *user_type = [[NSUserDefaults standardUserDefaults]objectForKey:@"stat_user_type"];
-    appDel.user_type = user_type;
+    self->appDel.user_type = user_type;
     NSString *city_id = [[NSUserDefaults standardUserDefaults]objectForKey:@"stat_city_id"];
-    appDel.selected_City_Id = city_id;
-    appDel.event_type = @"Favourite";
+    self->appDel.selected_City_Id = city_id;
+    self->appDel.event_type = @"Favourite";
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
     [parameters setObject:@"General" forKey:@"event_type"];
     [parameters setObject:user_id forKey:@"user_id"];
@@ -300,47 +322,47 @@
          
          if ([msg isEqualToString:@"View Events"] && [status isEqualToString:@"success"])
          {
-             appDel.event_categoery_Ref = @"general";
-             Eventdetails = [responseObject objectForKey:@"Eventdetails"];
-             _eventArray = [responseObject objectForKey:@"Eventdetails"];
+             self->appDel.event_categoery_Ref = @"general";
+             self->Eventdetails = [responseObject objectForKey:@"Eventdetails"];
+             self->_eventArray = [responseObject objectForKey:@"Eventdetails"];
              
-             [adv_status removeAllObjects];
-             [advertisement removeAllObjects];
-             [booking_status removeAllObjects];
-             [category_id removeAllObjects];
-             [city_name removeAllObjects];
-             [contact_email removeAllObjects];
-             [contact_person removeAllObjects];
-             [country_name removeAllObjects];
-             [description removeAllObjects];
-             [end_date removeAllObjects];
-             [event_address removeAllObjects];
-             [event_banner removeAllObjects];
-             [event_city removeAllObjects];
-             [event_colour_scheme removeAllObjects];
-             [event_country removeAllObjects];
-             [event_id removeAllObjects];
-             [event_latitude removeAllObjects];
-             [event_longitude removeAllObjects];
-             [event_name removeAllObjects];
-             [event_status removeAllObjects];
-             [event_type removeAllObjects];
-             [event_venue removeAllObjects];
-             [hotspot_status removeAllObjects];
-             [popularity removeAllObjects];
-             [primary_contact_no removeAllObjects];
-             [secondary_contact_no removeAllObjects];
-             [start_date removeAllObjects];
-             [start_time removeAllObjects];
-             [end_time removeAllObjects];
-             [date_label removeAllObjects];
-             [month_label removeAllObjects];
-             [to_date_label removeAllObjects];
-             [to_month_label removeAllObjects];
-             
-             for(int i = 0;i < [Eventdetails count];i++)
+             [self->adv_status removeAllObjects];
+             [self->advertisement removeAllObjects];
+             [self->booking_status removeAllObjects];
+             [self->category_id removeAllObjects];
+             [self->city_name removeAllObjects];
+             [self->contact_email removeAllObjects];
+             [self->contact_person removeAllObjects];
+             [self->country_name removeAllObjects];
+             [self->description removeAllObjects];
+             [self->end_date removeAllObjects];
+             [self->event_address removeAllObjects];
+             [self->event_banner removeAllObjects];
+             [self->event_city removeAllObjects];
+             [self->event_colour_scheme removeAllObjects];
+             [self->event_country removeAllObjects];
+             [self->event_id removeAllObjects];
+             [self->event_latitude removeAllObjects];
+             [self->event_longitude removeAllObjects];
+             [self->event_name removeAllObjects];
+             [self->event_status removeAllObjects];
+             [self->event_type removeAllObjects];
+             [self->event_venue removeAllObjects];
+             [self->hotspot_status removeAllObjects];
+             [self->popularity removeAllObjects];
+             [self->primary_contact_no removeAllObjects];
+             [self->secondary_contact_no removeAllObjects];
+             [self->start_date removeAllObjects];
+             [self->start_time removeAllObjects];
+             [self->end_time removeAllObjects];
+//             [self->date_label removeAllObjects];
+//             [self->month_label removeAllObjects];
+//             [self->to_date_label removeAllObjects];
+//             [self->to_month_label removeAllObjects];
+//
+             for(int i = 0;i < [self->Eventdetails count];i++)
              {
-                 NSDictionary *dict = [Eventdetails objectAtIndex:i];
+                 NSDictionary *dict = [self->Eventdetails objectAtIndex:i];
                  NSString *strAdv_status = [dict objectForKey:@"adv_status"];
                  NSString *strAdvertisement = [dict objectForKey:@"advertisement"];
                  NSString *strBooking_status = [dict objectForKey:@"booking_status"];
@@ -350,7 +372,7 @@
                  NSString *strContact_person = [dict objectForKey:@"contact_person"];
                  NSString *strCountry_name = [dict objectForKey:@"country_name"];
                  NSString *strDescription = [dict objectForKey:@"description"];
-                 NSString *strEnd_date = [dict objectForKey:@"end_date"];
+//                 NSString *strEnd_date = [dict objectForKey:@"end_date"];
                  NSString *strEvent_address = [dict objectForKey:@"event_address"];
                  NSString *strEvent_banner = [dict objectForKey:@"event_banner"];
                  NSString *strEvent_city = [dict objectForKey:@"event_city"];
@@ -372,74 +394,61 @@
                  NSString *strStart_time = [dict objectForKey:@"start_time"];
                  NSString *strEnd_time = [dict objectForKey:@"end_time"];
 
-                 dateFormatter = [[NSDateFormatter alloc] init];
-                 [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-                 date = [[NSDate alloc] init];
-                 date = [dateFormatter dateFromString:strStart_date];
+                 self->dateFormatter = [[NSDateFormatter alloc] init];
+                 [self->dateFormatter setDateFormat:@"yyyy-MM-dd"];
+                 self->date = [[NSDate alloc] init];
+                 self->date = [self->dateFormatter dateFromString:strStart_date];
                  // converting into our required date format
-                 [dateFormatter setDateFormat:@"EEEE, MMM dd, yyyy"];
-                 reqDateString = [dateFormatter stringFromDate:date];
-                 NSLog(@"date is %@", reqDateString);
+                 [self->dateFormatter setDateFormat:@"dd MMM yyyy"];
+                 self->reqStartDateString = [self->dateFormatter stringFromDate:self->date];
+                 NSLog(@"date is %@", self->reqStartDateString);
                  
-                 testArray = [reqDateString componentsSeparatedByString:@" "];
-                 strdate = [testArray objectAtIndex:1];
-                 str = [testArray objectAtIndex:2];
-                 samp = [str componentsSeparatedByString:@","];
-                 strMonth = [samp objectAtIndex:0];
-                 
-                 
-                 dateFormatter = [[NSDateFormatter alloc] init];
-                 [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-                 date = [[NSDate alloc] init];
-                 date = [dateFormatter dateFromString:strend_date];
+                 self->dateFormatter = [[NSDateFormatter alloc] init];
+                 [self->dateFormatter setDateFormat:@"yyyy-MM-dd"];
+                 self->date = [[NSDate alloc] init];
+                 self->date = [self->dateFormatter dateFromString:strend_date];
                  // converting into our required date format
-                 [dateFormatter setDateFormat:@"EEEE, MMM dd, yyyy"];
-                 reqDateString = [dateFormatter stringFromDate:date];
-                 NSLog(@"date is %@", reqDateString);
+                 [self->dateFormatter setDateFormat:@"dd MMM yyyy"];
+                 self->reqEndDateString = [self->dateFormatter stringFromDate:self->date];
+                 NSLog(@"date is %@", self->reqEndDateString);
                  
-                 to_testArray = [reqDateString componentsSeparatedByString:@" "];
-                 strtodate = [to_testArray objectAtIndex:1];
-                 str = [to_testArray objectAtIndex:2];
-                 samp = [str componentsSeparatedByString:@","];
-                 strToMonth = [samp objectAtIndex:0];
-                 
-                 [adv_status addObject:strAdv_status];
-                 [advertisement addObject:strAdvertisement];
-                 [booking_status addObject:strBooking_status];
-                 [category_id addObject:strCategory_id];
-                 [city_name addObject:strCity_name];
-                 [contact_email addObject:strContact_email];
-                 [contact_person addObject:strContact_person];
-                 [country_name addObject:strCountry_name];
-                 [description addObject:strDescription];
-                 [end_date addObject:strEnd_date];
-                 [event_address addObject:strEvent_address];
-                 [event_banner addObject:strEvent_banner];
-                 [event_city addObject:strEvent_city];
-                 [event_colour_scheme addObject:strEvent_colour_scheme];
-                 [event_country addObject:strEvent_country];
-                 [event_id addObject:strEvent_id];
-                 [event_latitude addObject:strEvent_latitude];
-                 [event_longitude addObject:strEvent_longitude];
-                 [event_name addObject:strEvent_name];
-                 [event_status addObject:strEvent_status];
-                 [event_type addObject:strEvent_type];
-                 [event_venue addObject:strEvent_venue];
-                 [hotspot_status addObject:stHotspot_status];
-                 [popularity addObject:strPopularity];
-                 [primary_contact_no addObject:strPrimary_contact_no];
-                 [secondary_contact_no addObject:strSecondary_contact_no];
-                 [start_date addObject:strStart_date];
-                 [start_time addObject:strStart_time];
-                 [end_time addObject:strEnd_time];
-                 [date_label addObject:strdate];
-                 [month_label addObject:strMonth];
-                 [to_date_label addObject:strtodate];
-                 [to_month_label addObject:strToMonth];
+                 [self->adv_status addObject:strAdv_status];
+                 [self->advertisement addObject:strAdvertisement];
+                 [self->booking_status addObject:strBooking_status];
+                 [self->category_id addObject:strCategory_id];
+                 [self->city_name addObject:strCity_name];
+                 [self->contact_email addObject:strContact_email];
+                 [self->contact_person addObject:strContact_person];
+                 [self->country_name addObject:strCountry_name];
+                 [self->description addObject:strDescription];
+                 [self->end_date addObject:self->reqEndDateString];
+                 [self->event_address addObject:strEvent_address];
+                 [self->event_banner addObject:strEvent_banner];
+                 [self->event_city addObject:strEvent_city];
+                 [self->event_colour_scheme addObject:strEvent_colour_scheme];
+                 [self->event_country addObject:strEvent_country];
+                 [self->event_id addObject:strEvent_id];
+                 [self->event_latitude addObject:strEvent_latitude];
+                 [self->event_longitude addObject:strEvent_longitude];
+                 [self->event_name addObject:strEvent_name];
+                 [self->event_status addObject:strEvent_status];
+                 [self->event_type addObject:strEvent_type];
+                 [self->event_venue addObject:strEvent_venue];
+                 [self->hotspot_status addObject:stHotspot_status];
+                 [self->popularity addObject:strPopularity];
+                 [self->primary_contact_no addObject:strPrimary_contact_no];
+                 [self->secondary_contact_no addObject:strSecondary_contact_no];
+                 [self->start_date addObject:self->reqStartDateString];
+                 [self->start_time addObject:strStart_time];
+                 [self->end_time addObject:strEnd_time];
+//                 [self->date_label addObject:self->strdate];
+//                 [self->month_label addObject:self->strMonth];
+//                 [self->to_date_label addObject:self->strtodate];
+//                 [self->to_month_label addObject:self->strToMonth];
 
              }
              
-             if ([mapViewFlag isEqualToString:@"YES"])
+             if ([self->mapViewFlag isEqualToString:@"YES"])
              {
                  [self loadUserLocation];
 
@@ -447,7 +456,7 @@
              else
              {
                  self.tableView.hidden = NO;
-                 hotspotFlag = @"NO";
+                 self->hotspotFlag = @"NO";
                  [self.tableView reloadData];
 
              }
@@ -482,12 +491,12 @@
 {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     self.searchController.searchBar.hidden = NO;
-    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
     [parameters setObject:@"Popularity" forKey:@"event_type"];
-    [parameters setObject:appDel.user_Id forKey:@"user_id"];
-    [parameters setObject:appDel.user_type forKey:@"user_type"];
-    [parameters setObject:appDel.selected_City_Id forKey:@"event_city_id"];
+    [parameters setObject:self->appDel.user_Id forKey:@"user_id"];
+    [parameters setObject:self->appDel.user_type forKey:@"user_type"];
+    [parameters setObject:self->appDel.selected_City_Id forKey:@"event_city_id"];
     
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
@@ -508,47 +517,47 @@
          
          if ([msg isEqualToString:@"View Events"] && [status isEqualToString:@"success"])
          {
-             appDel.event_categoery_Ref = @"popular";
-             Eventdetails = [responseObject objectForKey:@"Eventdetails"];
-             _eventArray = [responseObject objectForKey:@"Eventdetails"];
+             self->appDel.event_categoery_Ref = @"popular";
+             self->Eventdetails = [responseObject objectForKey:@"Eventdetails"];
+             self->_eventArray = [responseObject objectForKey:@"Eventdetails"];
 
-             [adv_status removeAllObjects];
-             [advertisement removeAllObjects];
-             [booking_status removeAllObjects];
-             [category_id removeAllObjects];
-             [city_name removeAllObjects];
-             [contact_email removeAllObjects];
-             [contact_person removeAllObjects];
-             [country_name removeAllObjects];
-             [description removeAllObjects];
-             [end_date removeAllObjects];
-             [event_address removeAllObjects];
-             [event_banner removeAllObjects];
-             [event_city removeAllObjects];
-             [event_colour_scheme removeAllObjects];
-             [event_country removeAllObjects];
-             [event_id removeAllObjects];
-             [event_latitude removeAllObjects];
-             [event_longitude removeAllObjects];
-             [event_name removeAllObjects];
-             [event_status removeAllObjects];
-             [event_type removeAllObjects];
-             [event_venue removeAllObjects];
-             [hotspot_status removeAllObjects];
-             [popularity removeAllObjects];
-             [primary_contact_no removeAllObjects];
-             [secondary_contact_no removeAllObjects];
-             [start_date removeAllObjects];
-             [start_time removeAllObjects];
-             [end_time removeAllObjects];
-             [date_label removeAllObjects];
-             [month_label removeAllObjects];
-             [to_date_label removeAllObjects];
-             [to_month_label removeAllObjects];
+             [self->adv_status removeAllObjects];
+             [self->advertisement removeAllObjects];
+             [self->booking_status removeAllObjects];
+             [self->category_id removeAllObjects];
+             [self->city_name removeAllObjects];
+             [self->contact_email removeAllObjects];
+             [self->contact_person removeAllObjects];
+             [self->country_name removeAllObjects];
+             [self->description removeAllObjects];
+             [self->end_date removeAllObjects];
+             [self->event_address removeAllObjects];
+             [self->event_banner removeAllObjects];
+             [self->event_city removeAllObjects];
+             [self->event_colour_scheme removeAllObjects];
+             [self->event_country removeAllObjects];
+             [self->event_id removeAllObjects];
+             [self->event_latitude removeAllObjects];
+             [self->event_longitude removeAllObjects];
+             [self->event_name removeAllObjects];
+             [self->event_status removeAllObjects];
+             [self->event_type removeAllObjects];
+             [self->event_venue removeAllObjects];
+             [self->hotspot_status removeAllObjects];
+             [self->popularity removeAllObjects];
+             [self->primary_contact_no removeAllObjects];
+             [self->secondary_contact_no removeAllObjects];
+             [self->start_date removeAllObjects];
+             [self->start_time removeAllObjects];
+             [self->end_time removeAllObjects];
+//             [self->date_label removeAllObjects];
+//             [self->month_label removeAllObjects];
+//             [self->to_date_label removeAllObjects];
+//             [self->to_month_label removeAllObjects];
              
-             for(int i = 0;i < [Eventdetails count];i++)
+             for(int i = 0;i < [self->Eventdetails count];i++)
              {
-                 NSDictionary *dict = [Eventdetails objectAtIndex:i];
+                 NSDictionary *dict = [self->Eventdetails objectAtIndex:i];
                  NSString *strAdv_status = [dict objectForKey:@"adv_status"];
                  NSString *strAdvertisement = [dict objectForKey:@"advertisement"];
                  NSString *strBooking_status = [dict objectForKey:@"booking_status"];
@@ -558,7 +567,7 @@
                  NSString *strContact_person = [dict objectForKey:@"contact_person"];
                  NSString *strCountry_name = [dict objectForKey:@"country_name"];
                  NSString *strDescription = [dict objectForKey:@"description"];
-                 NSString *strEnd_date = [dict objectForKey:@"end_date"];
+//                 NSString *strEnd_date = [dict objectForKey:@"end_date"];
                  NSString *strEvent_address = [dict objectForKey:@"event_address"];
                  NSString *strEvent_banner = [dict objectForKey:@"event_banner"];
                  NSString *strEvent_city = [dict objectForKey:@"event_city"];
@@ -580,73 +589,62 @@
                  NSString *strStart_time = [dict objectForKey:@"start_time"];
                  NSString *strEnd_time = [dict objectForKey:@"end_time"];
                  
-                 dateFormatter = [[NSDateFormatter alloc] init];
-                 [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-                 date = [[NSDate alloc] init];
-                 date = [dateFormatter dateFromString:strStart_date];
+                 self->dateFormatter = [[NSDateFormatter alloc] init];
+                 [self->dateFormatter setDateFormat:@"yyyy-MM-dd"];
+                 self->date = [[NSDate alloc] init];
+                 self->date = [self->dateFormatter dateFromString:strStart_date];
                  // converting into our required date format
-                 [dateFormatter setDateFormat:@"EEEE, MMM dd, yyyy"];
-                 reqDateString = [dateFormatter stringFromDate:date];
-                 NSLog(@"date is %@", reqDateString);
+                 [self->dateFormatter setDateFormat:@"dd MMM yyyy"];
+                 self->reqStartDateString = [self->dateFormatter stringFromDate:self->date];
+                 NSLog(@"date is %@",self->reqStartDateString);
                  
-                 testArray = [reqDateString componentsSeparatedByString:@" "];
-                 strdate = [testArray objectAtIndex:1];
-                 str = [testArray objectAtIndex:2];
-                 samp = [str componentsSeparatedByString:@","];
-                 strMonth = [samp objectAtIndex:0];
-                 
-                 dateFormatter = [[NSDateFormatter alloc] init];
-                 [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-                 date = [[NSDate alloc] init];
-                 date = [dateFormatter dateFromString:strend_date];
+                 self->dateFormatter = [[NSDateFormatter alloc] init];
+                 [self->dateFormatter setDateFormat:@"yyyy-MM-dd"];
+                 self->date = [[NSDate alloc] init];
+                 self->date = [self->dateFormatter dateFromString:strend_date];
                  // converting into our required date format
-                 [dateFormatter setDateFormat:@"EEEE, MMM dd, yyyy"];
-                 reqDateString = [dateFormatter stringFromDate:date];
-                 NSLog(@"date is %@", reqDateString);
+                 [self->dateFormatter setDateFormat:@"dd MMM yyyy"];
+                 self->reqEndDateString = [self->dateFormatter stringFromDate:self->date];
+                 NSLog(@"date is %@",self->reqEndDateString);
                  
-                 to_testArray = [reqDateString componentsSeparatedByString:@" "];
-                 strtodate = [to_testArray objectAtIndex:1];
-                 str = [to_testArray objectAtIndex:2];
-                 samp = [str componentsSeparatedByString:@","];
-                 strToMonth = [samp objectAtIndex:0];
                  
-                 [adv_status addObject:strAdv_status];
-                 [advertisement addObject:strAdvertisement];
-                 [booking_status addObject:strBooking_status];
-                 [category_id addObject:strCategory_id];
-                 [city_name addObject:strCity_name];
-                 [contact_email addObject:strContact_email];
-                 [contact_person addObject:strContact_person];
-                 [country_name addObject:strCountry_name];
-                 [description addObject:strDescription];
-                 [end_date addObject:strEnd_date];
-                 [event_address addObject:strEvent_address];
-                 [event_banner addObject:strEvent_banner];
-                 [event_city addObject:strEvent_city];
-                 [event_colour_scheme addObject:strEvent_colour_scheme];
-                 [event_country addObject:strEvent_country];
-                 [event_id addObject:strEvent_id];
-                 [event_latitude addObject:strEvent_latitude];
-                 [event_longitude addObject:strEvent_longitude];
-                 [event_name addObject:strEvent_name];
-                 [event_status addObject:strEvent_status];
-                 [event_type addObject:strEvent_type];
-                 [event_venue addObject:strEvent_venue];
-                 [hotspot_status addObject:stHotspot_status];
-                 [popularity addObject:strPopularity];
-                 [primary_contact_no addObject:strPrimary_contact_no];
-                 [secondary_contact_no addObject:strSecondary_contact_no];
-                 [start_date addObject:strStart_date];
-                 [start_time addObject:strStart_time];
-                 [end_time addObject:strEnd_time];
-                 [date_label addObject:strdate];
-                 [month_label addObject:strMonth];
-                 [to_date_label addObject:strtodate];
-                 [to_month_label addObject:strToMonth];
+                 [self->adv_status addObject:strAdv_status];
+                 [self->advertisement addObject:strAdvertisement];
+                 [self->booking_status addObject:strBooking_status];
+                 [self->category_id addObject:strCategory_id];
+                 [self->city_name addObject:strCity_name];
+                 [self->contact_email addObject:strContact_email];
+                 [self->contact_person addObject:strContact_person];
+                 [self->country_name addObject:strCountry_name];
+                 [self->description addObject:strDescription];
+                 [self->end_date addObject:self->reqEndDateString];
+                 [self->event_address addObject:strEvent_address];
+                 [self->event_banner addObject:strEvent_banner];
+                 [self->event_city addObject:strEvent_city];
+                 [self->event_colour_scheme addObject:strEvent_colour_scheme];
+                 [self->event_country addObject:strEvent_country];
+                 [self->event_id addObject:strEvent_id];
+                 [self->event_latitude addObject:strEvent_latitude];
+                 [self->event_longitude addObject:strEvent_longitude];
+                 [self->event_name addObject:strEvent_name];
+                 [self->event_status addObject:strEvent_status];
+                 [self->event_type addObject:strEvent_type];
+                 [self->event_venue addObject:strEvent_venue];
+                 [self->hotspot_status addObject:stHotspot_status];
+                 [self->popularity addObject:strPopularity];
+                 [self->primary_contact_no addObject:strPrimary_contact_no];
+                 [self->secondary_contact_no addObject:strSecondary_contact_no];
+                 [self->start_date addObject:self->reqStartDateString];
+                 [self->start_time addObject:strStart_time];
+                 [self->end_time addObject:strEnd_time];
+//                 [self->date_label addObject:self->strdate];
+//                 [self->month_label addObject:self->strMonth];
+//                 [self->to_date_label addObject:self->strtodate];
+//                 [self->to_month_label addObject:self->strToMonth];
 
              }
              
-             if ([mapViewFlag isEqualToString:@"YES"])
+             if ([self->mapViewFlag isEqualToString:@"YES"])
              {
                  [self loadUserLocation];
                  
@@ -654,7 +652,7 @@
              else
              {
                  self.tableView.hidden = NO;
-                 hotspotFlag = @"NO";
+                 self->hotspotFlag = @"NO";
                  [self.tableView reloadData];
              }
              
@@ -689,12 +687,12 @@
 {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     self.searchController.searchBar.hidden = NO;
-    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
     [parameters setObject:@"Hotspot" forKey:@"event_type"];
-    [parameters setObject:appDel.user_Id forKey:@"user_id"];
-    [parameters setObject:appDel.user_type forKey:@"user_type"];
-    [parameters setObject:appDel.selected_City_Id forKey:@"event_city_id"];
+    [parameters setObject:self->appDel.user_Id forKey:@"user_id"];
+    [parameters setObject:self->appDel.user_type forKey:@"user_type"];
+    [parameters setObject:self->appDel.selected_City_Id forKey:@"event_city_id"];
     
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
@@ -714,47 +712,47 @@
          
          if ([msg isEqualToString:@"View Events"] && [status isEqualToString:@"success"])
          {
-             appDel.event_categoery_Ref = @"hotspot";
-             Eventdetails = [responseObject objectForKey:@"Eventdetails"];
-             _eventArray = [responseObject objectForKey:@"Eventdetails"];
+             self->appDel.event_categoery_Ref = @"hotspot";
+             self->Eventdetails = [responseObject objectForKey:@"Eventdetails"];
+             self->_eventArray = [responseObject objectForKey:@"Eventdetails"];
 
-             [adv_status removeAllObjects];
-             [advertisement removeAllObjects];
-             [booking_status removeAllObjects];
-             [category_id removeAllObjects];
-             [city_name removeAllObjects];
-             [contact_email removeAllObjects];
-             [contact_person removeAllObjects];
-             [country_name removeAllObjects];
-             [description removeAllObjects];
-             [end_date removeAllObjects];
-             [event_address removeAllObjects];
-             [event_banner removeAllObjects];
-             [event_city removeAllObjects];
-             [event_colour_scheme removeAllObjects];
-             [event_country removeAllObjects];
-             [event_id removeAllObjects];
-             [event_latitude removeAllObjects];
-             [event_longitude removeAllObjects];
-             [event_name removeAllObjects];
-             [event_status removeAllObjects];
-             [event_type removeAllObjects];
-             [event_venue removeAllObjects];
-             [hotspot_status removeAllObjects];
-             [popularity removeAllObjects];
-             [primary_contact_no removeAllObjects];
-             [secondary_contact_no removeAllObjects];
-             [start_date removeAllObjects];
-             [start_time removeAllObjects];
-             [end_time removeAllObjects];
-             [date_label removeAllObjects];
-             [month_label removeAllObjects];
-             [to_date_label removeAllObjects];
-             [to_month_label removeAllObjects];
+             [self->adv_status removeAllObjects];
+             [self->advertisement removeAllObjects];
+             [self->booking_status removeAllObjects];
+             [self->category_id removeAllObjects];
+             [self->city_name removeAllObjects];
+             [self->contact_email removeAllObjects];
+             [self->contact_person removeAllObjects];
+             [self->country_name removeAllObjects];
+             [self->description removeAllObjects];
+             [self->end_date removeAllObjects];
+             [self->event_address removeAllObjects];
+             [self->event_banner removeAllObjects];
+             [self->event_city removeAllObjects];
+             [self->event_colour_scheme removeAllObjects];
+             [self->event_country removeAllObjects];
+             [self->event_id removeAllObjects];
+             [self->event_latitude removeAllObjects];
+             [self->event_longitude removeAllObjects];
+             [self->event_name removeAllObjects];
+             [self->event_status removeAllObjects];
+             [self->event_type removeAllObjects];
+             [self->event_venue removeAllObjects];
+             [self->hotspot_status removeAllObjects];
+             [self->popularity removeAllObjects];
+             [self->primary_contact_no removeAllObjects];
+             [self->secondary_contact_no removeAllObjects];
+             [self->start_date removeAllObjects];
+             [self->start_time removeAllObjects];
+             [self->end_time removeAllObjects];
+//             [self->date_label removeAllObjects];
+//             [self->month_label removeAllObjects];
+//             [self->to_date_label removeAllObjects];
+//             [self->to_month_label removeAllObjects];
              
-             for(int i = 0;i < [Eventdetails count];i++)
+             for(int i = 0;i < [self->Eventdetails count];i++)
              {
-                 NSDictionary *dict = [Eventdetails objectAtIndex:i];
+                 NSDictionary *dict = [self->Eventdetails objectAtIndex:i];
                  NSString *strAdv_status = [dict objectForKey:@"adv_status"];
                  NSString *strAdvertisement = [dict objectForKey:@"advertisement"];
                  NSString *strBooking_status = [dict objectForKey:@"booking_status"];
@@ -764,7 +762,7 @@
                  NSString *strContact_person = [dict objectForKey:@"contact_person"];
                  NSString *strCountry_name = [dict objectForKey:@"country_name"];
                  NSString *strDescription = [dict objectForKey:@"description"];
-                 NSString *strEnd_date = [dict objectForKey:@"end_date"];
+//                 NSString *strEnd_date = [dict objectForKey:@"end_date"];
                  NSString *strEvent_address = [dict objectForKey:@"event_address"];
                  NSString *strEvent_banner = [dict objectForKey:@"event_banner"];
                  NSString *strEvent_city = [dict objectForKey:@"event_city"];
@@ -786,79 +784,68 @@
                  NSString *strStart_time = [dict objectForKey:@"start_time"];
                  NSString *strEnd_time = [dict objectForKey:@"end_time"];
                  
-                 dateFormatter = [[NSDateFormatter alloc] init];
-                 [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-                 date = [[NSDate alloc] init];
-                 date = [dateFormatter dateFromString:strStart_date];
+                 self->dateFormatter = [[NSDateFormatter alloc] init];
+                 [self->dateFormatter setDateFormat:@"yyyy-MM-dd"];
+                 self->date = [[NSDate alloc] init];
+                 self->date = [self->dateFormatter dateFromString:strStart_date];
                  // converting into our required date format
-                 [dateFormatter setDateFormat:@"EEEE, MMM dd, yyyy"];
-                 reqDateString = [dateFormatter stringFromDate:date];
-                 NSLog(@"date is %@", reqDateString);
+                 [self->dateFormatter setDateFormat:@"EEEE, MMM dd, yyyy"];
+                 self->reqStartDateString = [self->dateFormatter stringFromDate:self->date];
+                 NSLog(@"date is %@", self->reqStartDateString);
                  
-                 testArray = [reqDateString componentsSeparatedByString:@" "];
-                 strdate = [testArray objectAtIndex:1];
-                 str = [testArray objectAtIndex:2];
-                 samp = [str componentsSeparatedByString:@","];
-                 strMonth = [samp objectAtIndex:0];
-                 
-                 dateFormatter = [[NSDateFormatter alloc] init];
-                 [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-                 date = [[NSDate alloc] init];
-                 date = [dateFormatter dateFromString:strend_date];
+                 self->dateFormatter = [[NSDateFormatter alloc] init];
+                 [self->dateFormatter setDateFormat:@"yyyy-MM-dd"];
+                 self->date = [[NSDate alloc] init];
+                 self->date = [self->dateFormatter dateFromString:strend_date];
                  // converting into our required date format
-                 [dateFormatter setDateFormat:@"EEEE, MMM dd, yyyy"];
-                 reqDateString = [dateFormatter stringFromDate:date];
-                 NSLog(@"date is %@", reqDateString);
+                 [self->dateFormatter setDateFormat:@"dd MMM yyyy"];
+                 self->reqEndDateString = [self->dateFormatter stringFromDate:self->date];
+                 NSLog(@"date is %@",self-> reqEndDateString);
                  
-                 to_testArray = [reqDateString componentsSeparatedByString:@" "];
-                 strtodate = [to_testArray objectAtIndex:1];
-                 str = [to_testArray objectAtIndex:2];
-                 samp = [str componentsSeparatedByString:@","];
-                 strToMonth = [samp objectAtIndex:0];
                  
-                 [adv_status addObject:strAdv_status];
-                 [advertisement addObject:strAdvertisement];
-                 [booking_status addObject:strBooking_status];
-                 [category_id addObject:strCategory_id];
-                 [city_name addObject:strCity_name];
-                 [contact_email addObject:strContact_email];
-                 [contact_person addObject:strContact_person];
-                 [country_name addObject:strCountry_name];
-                 [description addObject:strDescription];
-                 [end_date addObject:strEnd_date];
-                 [event_address addObject:strEvent_address];
-                 [event_banner addObject:strEvent_banner];
-                 [event_city addObject:strEvent_city];
-                 [event_colour_scheme addObject:strEvent_colour_scheme];
-                 [event_country addObject:strEvent_country];
-                 [event_id addObject:strEvent_id];
-                 [event_latitude addObject:strEvent_latitude];
-                 [event_longitude addObject:strEvent_longitude];
-                 [event_name addObject:strEvent_name];
-                 [event_status addObject:strEvent_status];
-                 [event_type addObject:strEvent_type];
-                 [event_venue addObject:strEvent_venue];
-                 [hotspot_status addObject:stHotspot_status];
-                 [popularity addObject:strPopularity];
-                 [primary_contact_no addObject:strPrimary_contact_no];
-                 [secondary_contact_no addObject:strSecondary_contact_no];
-                 [start_date addObject:strStart_date];
-                 [start_time addObject:strStart_time];
-                 [end_time addObject:strEnd_time];
-                 [date_label addObject:strdate];
-                 [month_label addObject:strMonth];
-                 [to_date_label addObject:strtodate];
-                 [to_month_label addObject:strToMonth];
+                 [self->adv_status addObject:strAdv_status];
+                 [self->advertisement addObject:strAdvertisement];
+                 [self->booking_status addObject:strBooking_status];
+                 [self->category_id addObject:strCategory_id];
+                 [self->city_name addObject:strCity_name];
+                 [self->contact_email addObject:strContact_email];
+                 [self->contact_person addObject:strContact_person];
+                 [self->country_name addObject:strCountry_name];
+                 [self->description addObject:strDescription];
+                 [self->end_date addObject:self->reqEndDateString];
+                 [self->event_address addObject:strEvent_address];
+                 [self->event_banner addObject:strEvent_banner];
+                 [self->event_city addObject:strEvent_city];
+                 [self->event_colour_scheme addObject:strEvent_colour_scheme];
+                 [self->event_country addObject:strEvent_country];
+                 [self->event_id addObject:strEvent_id];
+                 [self->event_latitude addObject:strEvent_latitude];
+                 [self->event_longitude addObject:strEvent_longitude];
+                 [self->event_name addObject:strEvent_name];
+                 [self->event_status addObject:strEvent_status];
+                 [self->event_type addObject:strEvent_type];
+                 [self->event_venue addObject:strEvent_venue];
+                 [self->hotspot_status addObject:stHotspot_status];
+                 [self->popularity addObject:strPopularity];
+                 [self->primary_contact_no addObject:strPrimary_contact_no];
+                 [self->secondary_contact_no addObject:strSecondary_contact_no];
+                 [self->start_date addObject:self->reqStartDateString];
+                 [self->start_time addObject:strStart_time];
+                 [self->end_time addObject:strEnd_time];
+//                 [self->date_label addObject:self->strdate];
+//                 [self->month_label addObject:self->strMonth];
+//                 [self->to_date_label addObject:self->strtodate];
+//                 [self->to_month_label addObject:self->strToMonth];
              }
              
-             if ([mapViewFlag isEqualToString:@"YES"])
+             if ([self->mapViewFlag isEqualToString:@"YES"])
              {
                  [self loadUserLocation];
              }
              else
              {
                  self.tableView.hidden = NO;
-                 hotspotFlag = @"YES";
+                 self->hotspotFlag = @"YES";
                  [self.tableView reloadData];
                  
              }
@@ -963,20 +950,12 @@
             
             cell.eventLocation.text = [event_venue objectAtIndex:indexPath.row];
             cell.eventStatus.text = [event_type objectAtIndex:indexPath.row];
-            NSString *strStartTime = [start_time objectAtIndex:indexPath.row];
-            NSString *strendTime = [end_time objectAtIndex:indexPath.row];
-            cell.eventTime.text = [NSString stringWithFormat:@"%@ - %@",strStartTime,strendTime];
-            cell.dateView.hidden = YES;
+            cell.eventTime.hidden = YES;
             
         }
         else
         {
             cell.eventName.text = [event_name objectAtIndex:indexPath.row];
-            cell.dateView.hidden = YES;
-            cell.dateLabel.text = [date_label objectAtIndex:indexPath.row];
-            cell.monthLabel.text = [month_label objectAtIndex:indexPath.row];
-            cell.toDateLabel.text = [to_date_label objectAtIndex:indexPath.row];
-            cell.toMonthLabel.text = [to_month_label objectAtIndex:indexPath.row];
             NSString *imageUrl = [event_banner objectAtIndex:indexPath.row];
             __weak HomeViewTableCell *weakCell = cell;
             UIImage *placeholderImage = [UIImage imageNamed:@"placeholder.jpg"];
@@ -993,10 +972,7 @@
             
             cell.eventLocation.text = [event_venue objectAtIndex:indexPath.row];
             cell.eventStatus.text = [event_type objectAtIndex:indexPath.row];
-            NSString *strStartTime = [start_time objectAtIndex:indexPath.row];
-            NSString *strendTime = [end_time objectAtIndex:indexPath.row];
-            cell.eventTime.text = [NSString stringWithFormat:@"%@ - %@",strStartTime,strendTime];
-            
+            cell.eventTime.hidden = YES;
         }
     }
     else
@@ -1021,20 +997,15 @@
             
             cell.eventLocation.text = [event_venue objectAtIndex:indexPath.row];
             cell.eventStatus.text = [event_type objectAtIndex:indexPath.row];
-            NSString *strStartTime = [start_time objectAtIndex:indexPath.row];
-            NSString *strendTime = [end_time objectAtIndex:indexPath.row];
-            cell.eventTime.text = [NSString stringWithFormat:@"%@ - %@",strStartTime,strendTime];
-            cell.dateView.hidden = NO;
-            
+            cell.eventTime.hidden = NO;
+            NSString *strStartDate = [start_date objectAtIndex:indexPath.row];
+            NSString *strEndTime = [end_date objectAtIndex:indexPath.row];
+            cell.eventTime.text = [NSString stringWithFormat:@"%@ - %@",strStartDate,strEndTime];
         }
         else
         {
             cell.eventName.text = [event_name objectAtIndex:indexPath.row];
-            cell.dateView.hidden = NO;
-            cell.dateLabel.text = [date_label objectAtIndex:indexPath.row];
-            cell.monthLabel.text = [month_label objectAtIndex:indexPath.row];
-            cell.toDateLabel.text = [to_date_label objectAtIndex:indexPath.row];
-            cell.toMonthLabel.text = [to_month_label objectAtIndex:indexPath.row];
+            cell.eventTime.hidden = NO;
             NSString *imageUrl = [event_banner objectAtIndex:indexPath.row];
             __weak HomeViewTableCell *weakCell = cell;
             UIImage *placeholderImage = [UIImage imageNamed:@"placeholder.jpg"];
@@ -1051,9 +1022,9 @@
             
             cell.eventLocation.text = [event_venue objectAtIndex:indexPath.row];
             cell.eventStatus.text = [event_type objectAtIndex:indexPath.row];
-            NSString *strStartTime = [start_time objectAtIndex:indexPath.row];
-            NSString *strendTime = [end_time objectAtIndex:indexPath.row];
-            cell.eventTime.text = [NSString stringWithFormat:@"%@ - %@",strStartTime,strendTime];
+            NSString *strStartDate = [start_date objectAtIndex:indexPath.row];
+            NSString *strEndTime = [end_date objectAtIndex:indexPath.row];
+            cell.eventTime.text = [NSString stringWithFormat:@"%@ - %@",strStartDate,strEndTime];
             
         }
     }
@@ -1138,7 +1109,7 @@
     {
         if(UIInterfaceOrientationIsLandscape(UIApplication.sharedApplication.statusBarOrientation))
         {
-            _segmentedControl.frame = CGRectMake(self.segmentView.bounds.origin.x,self.segmentView.bounds.origin.y,self.segmentView.bounds.size.width, 55);
+            _segmentedControl.frame = CGRectMake(self.segmentView.bounds.origin.x,self.segmentView.bounds.origin.y,self.segmentView.bounds.size.width, self.segmentView.bounds.size.height);
             _segmentedControl.selectionIndicatorHeight = 2.0f;
             _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
             _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
@@ -1149,7 +1120,7 @@
         }
         else
         {
-            _segmentedControl.frame = CGRectMake(self.segmentView.bounds.origin.x,self.segmentView.bounds.origin.y,self.segmentView.bounds.size.width, 55);
+            _segmentedControl.frame = CGRectMake(self.segmentView.bounds.origin.x,self.segmentView.bounds.origin.y,self.segmentView.bounds.size.width, self.segmentView.bounds.size.height);
             _segmentedControl.selectionIndicatorHeight = 2.0f;
             _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
             _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
@@ -1183,7 +1154,7 @@
     }
     else
     {
-        _segmentedControl.frame = CGRectMake(self.segmentView.bounds.origin.x,self.segmentView.bounds.origin.y,self.segmentView.bounds.size.width,self.segmentView.bounds.size.height);
+        _segmentedControl.frame = CGRectMake(self.segmentView.bounds.origin.x,self.segmentView.bounds.origin.y,self.segmentView.bounds.size.width,55);
         _segmentedControl.selectionIndicatorHeight = 2.0f;
         _segmentedControl.backgroundColor = [UIColor colorWithRed:62/255.0f green:142/255.0f blue:204/255.0f alpha:1.0];
         _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
@@ -1197,12 +1168,12 @@
 
 #pragma mark - UIScrollViewDelegate
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    CGFloat pageWidth = scrollView.frame.size.width;
-    NSInteger page = scrollView.contentOffset.x / pageWidth;    
-    [self.segmentedControl setSelectedSegmentIndex:page animated:YES];
-}
+//- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+//{
+//    CGFloat pageWidth = scrollView.frame.size.width;
+//    NSInteger page = scrollView.contentOffset.x / pageWidth;
+//    [self.segmentedControl setSelectedSegmentIndex:page animated:YES];
+//}
 
 -(void)segmentAction:(UISegmentedControl *)sender
 {
@@ -1213,6 +1184,8 @@
         self.leaderBoardView.hidden =YES;
         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
         appDel.event_type = @"Favourite";
+        self.search.tintColor = [UIColor whiteColor];
+        self.advanceFilter.tintColor = [UIColor whiteColor];
         [self generalEventsList];
     }
     else if (_segmentedControl.selectedSegmentIndex == 1)
@@ -1222,6 +1195,8 @@
         self.leaderBoardView.hidden =YES;
         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
         appDel.event_type = @"Popular";
+        self.search.tintColor = [UIColor whiteColor];
+        self.advanceFilter.tintColor = [UIColor whiteColor];
         [self generalPopularList];
     }
     else if (_segmentedControl.selectedSegmentIndex == 2)
@@ -1231,6 +1206,8 @@
         self.leaderBoardView.hidden =YES;
         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
         appDel.event_type = @"Hotspot";
+        self.search.tintColor = [UIColor whiteColor];
+        self.advanceFilter.tintColor = [UIColor whiteColor];
         [self generalHotspotList];
     }
     else if (_segmentedControl.selectedSegmentIndex == 3)
@@ -1248,7 +1225,8 @@
                                  style:UIAlertActionStyleDefault
                                  handler:^(UIAlertAction * action)
                                  {
-                                     
+                                     LoginViewController *loginViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+                                     [self presentViewController:loginViewController animated:NO completion:nil];
                                  }];
             
             UIAlertAction *cancel = [UIAlertAction
@@ -1277,7 +1255,7 @@
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
     self.userName.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"statUser_Name"];;
     self.fullName.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"fullName"];
-    self.imageView.layer.cornerRadius = 55;
+    self.imageView.layer.cornerRadius = 50;
     self.imageView.layer.borderWidth = 5.0;
     self.imageView.layer.borderColor = [UIColor whiteColor].CGColor;
     self.imageView.clipsToBounds = YES;
@@ -1368,7 +1346,7 @@
              NSArray *Leaderboard = [responseObject objectForKey:@"Leaderboard"];
              for (int i = 0; i < [Leaderboard count]; i++)
              {
-                 appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                 self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
                  NSDictionary *dict = [Leaderboard objectAtIndex:i];
                  strtotalPoints = [dict objectForKey:@"total_points"];
                  login_count = [dict objectForKey:@"login_count"];
@@ -1382,7 +1360,7 @@
                  booking_count = [dict objectForKey:@"booking_count"];
                  booking_points = [dict objectForKey:@"booking_points"];
                  strid = [dict objectForKey:@"id"];
-                 appDel.user_Id = [dict objectForKey:@"user_id"];
+                 self->appDel.user_Id = [dict objectForKey:@"user_id"];
              }
              self.totalPoints.text = [NSString stringWithFormat:@"%@ ( %@ )",@"Total Points",strtotalPoints];
              self.loginCount.text = [NSString stringWithFormat:@"%@ %@ %@ %@" ,@"Login",@"(",login_count,@")"];
@@ -1468,7 +1446,7 @@
             UIStoryboard *storyboard  = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             HomeViewController *homeviewController = [storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"];
             [self.navigationController pushViewController:homeviewController animated:YES];
-            mapViewFlag = @"NO";
+            self->mapViewFlag = @"NO";
 
         }
         else if (index == 2)
@@ -1481,22 +1459,22 @@
             self.navigationItem.rightBarButtonItems = nil;
             self.searchController.searchBar.hidden = YES;
             self.tipsLabel.text = [NSString stringWithFormat:@"Click at index %d", (int)index];
-            if ([appDel.event_categoery_Ref isEqualToString:@"general"])
+            if ([self->appDel.event_categoery_Ref isEqualToString:@"general"])
             {
-                [_mapView setMapType:MKMapTypeStandard];
-                mapViewFlag = @"YES";
+                [self->_mapView setMapType:MKMapTypeStandard];
+                self->mapViewFlag = @"YES";
                 [self loadUserLocation];
             }
-            else if ([appDel.event_categoery_Ref isEqualToString:@"popular"])
+            else if ([self->appDel.event_categoery_Ref isEqualToString:@"popular"])
             {
-                [_mapView setMapType:MKMapTypeStandard];
-                mapViewFlag = @"YES";
+                [self->_mapView setMapType:MKMapTypeStandard];
+                self->mapViewFlag = @"YES";
                 [self loadUserLocation];
             }
-            else if ([appDel.event_categoery_Ref isEqualToString:@"hotspot"])
+            else if ([self->appDel.event_categoery_Ref isEqualToString:@"hotspot"])
             {
-                [_mapView setMapType:MKMapTypeStandard];
-                mapViewFlag = @"YES";
+                [self->_mapView setMapType:MKMapTypeStandard];
+                self->mapViewFlag = @"YES";
                 [self loadUserLocation];
             }
         }
@@ -1827,5 +1805,9 @@
 {
     ProfileViewController *profileViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ProfileViewController"];
     [self presentViewController:profileViewController animated:NO completion:nil];
+}
+- (IBAction)daySegmentButton:(id)sender
+{
+    
 }
 @end

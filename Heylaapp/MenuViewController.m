@@ -92,40 +92,61 @@
 
 - (IBAction)signOutBtn:(id)sender
 {
-    appDel.user_name = @"";
-    appDel.picture_url =@"";
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"stat_user_type"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"stat_user_id"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"userName"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"password"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"signOut" forKey:@"status"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"picture_Url"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"statemail_id"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"statemobile_no"];
+    UIAlertController *alert= [UIAlertController
+                               alertControllerWithTitle:@"Heyla"
+                               message:@"Do you really want to signout?"
+                               preferredStyle:UIAlertControllerStyleAlert];
     
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"fullName"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"dob"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"occupation"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"gender"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"addressLine"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"addressLineTwo"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"addressLineThree"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"country"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"state"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"city"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"pincode"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"country_id_key"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"state_id_key"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"city_id_key"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"new_Letter_Key"];
-    [self performSegueWithIdentifier:@"menu_signOut" sender:self];
+    UIAlertAction *ok = [UIAlertAction
+                         actionWithTitle:@"OK"
+                         style:UIAlertActionStyleDefault
+                         handler:^(UIAlertAction * action)
+                         {
+                             self->appDel.user_name = @"";
+                             self->appDel.picture_url =@"";
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"stat_user_type"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"stat_user_id"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"userName"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"password"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"signOut" forKey:@"status"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"picture_Url"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"statemail_id"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"statemobile_no"];
+                             
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"fullName"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"dob"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"occupation"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"gender"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"addressLine"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"addressLineTwo"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"addressLineThree"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"country"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"state"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"city"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"pincode"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"country_id_key"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"state_id_key"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"city_id_key"];
+                             [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"new_Letter_Key"];
+                             [self performSegueWithIdentifier:@"menu_signOut" sender:self];
+                         }];
+    
+    UIAlertAction *cancel = [UIAlertAction
+                             actionWithTitle:@"Cancel"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 
+                             }];
+    
+    [alert addAction:ok];
+    [alert addAction:cancel];
+    [self presentViewController:alert animated:YES completion:nil];
 }
-
 - (IBAction)settingsBtn:(id)sender
 {
    // [self performSegueWithIdentifier:@"to_settings" sender:self];
 }
-
 - (IBAction)notificationBellBtn:(id)sender
 {
     
@@ -145,10 +166,20 @@
                              style:UIAlertActionStyleDefault
                              handler:^(UIAlertAction * action)
                              {
-                                 
+                                 LoginViewController *loginViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+                                 [self presentViewController:loginViewController animated:NO completion:nil];
                              }];
         
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     
+                                 }];
+        
         [alert addAction:ok];
+        [alert addAction:cancel];
         [self presentViewController:alert animated:YES completion:nil];
     }
     else
@@ -185,10 +216,20 @@
                              style:UIAlertActionStyleDefault
                              handler:^(UIAlertAction * action)
                              {
-                                 
+                                 LoginViewController *loginViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+                                 [self presentViewController:loginViewController animated:NO completion:nil];
                              }];
         
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     
+                                 }];
+        
         [alert addAction:ok];
+        [alert addAction:cancel];
         [self presentViewController:alert animated:YES completion:nil];
     }
     else
@@ -222,7 +263,7 @@
 
     UIPopoverPresentationController *popController = [controller popoverPresentationController];
     popController.permittedArrowDirections = UIPopoverArrowDirectionAny;
-    popController.barButtonItem = self.navigationItem.leftBarButtonItem;
+    popController.sourceView = self.shareOutlet;
 
     // access the completion handler
     controller.completionWithItemsHandler = ^(NSString *activityType,
@@ -285,10 +326,20 @@
                              style:UIAlertActionStyleDefault
                              handler:^(UIAlertAction * action)
                              {
-                                 
+                                 LoginViewController *loginViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+                                 [self presentViewController:loginViewController animated:NO completion:nil];
                              }];
         
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     
+                                 }];
+        
         [alert addAction:ok];
+        [alert addAction:cancel];
         [self presentViewController:alert animated:YES completion:nil];
     }
     else

@@ -10,7 +10,7 @@
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
 
-@interface SelectCityPageViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,CLLocationManagerDelegate>
+@interface SelectCityPageViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,CLLocationManagerDelegate,MKMapViewDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 - (IBAction)backBtn:(id)sender;
 

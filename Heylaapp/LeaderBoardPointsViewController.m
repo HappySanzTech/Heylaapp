@@ -84,8 +84,8 @@
                  NSDictionary *dict = [data objectAtIndex:i];
                  NSString *strevent_name =  [dict objectForKey:@"event_name"];
                  NSString *strevent_venue =  [dict objectForKey:@"event_venue"];
-                 [event_name addObject:strevent_name];
-                 [event_venue addObject:strevent_venue];
+                 [self->event_name addObject:strevent_name];
+                 [self->event_venue addObject:strevent_venue];
 
              }
              [self.tableView reloadData];
@@ -98,8 +98,8 @@
                  NSDictionary *dict = [data objectAtIndex:i];
                  NSString *strevent_name =  [dict objectForKey:@"event_name"];
                  NSString *strevent_venue =  [dict objectForKey:@"event_venue"];
-                 [event_name addObject:strevent_name];
-                 [event_venue addObject:strevent_venue];
+                 [self->event_name addObject:strevent_name];
+                 [self->event_venue addObject:strevent_venue];
                  
              }
              [self.tableView reloadData];
@@ -112,8 +112,8 @@
                  NSDictionary *dict = [data objectAtIndex:i];
                  NSString *strevent_name =  [dict objectForKey:@"event_name"];
                  NSString *strevent_venue =  [dict objectForKey:@"event_venue"];
-                 [event_name addObject:strevent_name];
-                 [event_venue addObject:strevent_venue];
+                 [self->event_name addObject:strevent_name];
+                 [self->event_venue addObject:strevent_venue];
                  
              }
              [self.tableView reloadData];
@@ -126,8 +126,8 @@
                  NSDictionary *dict = [data objectAtIndex:i];
                  NSString *strevent_name =  [dict objectForKey:@"event_name"];
                  NSString *strevent_venue =  [dict objectForKey:@"event_venue"];
-                 [event_name addObject:strevent_name];
-                 [event_venue addObject:strevent_venue];
+                 [self->event_name addObject:strevent_name];
+                 [self->event_venue addObject:strevent_venue];
                  
              }
              [self.tableView reloadData];

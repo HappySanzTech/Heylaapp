@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <UserNotifications/UserNotifications.h>
 
 @import GoogleMaps;
 
@@ -165,31 +166,27 @@
             }
             
         }];
-        
-        
-        
     }
     
-    else {
+    else
+    {
         
-        // Code for old versions
-        
-        UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
-                                                        
-                                                        UIUserNotificationTypeBadge |
-                                                        
-                                                        UIUserNotificationTypeSound);
-        
-        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes
-                                                
-                                                                                 categories:nil];
-        
-        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-        
-        [[UIApplication sharedApplication] registerForRemoteNotifications];
+//        Code for old versions
+//        UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
+//
+//                                                        UIUserNotificationTypeBadge |
+//
+//                                                        UIUserNotificationTypeSound);
+//
+//        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes
+//
+//                                                                                 categories:nil];
+//
+//        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+//
+//        [[UIApplication sharedApplication] registerForRemoteNotifications];
         
     }
-    
 }
 -(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler{
     
@@ -223,29 +220,29 @@
     // Handle Click of the Push Notification From Here…
     // You can write a code to redirect user to specific screen of the app here….
 }
-- (void)application:(UIApplication *)application willChangeStatusBarFrame:(CGRect)newStatusBarFrame
-{
-    @try
-    {
-        [UIView animateWithDuration:0.35 animations:^{
-            CGRect windowFrame = ((UINavigationController *)((UITabBarController *)self.window.rootViewController).viewControllers[0]).view.frame;
-            if (newStatusBarFrame.size.height > 20)
-            {
-                [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"Hotspot_nav"];
-                windowFrame.origin.y = newStatusBarFrame.size.height - 20 ;
-            }
-            else
-            {
-                [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"Hotspot_nav"];
-                windowFrame.origin.y = 0.0;
-                
-            }
-            ((UINavigationController *)((UITabBarController *)self.window.rootViewController).viewControllers[0]).view.frame = windowFrame;
-        }];
-    }
-    @catch (NSException *exception)
-    {
-       
-    }
-}
+//- (void)application:(UIApplication *)application willChangeStatusBarFrame:(CGRect)newStatusBarFrame
+//{
+//    @try
+//    {
+//        [UIView animateWithDuration:0.35 animations:^{
+//            CGRect windowFrame = ((UINavigationController *)((UITabBarController *)self.window.rootViewController).viewControllers[0]).view.frame;
+//            if (newStatusBarFrame.size.height > 20)
+//            {
+//                [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"Hotspot_nav"];
+//                windowFrame.origin.y = newStatusBarFrame.size.height - 20 ;
+//            }
+//            else
+//            {
+//                [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"Hotspot_nav"];
+//                windowFrame.origin.y = 0.0;
+//                
+//            }
+//            ((UINavigationController *)((UITabBarController *)self.window.rootViewController).viewControllers[0]).view.frame = windowFrame;
+//        }];
+//    }
+//    @catch (NSException *exception)
+//    {
+//       
+//    }
+//}
 @end
