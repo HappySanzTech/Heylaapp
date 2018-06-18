@@ -15,7 +15,7 @@
     NSMutableArray *nameArr;
     NSMutableArray *emailArr;
     NSMutableArray *mobArr;
-
+    
 }
 @end
 
@@ -24,6 +24,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
     seats =  [[NSMutableArray alloc]init];
     seats = [[NSUserDefaults standardUserDefaults]objectForKey:@"tickcount_arr"];
     nameArr = [[NSMutableArray alloc]init];
@@ -131,9 +132,17 @@
     }
     
 }
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    return 195;
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        return 225;
+    }
+    else
+    {
+        return 195;
+
+    }
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)theTextField
 {
@@ -189,89 +198,106 @@
 - (IBAction)backBtn:(id)sender
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    HomeViewController *homeViewController = [storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"];
-    [self.navigationController pushViewController:homeViewController animated:self];
+    UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"NavigationController"];
+    [navigationController setViewControllers:@[[storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"]]];
+    SideMenuMainViewController *sideMenuMainViewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"SideMenuMainViewController"]; //or
+    sideMenuMainViewController.rootViewController = navigationController;
+    [sideMenuMainViewController setupWithType:0];
+    self.window.rootViewController = navigationController;
+    [self.window makeKeyAndVisible];
+    UIWindow *window = UIApplication.sharedApplication.delegate.window;
+    window.rootViewController = sideMenuMainViewController;
+    
+    [UIView transitionWithView:window
+                      duration:0.3
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:nil
+                    completion:nil];
 }
 
 - (IBAction)payNowbtn:(id)sender
 {
-        NSString *strName;
-        NSString *stremail;
-        NSString *strMob_no;
+    __block NSString *check = nil;
+    
+    NSString *strName;
+    NSString *stremail;
+    NSString *strMob_no;
 
-        for (int i = 0; i < [seats count]; i++)
+    for (int i = 0; i < [seats count]; i++)
+    {
+       
+        @try
         {
-           
-            @try
-            {
-                strName = [nameArr objectAtIndex:i];
-                
-                stremail = [emailArr objectAtIndex:i];
-                
-                strMob_no = [mobArr objectAtIndex:i];
-            }
-            @catch (NSException *exception)
-            {
-              
-                strName =@"";
-                
-                stremail =@"";
-
-                strMob_no =@"";
-
-            }
+            strName = [nameArr objectAtIndex:i];
             
-            appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-            NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
-            [parameters setObject:appDel.order_id forKey:@"order_id"];
-            [parameters setObject:strName forKey:@"name"];
-            [parameters setObject:stremail forKey:@"email_id"];
-            [parameters setObject:strMob_no forKey:@"mobile_no"];
+            stremail = [emailArr objectAtIndex:i];
             
-            AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-            manager.requestSerializer = [AFJSONRequestSerializer serializer];
-            [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-            manager.responseSerializer.acceptableContentTypes = [manager.responseSerializer.acceptableContentTypes setByAddingObject:@"text/html"];
-            
-            NSString *bookingAttendees = @"apimain/bookingAttendees";
-            NSArray *components = [NSArray arrayWithObjects:baseUrl,bookingAttendees, nil];
-            NSString *api = [NSString pathWithComponents:components];
-            
-            [manager POST:api parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
-             {
-                 
-                 NSLog(@"%@",responseObject);
-                 NSString *msg = [responseObject objectForKey:@"msg"];
-                 NSString *status = [responseObject objectForKey:@"status"];
-                 if ([msg isEqualToString:@"Attendees Added"] && [status isEqualToString:@"success"])
-                 {
-                     
-                 }
-                 
-             }
-                  failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
-             {
-                 NSLog(@"error: %@", error);
-             }];
+            strMob_no = [mobArr objectAtIndex:i];
         }
-            [self navigation_NextView];
+        @catch (NSException *exception)
+        {
+          
+            strName =@"";
+            
+            stremail =@"";
+
+            strMob_no =@"";
+
+        }
+        
+        appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
+        [parameters setObject:appDel.order_id forKey:@"order_id"];
+        [parameters setObject:strName forKey:@"name"];
+        [parameters setObject:stremail forKey:@"email_id"];
+        [parameters setObject:strMob_no forKey:@"mobile_no"];
+        
+        AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+        manager.requestSerializer = [AFJSONRequestSerializer serializer];
+        [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        manager.responseSerializer.acceptableContentTypes = [manager.responseSerializer.acceptableContentTypes setByAddingObject:@"text/html"];
+        
+        NSString *bookingAttendees = @"apimain/bookingAttendees";
+        NSArray *components = [NSArray arrayWithObjects:baseUrl,bookingAttendees, nil];
+        NSString *api = [NSString pathWithComponents:components];
+        
+        [manager POST:api parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
+         {
+             
+             NSLog(@"%@",responseObject);
+             NSString *msg = [responseObject objectForKey:@"msg"];
+             check = [responseObject objectForKey:@"msg"];
+             NSString *status = [responseObject objectForKey:@"status"];
+             if ([msg isEqualToString:@"Attendees Added"] && [status isEqualToString:@"success"])
+             {
+                 NSLog(@"%@",check);
+//                 if ([check isEqualToString:@"Attendees Added"])
+//                 {
+//                     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//                     ReviewTicketBookingController *reviewTicketBookingController = (ReviewTicketBookingController *)[storyboard instantiateViewControllerWithIdentifier:@"ReviewTicketBookingController"];
+//                     [self.navigationController pushViewController:reviewTicketBookingController animated:YES];
+//                 }
+             }
+             
+         }
+              failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
+         {
+             NSLog(@"error: %@", error);
+         }];
+    }
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+     ReviewTicketBookingController *reviewTicketBookingController = (ReviewTicketBookingController *)[storyboard instantiateViewControllerWithIdentifier:@"ReviewTicketBookingController"];
+     [self.navigationController pushViewController:reviewTicketBookingController animated:YES];
 }
--(void)navigation_NextView
+//-(void)navigation_NextView
+//{
+//    if ([msg isEqualToString:@"Attendees Added"])
+//    {
+//        [self performSegueWithIdentifier:@"to_ReviewPage" sender:self];
+//    }
+//}
+-(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
-    
-    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    UIStoryboard *eventStoryBoard = [UIStoryboard storyboardWithName:@"Booking" bundle:nil];
-    CCWebViewController* controller = [eventStoryBoard instantiateViewControllerWithIdentifier:@"CCWebViewController"];
-    controller.accessCode = @"AVWD63DB90AK18DWKA";
-    controller.merchantId = @"89958";
-    controller.amount = appDel.total_price;
-    controller.currency = @"INR";
-    controller.orderId =  appDel.order_id;
-    controller.redirectUrl = @"http://hobbistan.com/app/hobbistan/ccavenue/PHP/ccavResponseHandler.php";
-    controller.cancelUrl = @"http://hobbistan.com/app/hobbistan/ccavenue/PHP/ccavResponseHandler.php";
-    controller.rsaKeyUrl = @"http://hobbistan.com/app/hobbistan/ccavenue/PHP/GetRSA.php";
-    
-    controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self.navigationController pushViewController:controller animated:YES];
+    return NO;
 }
 @end

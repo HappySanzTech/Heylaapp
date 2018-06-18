@@ -9,10 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface SettingsViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 - (IBAction)backBtn:(id)sender;
-- (IBAction)editProfBtn:(id)sender;
-- (IBAction)changeNumBtn:(id)sender;
-- (IBAction)chNgePaswrdBtn:(id)sender;
-- (IBAction)verifyMailBtn:(id)sender;
-
 @end

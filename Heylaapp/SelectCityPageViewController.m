@@ -15,10 +15,6 @@
     NSMutableArray *city_Longitude;
     NSMutableArray *city_Name;
     NSMutableArray *city_Id;
-    CLLocationManager *objLocationManager;
-    double latitude_UserLocation, longitude_UserLocation;
-    NSString *address;
-
 }
 @end
 
@@ -29,44 +25,33 @@
     // Do any additional setup after loading the view.
     
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
-    
+    self.currentCity.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"locatedCity"];
+    NSLog(@"%@",self.currentCity.text);
     city_Latitude = [[NSMutableArray alloc]init];
     city_Longitude = [[NSMutableArray alloc]init];
     city_Name = [[NSMutableArray alloc]init];
     city_Id = [[NSMutableArray alloc]init];
-//    if ([objLocationManager respondsToSelector:@selector(requestWhenInUseAuthorization)])
-//    {
-//        [objLocationManager requestWhenInUseAuthorization];
-//    }
-//    [objLocationManager startUpdatingLocation];
-//    CLGeocoder *geocoder = [[CLGeocoder alloc] init] ;
-//    [geocoder reverseGeocodeLocation:objLocationManager.location
-//                   completionHandler:^(NSArray *placemarks, NSError *error)
-//     {
-//         NSLog(@"reverseGeocodeLocation:completionHandler: Completion Handler called!");
-//         if (error)
-//         {
-//             NSLog(@"Geocode failed with error: %@", error);
-//             return;
-//         }
-//         CLPlacemark *placemark = [placemarks objectAtIndex:0];
-//         self->address = [NSString stringWithFormat:@"%@,%@,%@,%@,%@,%@",
-//                          placemark.thoroughfare,
-//                          placemark.locality,
-//                          placemark.subLocality,
-//                          placemark.administrativeArea,
-//                          placemark.postalCode,
-//                          placemark.country];
-//         NSLog(@"%@", self->address);
-//         NSArray *splitArray = [self->address componentsSeparatedByString:@","];
-//         NSString *locatedCity = [splitArray objectAtIndex:1];
-//         [[NSUserDefaults standardUserDefaults]setObject:locatedCity forKey:@"locatedCity"];
-//
-//     }];
-    [self loadUserLocation];
+    NSString *str = [[NSUserDefaults standardUserDefaults]objectForKey:@"from_sideMenu"];
+    if ([str isEqualToString:@"YES"])
+    {
+        _backOutlet.enabled = YES;
+        _backOutlet.tintColor = [UIColor whiteColor];
+    }
+    else
+    {
+        _backOutlet.enabled = NO;
+        _backOutlet.tintColor = [UIColor clearColor];
+    }
     self.tableView.hidden = YES;
+    self.curentCityLabel.hidden = YES;
+    self.cityImage.hidden = YES;
+    self.heylaLogo.hidden = YES;
+    self.locationTitle.hidden = YES;
+    self.curentCityImage.hidden = YES;
+    self.currentCity.hidden = YES;
     appDel.user_Id = [[NSUserDefaults standardUserDefaults]objectForKey:@"stat_user_id"];
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
     [parameters setObject:appDel.user_Id forKey:@"user_id"];
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
@@ -77,22 +62,18 @@
     NSString *selectAllCity = @"apimain/selectallcity";
     NSArray *components = [NSArray arrayWithObjects:baseUrl,selectAllCity, nil];
     NSString *api = [NSString pathWithComponents:components];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
     [manager POST:api parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
      {
          
          NSLog(@"%@",responseObject);
          [MBProgressHUD hideHUDForView:self.view animated:YES];
-         
          NSString *msg = [responseObject objectForKey:@"msg"];
          NSString *status = [responseObject objectForKey:@"status"];
          
          if ([msg isEqualToString:@"View Cities"] && [status isEqualToString:@"success"])
          {
              NSArray *cities = [responseObject objectForKey:@"Cities"];
-             [MBProgressHUD hideHUDForView:self.view animated:YES];
-
              [self->city_Latitude removeAllObjects];
              [self->city_Longitude removeAllObjects];
              [self->city_Name removeAllObjects];
@@ -114,6 +95,12 @@
              }
              [[NSUserDefaults standardUserDefaults]setObject:self->city_Name forKey:@"cityName_Array"];
              [[NSUserDefaults standardUserDefaults]setObject:self->city_Id forKey:@"cityID_Array"];
+             self.curentCityLabel.hidden = NO;
+             self.cityImage.hidden = NO;
+             self.heylaLogo.hidden = NO;
+             self.locationTitle.hidden = NO;
+             self.curentCityImage.hidden = NO;
+             self.currentCity.hidden = NO;
              self.tableView.hidden = NO;
              [self.tableView reloadData];
 
@@ -146,47 +133,6 @@
     [tracker set:kGAIScreenName value:@"cityPage"];
     [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
     self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
-}
-- (void)loadUserLocation
-{
-    objLocationManager = [[CLLocationManager alloc] init];
-    objLocationManager.delegate = self;
-    objLocationManager.distanceFilter = kCLDistanceFilterNone;
-    objLocationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    if ([objLocationManager respondsToSelector:@selector(requestWhenInUseAuthorization)])
-    {
-        [objLocationManager requestWhenInUseAuthorization];
-    }
-    [objLocationManager startUpdatingLocation];
-}
-- (void)locationManager:(CLLocationManager *)manager
-     didUpdateLocations:(NSArray *)locations __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_6_0)
-{
-     CLLocation *newLocation = [locations objectAtIndex:0];
-     NSLog(@"NewLocation %f %f", newLocation.coordinate.latitude, newLocation.coordinate.longitude);
-     NSLog(@"%@",newLocation);
-     [objLocationManager stopUpdatingLocation];
-     CLGeocoder *geocoder = [[CLGeocoder alloc] init] ;
-     [geocoder reverseGeocodeLocation:newLocation completionHandler:^(NSArray *placemarks, NSError *error)
-     {
-         if (!(error))
-         {
-             CLPlacemark *placemark = [placemarks objectAtIndex:0];
-             NSString *address = [NSString stringWithFormat:@"%@, %@, %@, %@, %@, %@",
-                                  placemark.thoroughfare,
-                                  placemark.locality,
-                                  placemark.subLocality,
-                                  placemark.administrativeArea,
-                                  placemark.postalCode,
-                                  placemark.country];
-             NSLog(@"%@", address);
-             NSArray *splitArray = [address componentsSeparatedByString:@","];
-             NSString *City = [splitArray objectAtIndex:1];
-             NSArray *spiltSpace = [City componentsSeparatedByString:@" "];
-             NSString *locatedCity = [spiltSpace objectAtIndex:1];
-             [[NSUserDefaults standardUserDefaults]setObject:locatedCity forKey:@"locatedCity"];
-         }
-     }];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -238,13 +184,23 @@
     [[NSUserDefaults standardUserDefaults]setObject:appDel.selected_City_Id forKey:@"stat_city_id"];
     [self performSegueWithIdentifier:@"to_categoeryView" sender:self];
 }
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    return 70;
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        return 81;
+
+    }
+    else
+    {
+       return 45;
+    }
 }
 - (IBAction)backBtn:(id)sender
 {
+//    [self.navigationController popViewControllerAnimated:YES];
     [self dismissViewControllerAnimated:YES completion:nil];
+
 }
 -(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {

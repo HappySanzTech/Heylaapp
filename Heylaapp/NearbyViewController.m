@@ -42,10 +42,6 @@
     NSMutableArray *start_time;
     NSMutableArray *end_time;
     NSMutableArray *Eventdetails;
-    NSMutableArray *date_label;
-    NSMutableArray *month_label;
-    NSMutableArray *to_date_label;
-    NSMutableArray *to_month_label;
     CLLocationManager *objLocationManager;
     UIPickerView *listpickerView;
     UIToolbar *listToolBar;
@@ -127,10 +123,6 @@
     start_date = [[NSMutableArray alloc]init];
     start_time = [[NSMutableArray alloc]init];
     end_time = [[NSMutableArray alloc]init];
-    date_label = [[NSMutableArray alloc]init];
-    month_label = [[NSMutableArray alloc]init];
-    to_date_label = [[NSMutableArray alloc]init];
-    to_month_label = [[NSMutableArray alloc]init];
     [listpickerView reloadAllComponents];
     [self loadUserLocation];
     self.tableView.hidden = YES;
@@ -431,10 +423,6 @@
                  [self->start_date removeAllObjects];
                  [self->start_time removeAllObjects];
                  [self->end_time removeAllObjects];
-                 [self->date_label removeAllObjects];
-                 [self->month_label removeAllObjects];
-                 [self->to_date_label removeAllObjects];
-                 [self->to_month_label removeAllObjects];
                  
                  for(int i = 0;i < [self->Eventdetails count];i++)
                  {
@@ -475,30 +463,19 @@
                      self->date = [[NSDate alloc] init];
                      self->date = [self->dateFormatter dateFromString:strStart_date];
                      // converting into our required date format
-                     [self->dateFormatter setDateFormat:@"EEEE, MMM dd, yyyy"];
+                     [self->dateFormatter setDateFormat:@"dd MMM yyyy"];
                      self->reqDateString = [self->dateFormatter stringFromDate:self->date];
                      NSLog(@"date is %@",self->reqDateString);
-                     
-                     self->testArray = [self->reqDateString componentsSeparatedByString:@" "];
-                     self->strdate = [self->testArray objectAtIndex:1];
-                     self->str = [self->testArray objectAtIndex:2];
-                     self->samp = [self->str componentsSeparatedByString:@","];
-                     self->strMonth = [self->samp objectAtIndex:0];
                      
                      self->dateFormatter = [[NSDateFormatter alloc] init];
                      [self->dateFormatter setDateFormat:@"yyyy-MM-dd"];
                      self->date = [[NSDate alloc] init];
                      self->date = [self->dateFormatter dateFromString:strend_date];
                      // converting into our required date format
-                     [self->dateFormatter setDateFormat:@"EEEE, MMM dd, yyyy"];
+                     [self->dateFormatter setDateFormat:@"MMMM dd yyyy"];
                      self->reqDateString = [self->dateFormatter stringFromDate:self->date];
                      NSLog(@"date is %@",self->reqDateString);
                      
-                     self->to_testArray = [self->reqDateString componentsSeparatedByString:@" "];
-                     self->strtodate = [self->to_testArray objectAtIndex:1];
-                     self->str = [self->to_testArray objectAtIndex:2];
-                     self->samp = [self->str componentsSeparatedByString:@","];
-                     self->strToMonth = [self->samp objectAtIndex:0];
                      
                      [self->adv_status addObject:strAdv_status];
                      [self->advertisement addObject:strAdvertisement];
@@ -529,10 +506,6 @@
                      [self->start_date addObject:strStart_date];
                      [self->start_time addObject:strStart_time];
                      [self->end_time addObject:strEnd_time];
-                     [self->date_label addObject:self->strdate];
-                     [self->month_label addObject:self->strMonth];
-                     [self->to_date_label addObject:self->strtodate];
-                     [self->to_month_label addObject:self->strToMonth];
                  }
                  
                  if ([self->mapViewFlag isEqualToString:@"YES"])
@@ -602,17 +575,17 @@
 {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     mapViewFlag = @"NO";
-    HomeViewTableCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
-    cell.eventName.text = [event_name objectAtIndex:indexPath.row];
-    cell.dateLabel.text = [date_label objectAtIndex:indexPath.row];
-    cell.monthLabel.text = [month_label objectAtIndex:indexPath.row];
-    cell.toDateLabel.text = [to_date_label objectAtIndex:indexPath.row];
-    cell.toMonthLabel.text = [to_month_label objectAtIndex:indexPath.row];
-    NSString *imageUrl = [event_banner objectAtIndex:indexPath.row];
-    __weak HomeViewTableCell *weakCell = cell;
-    UIImage *placeholderImage = [UIImage imageNamed:@"placeholder.jpg"];
-    NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:imageUrl]];
-    [cell.eventImageView setImageWithURLRequest:request placeholderImage:placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image)
+    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    if ([appDel.event_type isEqualToString:@"Hotspot"])
+    {
+        HomeViewTableCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
+        cell.eventName.text = [event_name objectAtIndex:indexPath.row];
+        cell.eventTime.text = [event_venue objectAtIndex:indexPath.row]; ;
+        NSString *imageUrl = [event_banner objectAtIndex:indexPath.row];
+        __weak HomeViewTableCell *weakCell = cell;
+        UIImage *placeholderImage = [UIImage imageNamed:@"placeholder.jpg"];
+        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:imageUrl]];
+        [cell.eventImageView setImageWithURLRequest:request placeholderImage:placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image)
          {
              weakCell.eventImageView.image = image;
              
@@ -622,14 +595,35 @@
              
          }];
         
-        cell.eventLocation.text = [event_venue objectAtIndex:indexPath.row];
         cell.eventStatus.text = [event_type objectAtIndex:indexPath.row];
-        NSString *strStartTime = [start_time objectAtIndex:indexPath.row];
-        NSString *strendTime = [end_time objectAtIndex:indexPath.row];
-        cell.eventTime.text = [NSString stringWithFormat:@"%@ - %@",strStartTime,strendTime];
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-    
-    return cell;
+        
+        return cell;
+    }
+    else
+    {
+        HomeViewTableCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
+        cell.eventName.text = [event_name objectAtIndex:indexPath.row];
+        NSString *imageUrl = [event_banner objectAtIndex:indexPath.row];
+        __weak HomeViewTableCell *weakCell = cell;
+        UIImage *placeholderImage = [UIImage imageNamed:@"placeholder.jpg"];
+        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:imageUrl]];
+        [cell.eventImageView setImageWithURLRequest:request placeholderImage:placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image)
+         {
+             weakCell.eventImageView.image = image;
+             
+         } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+             
+             NSLog(@"%@",error);
+             
+         }];
+        
+        cell.eventStatus.text = [event_type objectAtIndex:indexPath.row];
+        cell.eventTime.text = [NSString stringWithFormat:@"%@ - %@",[start_date objectAtIndex:indexPath.row],[end_date objectAtIndex:indexPath.row]];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        
+        return cell;
+    }
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -681,7 +675,7 @@
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     EventDetailViewController *eventDetail = [storyboard instantiateViewControllerWithIdentifier:@"EventDetailViewController"];
-    [self presentViewController:eventDetail animated:YES completion:nil];
+    [self.navigationController pushViewController:eventDetail animated:YES];
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {

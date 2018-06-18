@@ -195,9 +195,19 @@
 
 - (IBAction)backBtn:(id)sender
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    EventReviewViewController *myNewVC = (EventReviewViewController *)[storyboard instantiateViewControllerWithIdentifier:@"EventReviewViewController"];
-    [self.navigationController pushViewController:myNewVC animated:YES];
+    NSString *str = [[NSUserDefaults standardUserDefaults]objectForKey:@"addreview"];
+    if ([str isEqualToString:@"YES"])
+    {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        EventDetailViewController *eventDetailViewController = (EventDetailViewController *)[storyboard instantiateViewControllerWithIdentifier:@"EventDetailViewController"];
+        [self.navigationController pushViewController:eventDetailViewController animated:YES];
+    }
+    else
+    {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        EventReviewViewController *myNewVC = (EventReviewViewController *)[storyboard instantiateViewControllerWithIdentifier:@"EventReviewViewController"];
+        [self.navigationController pushViewController:myNewVC animated:YES];
+    }
 }
 - (IBAction)firstStarBtn:(id)sender
 {

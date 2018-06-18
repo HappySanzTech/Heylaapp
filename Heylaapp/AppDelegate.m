@@ -27,6 +27,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {    
     [self registerForRemoteNotifications];
+    NSLog( @"### running FB sdk version: %@", [FBSDKSettings sdkVersion] );
     NSLog(@"%@",@"Check 2");
     NSString *splash = [[NSUserDefaults standardUserDefaults]objectForKey:@"showSplash"];
     NSString *status = [[NSUserDefaults standardUserDefaults]objectForKey:@"status"];
@@ -37,10 +38,28 @@
         {
             
             self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+//            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//            HomeViewController *homeViewController = [storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"];
+//            UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:homeViewController];
+//            self.window.rootViewController = nav;
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-            HomeViewController *homeViewController = [storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"];
-            UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:homeViewController];
-            self.window.rootViewController = nav;
+            UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"NavigationController"];
+            [navigationController setViewControllers:@[[storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"]]];
+            
+            SideMenuMainViewController *sideMenuMainViewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"SideMenuMainViewController"]; //or
+            sideMenuMainViewController.rootViewController = navigationController;
+            [sideMenuMainViewController setupWithType:0];
+            self.window.rootViewController = navigationController;
+            [self.window makeKeyAndVisible];
+            
+            UIWindow *window = UIApplication.sharedApplication.delegate.window;
+            window.rootViewController = sideMenuMainViewController;
+            
+            [UIView transitionWithView:window
+                              duration:0.3
+                               options:UIViewAnimationOptionTransitionCrossDissolve
+                            animations:nil
+                            completion:nil];
         }
         else
         {
@@ -79,7 +98,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    [FBSDKAppEvents activateApp];
+     [FBSDKAppEvents activateApp];
 }
 - (void)applicationWillTerminate:(UIApplication *)application
 {
@@ -211,7 +230,8 @@
 
     
 }
--(void) handleRemoteNotification:(UIApplication *) application   userInfo:(NSDictionary *) remoteNotif {
+-(void) handleRemoteNotification:(UIApplication *) application   userInfo:(NSDictionary *) remoteNotif
+{
     
     NSLog(@"handleRemoteNotification");
     
@@ -219,6 +239,13 @@
     
     // Handle Click of the Push Notification From Here…
     // You can write a code to redirect user to specific screen of the app here….
+}
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(nullable NSString *)sourceApplication annotation:(id)annotation
+{
+    return [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                          openURL:url
+                                                sourceApplication:sourceApplication
+                                                       annotation:annotation];
 }
 //- (void)application:(UIApplication *)application willChangeStatusBarFrame:(CGRect)newStatusBarFrame
 //{

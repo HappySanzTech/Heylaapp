@@ -286,9 +286,10 @@
     NSUInteger intbooking_status = [event_name indexOfObject:appDel.event_Name];
     appDel.booking_status = booking_status[intbooking_status];
     
+    [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"advnce_filter"];
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     EventDetailViewController *eventDetail = [storyboard instantiateViewControllerWithIdentifier:@"EventDetailViewController"];
-    [self presentViewController:eventDetail animated:YES completion:nil];
+    [self.navigationController pushViewController:eventDetail animated:self];
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {

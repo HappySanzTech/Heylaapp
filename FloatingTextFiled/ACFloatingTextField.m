@@ -168,7 +168,7 @@
     _labelPlaceholder.text = placeHolderText;
     _labelPlaceholder.textAlignment = self.textAlignment;
     _labelPlaceholder.textColor = _placeHolderColor;
-    _labelPlaceholder.font = self.font;;
+    _labelPlaceholder.font = [UIFont fontWithName:@"Muli" size:13];
     _labelPlaceholder.hidden = YES;
     [self addSubview:_labelPlaceholder];
 
@@ -183,7 +183,7 @@
     self.labelErrorPlaceholder.text = self.errorText;
     self.labelErrorPlaceholder.textAlignment = self.textAlignment;
     self.labelErrorPlaceholder.textColor = self.errorTextColor;
-    self.labelErrorPlaceholder.font = [UIFont fontWithName:self.font.fontName size:15];
+    self.labelErrorPlaceholder.font = [UIFont fontWithName:@"Muli" size:13];
     [self.labelErrorPlaceholder sizeToFit];
     self.labelErrorPlaceholder.hidden = YES;
     [self addSubview:self.labelErrorPlaceholder];
@@ -294,7 +294,7 @@
 
     [UIView animateWithDuration:0.2 animations:^{
         self->_labelPlaceholder.frame = frame;
-        self->_labelPlaceholder.font = [UIFont fontWithName:self.font.fontName size:15];
+        self->_labelPlaceholder.font = [UIFont fontWithName:@"Muli" size:13];
         self->bottomLineView.frame  =  bottmLineFrame;
         
     }];
@@ -326,7 +326,7 @@
     
     [UIView animateWithDuration:0.3 animations:^{
         self->_labelPlaceholder.frame = frame;
-        self->_labelPlaceholder.font = self.font;
+        self->_labelPlaceholder.font = [UIFont fontWithName:@"Muli" size:13];
         self->_labelPlaceholder.textColor = self->_placeHolderColor;
         self->bottomLineView.frame  =  bottmLineFrame;
     } completion:^(BOOL finished) {

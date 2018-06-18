@@ -7,37 +7,157 @@
 //
 
 #import "EventDetailViewController.h"
-
+#import <QuartzCore/QuartzCore.h>
 @interface EventDetailViewController ()
 {
     AppDelegate *appDel;
     NSString *favImageFlag;
     NSString *eyeImageFlag;
     NSString *reviewCount;
-
+    UIBarButtonItem *wishlistButton;
 }
 @end
 
 @implementation EventDetailViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    [[self navigationController] setNavigationBarHidden:YES animated:YES];
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
+    wishlistButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"favWhishlist"] style:UIBarButtonItemStylePlain target:self action:@selector(Add:)];
+    self.navigationItem.rightBarButtonItem = wishlistButton;
+    wishlistButton.tintColor = [UIColor whiteColor];
+    self.mainView.layer.cornerRadius = 8.0;
+    self.mainView.clipsToBounds = YES;
+    self.writeReviewOutlet.layer.cornerRadius = 5.0;
+    self.writeReviewOutlet.clipsToBounds = YES;
+    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
+    [self.despTextView setContentOffset:CGPointZero animated:NO];
+    if ([appDel.booking_status isEqualToString:@"Y"])
+    {
+        self.bseView.hidden = NO;
+        self.bookTicketOutlet.hidden = NO;
+    }
+    else
+    {
+        self.bseView.hidden = YES;
+        self.bookTicketOutlet.hidden = YES;
+        self.checkInOutlet.frame = CGRectMake(self.checkInOutlet.frame.origin.x,self.checkInOutlet.frame.origin.y,375,self.checkInOutlet.frame.size.height);
+
+    }
+    UIImage *placeholderImage = [UIImage imageNamed:@"placeholder.jpg"];
+    __weak typeof(self) weakSelf = self;
+    NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:appDel.event_picture]];
+    [self.imageView setImageWithURLRequest:request placeholderImage:placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image)
+     {
+         weakSelf.imageView.image = image;
+         
+     } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+         
+         NSLog(@"%@",error);
+         
+     }];
+    self.eventNameLabel.text = appDel.event_Name;
+    self.adressLabel.text = appDel.event_Address;
+    
+    
+    if ([appDel.event_type isEqualToString:@"Hotspot"])
+    {
+        self.dateLabel.hidden = YES;
+        self.dateImage.hidden = YES;
+    }
+    else
+    {
+        self.dateLabel.hidden = NO;
+        self.dateImage.hidden = NO;
+        self.dateLabel.text = [NSString stringWithFormat:@"%@ - %@",appDel.event_StartDate,appDel.event_EndDate];
+        NSLog(@"%@%@",appDel.event_StartDate,appDel.event_EndDate);
+
+    }
+    self.timeLabel.text = [NSString stringWithFormat:@"%@-%@",appDel.event_StartTime,appDel.event_EndTime];
+    NSLog(@"%@%@%@",appDel.event_StartTime,appDel.event_EndTime,self.timeLabel.text);
+    self.despTextView.text = appDel.event_description;
+    self.mobileNumberLabel.text = [NSString stringWithFormat:@"%@ %@,%@",@"Mobile Number :",appDel.event_PrimaryContactNumber,appDel.event_secondaryContactNumber];;
+    self.organiserName.text =  appDel.event_PrimaryContactPerson;
+    self.mailLabel.text = [NSString stringWithFormat:@"%@ %@",@"Email :",appDel.event_Contact_email];
+    eyeImageFlag = @"0";
+    NSString *popularity = appDel.event_popularity;
+    self.poularityCount.text = [NSString stringWithFormat:@"%@ %@",popularity,@"Views"] ;
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    _viewOne.layer.cornerRadius = 8;
-    _viewOne.layer.borderWidth = 1.0;
-    _viewOne.layer.masksToBounds = true;
-    _viewTwo.layer.cornerRadius = 8;
-    _viewTwo.layer.borderWidth = 1.0;
-    _viewTwo.layer.masksToBounds = true;
-    _viewThree.layer.cornerRadius = 8;
-    _viewThree.layer.borderWidth = 1.0;
-    _viewThree.layer.masksToBounds = true;
-    _viewFour.layer.cornerRadius = 8;
-    _viewFour.layer.borderWidth = 1.0;
-    _viewFour.layer.masksToBounds = true;
-    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    self.reviewNameLabel.text = appDel.reviewUsername;
+    self.reviewComments.text = appDel.reviewComments;
+    if ([appDel.reviewComments isEqualToString:@""] && [appDel.event_rating isEqualToString:@""])
+    {
+        self.starImageOne.image = [UIImage imageNamed:@"star icon"];
+        self.starImageTwo.image = [UIImage imageNamed:@"star icon"];
+        self.starImageThree.image = [UIImage imageNamed:@"star icon"];
+        self.starImageFour.image = [UIImage imageNamed:@"star icon"];
+        self.starImageFive.image = [UIImage imageNamed:@"star icon"];
+        
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:@"Heyla"
+                                   message:@"Review not Found"
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 
+                             }];
+        
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else
+    {
+        if ([appDel.event_rating isEqualToString:@"1"])
+        {
+            self.starImageOne.image = [UIImage imageNamed:@"Star"];
+            self.starImageTwo.image = [UIImage imageNamed:@"star icon"];
+            self.starImageThree.image = [UIImage imageNamed:@"star icon"];
+            self.starImageFour.image = [UIImage imageNamed:@"star icon"];
+            self.starImageFive.image = [UIImage imageNamed:@"star icon"];
+        }
+        if ([appDel.event_rating isEqualToString:@"2"])
+        {
+            self.starImageOne.image = [UIImage imageNamed:@"Star"];
+            self.starImageTwo.image = [UIImage imageNamed:@"Star"];
+            self.starImageThree.image = [UIImage imageNamed:@"star icon"];
+            self.starImageFour.image = [UIImage imageNamed:@"star icon"];
+            self.starImageFive.image = [UIImage imageNamed:@"star icon"];
+        }
+        if ([appDel.event_rating isEqualToString:@"3"])
+        {
+            self.starImageOne.image = [UIImage imageNamed:@"Star"];
+            self.starImageTwo.image = [UIImage imageNamed:@"Star"];
+            self.starImageThree.image = [UIImage imageNamed:@"Star"];
+            self.starImageFour.image = [UIImage imageNamed:@"star icon"];
+            self.starImageFive.image = [UIImage imageNamed:@"star icon"];
+        }
+        if ([appDel.event_rating isEqualToString:@"4"])
+        {
+            self.starImageOne.image = [UIImage imageNamed:@"Star"];
+            self.starImageTwo.image = [UIImage imageNamed:@"Star"];
+            self.starImageThree.image = [UIImage imageNamed:@"Star"];
+            self.starImageFour.image = [UIImage imageNamed:@"Star"];
+            self.starImageFive.image = [UIImage imageNamed:@"star icon"];
+        }
+        if ([appDel.event_rating isEqualToString:@"5"])
+        {
+            self.starImageOne.image = [UIImage imageNamed:@"Star"];
+            self.starImageTwo.image = [UIImage imageNamed:@"Star"];
+            self.starImageThree.image = [UIImage imageNamed:@"Star"];
+            self.starImageFour.image = [UIImage imageNamed:@"Star"];
+            self.starImageFive.image = [UIImage imageNamed:@"Star"];
+        }
+    }
+    [self loadUserLocation];
+}
+-(void)viewWillAppear:(BOOL)animated
+{
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
     [parameters setObject:appDel.user_Id forKey:@"user_id"];
     [parameters setObject:appDel.event_id forKey:@"event_id"];
@@ -62,94 +182,25 @@
          
          if ([status isEqualToString:@"success"])
          {
-             self.favouriteImageView.image = [UIImage imageNamed:@"FavselectedHeart"];
+             UIImage *image = [UIImage imageNamed:@"favselectedED"];
+             [self->wishlistButton setBackgroundImage:image forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+             self->wishlistButton.tintColor = [UIColor redColor];
              self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
              self->appDel.wishlist_id = [responseObject objectForKey:@"wishlist_id"];
-             MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-             
-             // Configure for text only and offset down
-             hud.mode = MBProgressHUDModeText;
-             hud.label.text = @"Wishlist added";
-             hud.margin = 10.f;
-             hud.yOffset = 200.f;
-             hud.removeFromSuperViewOnHide = YES;
-             
-             [hud hideAnimated:YES afterDelay:3];
              self->favImageFlag = @"1";
          }
          else
          {
-             self.favouriteImageView.image = [UIImage imageNamed:@"FavHeart.png"];
+             UIImage *image = [UIImage imageNamed:@"favWhishlist"];
+             [self->wishlistButton setBackgroundImage:image forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+             self->wishlistButton.tintColor = [UIColor whiteColor];
              self->favImageFlag = @"0";
          }
-      }
+     }
           failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
      {
          NSLog(@"error: %@", error);
      }];
-    
-    [self.despTextView setContentOffset:CGPointZero animated:NO];
-    if ([appDel.booking_status isEqualToString:@"Y"])
-    {
-        self.bookNow.hidden = NO;
-    }
-    else
-    {
-        self.check.frame = CGRectMake(247, 10, 118, 34);
-        self.bookNow.hidden = YES;
-
-    }
-    UIImage *placeholderImage = [UIImage imageNamed:@"placeholder.jpg"];
-    __weak typeof(self) weakSelf = self;
-    NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:appDel.event_picture]];
-    [self.imageView setImageWithURLRequest:request placeholderImage:placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image)
-     {
-         weakSelf.imageView.image = image;
-         
-     } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
-         
-         NSLog(@"%@",error);
-         
-     }];
-    self.eventNameLabel.text = appDel.event_Name;
-    self.adressLabel.text = appDel.event_Address;
-    NSDateFormatter *startdateFormatter = [[NSDateFormatter alloc] init];
-    [startdateFormatter setDateFormat:@"yyyy-MM-dd"];
-    NSDate *startdate  = [startdateFormatter dateFromString:appDel.event_StartDate];
-    [startdateFormatter setDateFormat:@"dd-MM-yyyy"];
-    NSString *startDate = [startdateFormatter stringFromDate:startdate];
-    
-    NSDateFormatter *enddateFormatter = [[NSDateFormatter alloc] init];
-    [enddateFormatter setDateFormat:@"yyyy-MM-dd"];
-    NSDate *enddate  = [enddateFormatter dateFromString:appDel.event_EndDate];
-    [startdateFormatter setDateFormat:@"dd-MM-yyyy"];
-    NSString *endDate = [startdateFormatter stringFromDate:enddate];
-    
-    if ([appDel.event_type isEqualToString:@"Hotspot"])
-    {
-        self.dateLabel.hidden = YES;
-        self.dateImage.hidden = YES;
-        self.dateImageLabel.hidden = YES;
-    }
-    else
-    {
-        self.dateLabel.hidden = NO;
-        self.dateImage.hidden = NO;
-        self.dateImageLabel.hidden = NO;
-        self.dateLabel.text = [NSString stringWithFormat:@"%@ - %@",startDate,endDate];
-        NSLog(@"%@%@",appDel.event_StartDate,appDel.event_EndDate);
-
-    }
-    self.timeLabel.text = [NSString stringWithFormat:@"%@-%@",appDel.event_StartTime,appDel.event_EndTime];
-    NSLog(@"%@%@%@",appDel.event_StartTime,appDel.event_EndTime,self.timeLabel.text);
-    self.despTextView.text = appDel.event_description;
-    self.mobileNumberLabel.text = [NSString stringWithFormat:@"%@ , %@",appDel.event_PrimaryContactNumber,appDel.event_secondaryContactNumber];;
-    self.organiserName.text =  appDel.event_PrimaryContactPerson;
-    self.mailLabel.text = appDel.event_Contact_email;
-    eyeImageFlag = @"0";
-    NSString *popularity = appDel.event_popularity;
-    self.poularityCount.text = popularity;
-    [self loadUserLocation];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -157,7 +208,7 @@
 }
 -(void)viewDidLayoutSubviews
 {
-    self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width,730);
+    self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width,1081);
     [self.despTextView setContentOffset:CGPointZero animated:NO];
 }
 - (void)loadUserLocation
@@ -206,118 +257,6 @@
     // Pass the selected object to the new view controller.
 }
 */
-
-- (IBAction)favImageBtn:(id)sender
-{
-    if ([appDel.user_type isEqualToString:@"2"])
-    {
-        UIAlertController *alert= [UIAlertController
-                                   alertControllerWithTitle:@"Heyla"
-                                   message:@"Login to Access"
-                                   preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction *ok = [UIAlertAction
-                             actionWithTitle:@"OK"
-                             style:UIAlertActionStyleDefault
-                             handler:^(UIAlertAction * action)
-                             {
-                                 LoginViewController *loginViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
-                                 [self presentViewController:loginViewController animated:NO completion:nil];
-                             }];
-        
-        UIAlertAction *cancel = [UIAlertAction
-                                 actionWithTitle:@"Cancel"
-                                 style:UIAlertActionStyleDefault
-                                 handler:^(UIAlertAction * action)
-                                 {
-                                     
-                                 }];
-        
-        [alert addAction:ok];
-        [alert addAction:cancel];
-        [self presentViewController:alert animated:YES completion:nil];
-    }
-    else
-    {
-        if ([favImageFlag isEqualToString:@"0"])
-        {
-            appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-            NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
-            [parameters setObject:appDel.user_Id forKey:@"user_id"];
-            [parameters setObject:@"1" forKey:@"wishlist_master_id"];
-            [parameters setObject:appDel.event_id forKey:@"event_id"];
-            
-            AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-            manager.requestSerializer = [AFJSONRequestSerializer serializer];
-            [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-            manager.responseSerializer.acceptableContentTypes = [manager.responseSerializer.acceptableContentTypes setByAddingObject:@"text/html"];
-            
-            NSString *addWishListMaster = @"apimain/addWishList";
-            NSArray *components = [NSArray arrayWithObjects:baseUrl,addWishListMaster, nil];
-            NSString *api = [NSString pathWithComponents:components];
-            [manager POST:api parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
-             {
-                 
-                 NSLog(@"%@",responseObject);
-                 NSString *msg = [responseObject objectForKey:@"msg"];
-                 NSString *status = [responseObject objectForKey:@"status"];
-                 
-                 if ([msg isEqualToString:@"Wishlist Added"] && [status isEqualToString:@"success"])
-                 {
-                     self.favouriteImageView.image = [UIImage imageNamed:@"FavselectedHeart"];
-                     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-                     
-                     // Configure for text only and offset down
-                     hud.mode = MBProgressHUDModeText;
-                     hud.label.text = @"Wishlist added";
-                     hud.margin = 10.f;
-                     hud.yOffset = 200.f;
-                     hud.removeFromSuperViewOnHide = YES;
-                     [hud hideAnimated:YES afterDelay:2];
-                     
-                 }
-                 else
-                 {
-                     UIAlertController *alert= [UIAlertController
-                                                alertControllerWithTitle:@"Heyla"
-                                                message:msg
-                                                preferredStyle:UIAlertControllerStyleAlert];
-                     
-                     UIAlertAction* ok = [UIAlertAction
-                                          actionWithTitle:@"OK"
-                                          style:UIAlertActionStyleDefault
-                                          handler:^(UIAlertAction * action)
-                                          {
-                                              
-                                          }];
-                     [alert addAction:ok];
-                     [self presentViewController:alert animated:YES completion:nil];
-                 }
-             }
-                  failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
-             {
-                 NSLog(@"error: %@", error);
-             }];
-        }
-        else
-        {
-            UIAlertController *alert= [UIAlertController
-                                       alertControllerWithTitle:@"Heyla"
-                                       message:@"Whishlist already added"
-                                       preferredStyle:UIAlertControllerStyleAlert];
-            
-            UIAlertAction* ok = [UIAlertAction
-                                 actionWithTitle:@"OK"
-                                 style:UIAlertActionStyleDefault
-                                 handler:^(UIAlertAction * action)
-                                 {
-                                     
-                                 }];
-            [alert addAction:ok];
-            [self presentViewController:alert animated:YES completion:nil];
-        }
-    }
-}
 - (IBAction)checkBtn:(id)sender
 {
     CLLocation *startLocation = [[CLLocation alloc] initWithLatitude:latitude_UserLocation longitude:longitude_UserLocation];
@@ -486,7 +425,15 @@
 }
 - (IBAction)backBtn:(id)sender
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    NSString *str = [[NSUserDefaults standardUserDefaults]objectForKey:@"advnce_filter"];
+    if ([str isEqualToString:@"YES"])
+    {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    else
+    {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 -(CLLocationCoordinate2D)getLocation
 {
@@ -714,6 +661,165 @@
 - (IBAction)imageViewBtn:(id)sender
 {
     [self performSegueWithIdentifier:@"to_EventImage" sender:self];
+}
+
+- (IBAction)writeReviewButton:(id)sender
+{
+    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    if ([appDel.user_type isEqualToString:@"2"])
+    {
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:@"Heyla"
+                                   message:@"Login to Access"
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 LoginViewController *loginViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+                                 [self presentViewController:loginViewController animated:NO completion:nil];
+                             }];
+        
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     
+                                 }];
+        
+        [alert addAction:ok];
+        [alert addAction:cancel];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else
+    {
+        [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"addreview"];
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Booking" bundle:nil];
+        AddingReviewViewController *myNewVC = (AddingReviewViewController *)[storyboard instantiateViewControllerWithIdentifier:@"AddingReviewViewController"];
+        [self.navigationController pushViewController:myNewVC animated:YES];
+    }
+}
+
+-(IBAction)Add:(id)sender
+{
+    if ([appDel.user_type isEqualToString:@"2"])
+    {
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:@"Heyla"
+                                   message:@"Login to Access"
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 LoginViewController *loginViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+                                 [self presentViewController:loginViewController animated:NO completion:nil];
+                             }];
+        
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     
+                                 }];
+        
+        [alert addAction:ok];
+        [alert addAction:cancel];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else
+    {
+        if ([favImageFlag isEqualToString:@"0"])
+        {
+            appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
+            [parameters setObject:appDel.user_Id forKey:@"user_id"];
+            [parameters setObject:@"1" forKey:@"wishlist_master_id"];
+            [parameters setObject:appDel.event_id forKey:@"event_id"];
+            
+            AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+            manager.requestSerializer = [AFJSONRequestSerializer serializer];
+            [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            manager.responseSerializer.acceptableContentTypes = [manager.responseSerializer.acceptableContentTypes setByAddingObject:@"text/html"];
+            
+            NSString *addWishListMaster = @"apimain/addWishList";
+            NSArray *components = [NSArray arrayWithObjects:baseUrl,addWishListMaster, nil];
+            NSString *api = [NSString pathWithComponents:components];
+            [manager POST:api parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
+             {
+                 
+                 NSLog(@"%@",responseObject);
+                 NSString *msg = [responseObject objectForKey:@"msg"];
+                 NSString *status = [responseObject objectForKey:@"status"];
+                 
+                 if ([msg isEqualToString:@"Wishlist Added"] && [status isEqualToString:@"success"])
+                 {
+                     UIImage *image = [UIImage imageNamed:@"favselectedED"];
+                     [self->wishlistButton setBackgroundImage:image forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+                     self->wishlistButton.tintColor = [UIColor redColor];
+                     
+                     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+                     
+                     // Configure for text only and offset down
+                     hud.mode = MBProgressHUDModeText;
+                     hud.label.text = @"Wishlist added";
+                     hud.margin = 10.f;
+                     hud.yOffset = 200.f;
+                     hud.removeFromSuperViewOnHide = YES;
+                     [hud hideAnimated:YES afterDelay:2];
+                     
+                 }
+                 else
+                 {
+                     UIAlertController *alert= [UIAlertController
+                                                alertControllerWithTitle:@"Heyla"
+                                                message:msg
+                                                preferredStyle:UIAlertControllerStyleAlert];
+                     
+                     UIAlertAction* ok = [UIAlertAction
+                                          actionWithTitle:@"OK"
+                                          style:UIAlertActionStyleDefault
+                                          handler:^(UIAlertAction * action)
+                                          {
+                                              
+                                          }];
+                     [alert addAction:ok];
+                     [self presentViewController:alert animated:YES completion:nil];
+                 }
+             }
+                  failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
+             {
+                 NSLog(@"error: %@", error);
+             }];
+        }
+        else
+        {
+            UIAlertController *alert= [UIAlertController
+                                       alertControllerWithTitle:@"Heyla"
+                                       message:@"Whishlist already added"
+                                       preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction* ok = [UIAlertAction
+                                 actionWithTitle:@"OK"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     
+                                 }];
+            [alert addAction:ok];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    }
+}
+- (IBAction)moreButton:(id)sender
+{
+    [self performSegueWithIdentifier:@"to_reviewList" sender:self];
 }
 -(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {

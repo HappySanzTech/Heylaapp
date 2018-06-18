@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface AdvanceFilterViewController : UIViewController<UITextFieldDelegate,UIPickerViewDelegate,UIPickerViewDataSource>
+@property (weak, nonatomic) IBOutlet UILabel *sliderSelectedValue;
+- (IBAction)sliderButton:(id)sender;
+@property (weak, nonatomic) IBOutlet UISlider *slider;
 
 @property (strong, nonatomic) IBOutlet UIView *viewDate;
 @property (strong, nonatomic) IBOutlet UITextField *dateTextFiled;

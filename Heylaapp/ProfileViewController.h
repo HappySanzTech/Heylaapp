@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PECropViewController.h"
 
-@interface ProfileViewController : UIViewController<UITextFieldDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIActionSheetDelegate,UIPickerViewDelegate,UIPickerViewDataSource>
+@interface ProfileViewController : UIViewController<UITextFieldDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIActionSheetDelegate,UIPickerViewDelegate,UIPickerViewDataSource,PECropViewControllerDelegate>
+{
+}
 @property (strong, nonatomic) IBOutlet UITextField *genderTexfiled;
 - (IBAction)cityBtn:(id)sender;
 - (IBAction)stateBtn:(id)sender;

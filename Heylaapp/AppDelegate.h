@@ -68,9 +68,12 @@
 @property (strong, nonatomic) NSString *event_popularity;
 @property (strong, nonatomic) NSString *booking_status;
 @property (strong, nonatomic) NSString *event_secondaryContactNumber;
+@property (strong, nonatomic) NSString *planEvent_id;
 @property (strong, nonatomic) NSString *plan_id;
+@property (strong, nonatomic) NSString *plan_time_id;
 @property (strong, nonatomic) NSString *seat_rate;
 @property (strong, nonatomic) NSString *plan_name;
+@property (strong, nonatomic) NSString *event_SelectedTime;
 @property (strong, nonatomic) NSString *total_price;
 @property (strong, nonatomic) NSString *seat_count;
 @property (strong, nonatomic) NSString *bookingdate;
@@ -95,6 +98,14 @@
 @property (strong, nonatomic) NSString *event_type;
 @property (strong, nonatomic) NSString *login_type;
 @property (strong, nonatomic) NSString *wishlist_id;
+@property (strong, nonatomic) NSString *reviewComments;
+@property (strong, nonatomic) NSString *event_rating;
+@property (strong, nonatomic) NSString *reviewList_id;
+@property (strong, nonatomic) NSString *reviewUsername;
+@property (strong, nonatomic) NSString *reviewEventName;
+@property (strong, nonatomic) NSString *totalTickets;
+
+
 @property (nonatomic, strong) UINavigationController *navController;
 - (void)saveContext;
 

@@ -57,6 +57,7 @@
     self.viewWeb.delegate = self;
     
     //Getting RSA Key
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSString *rsaKeyDataStr = [NSString stringWithFormat:@"access_code=%@&order_id=%@",accessCode,orderId];
     NSData *requestData = [NSData dataWithBytes: [rsaKeyDataStr UTF8String] length: [rsaKeyDataStr length]];
     NSMutableURLRequest *rsaRequest = [[NSMutableURLRequest alloc] initWithURL: [NSURL URLWithString: rsaKeyUrl]];
@@ -66,14 +67,14 @@
     
     
     // NSData *rsaKeyData = [NSURLConnection sendSynchronousRequest: rsaRequest returningResponse: nil error: nil];
-    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+
     [[[NSURLSession sharedSession] dataTaskWithRequest:rsaRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *) response;
         NSLog(@"response status code: %ld", (long)[httpResponse statusCode]);
         if ([httpResponse statusCode] == 200)
         {
             NSLog(@"Success");
-            
             NSString *rsaKey = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
             rsaKey = [rsaKey stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
             rsaKey = [NSString stringWithFormat:@"-----BEGIN PUBLIC KEY-----\n%@\n-----END PUBLIC KEY-----\n",rsaKey];

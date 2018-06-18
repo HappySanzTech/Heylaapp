@@ -10,6 +10,7 @@
 #import "SideMenuMainViewController.h"
 
 @interface SelectCategoeryViewController : UIViewController<UICollectionViewDelegate,UICollectionViewDataSource,CLLocationManagerDelegate,MKMapViewDelegate>
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *backOutlet;
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (nonatomic, strong) NSIndexPath *selectedItemIndexPath;
 - (IBAction)backBtn:(id)sender;

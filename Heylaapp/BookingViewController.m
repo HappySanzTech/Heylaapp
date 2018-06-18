@@ -20,15 +20,20 @@
     NSMutableArray *Eventtime;
     NSMutableArray *Event_time_id;
     NSMutableArray *plan_name;
+    NSMutableArray *event_id;
     NSMutableArray *plan_id;
     NSMutableArray *seat_rate;
     NSMutableArray *seat_available;
+    NSMutableArray *planName_seatrate;
+    NSMutableArray *plan_time_id;
     NSString *dateTimeFlag;
     NSString *selectedDate;
     NSString *selectedTime;
+    NSString *selectedPlan;
     NSString *streventDate;
     NSString *streventTime;
-
+    NSString *getValue;
+    NSMutableArray *selected_Seat;
 }
 @end
 
@@ -45,8 +50,9 @@
     _eventDate.layer.borderColor = [UIColor clearColor].CGColor;
     _eventTime.layer.borderColor = [UIColor clearColor].CGColor;
 
+    self.mainView.layer.cornerRadius = 8.0;
+    self.mainView.clipsToBounds = YES;
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    
     UIImage *placeholderImage = [UIImage imageNamed:@"placeholder.jpg"];
     __weak typeof(self) weakSelf = self;
     NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:appDel.event_picture]];
@@ -61,10 +67,7 @@
          
      }];
     self.eventTitle.text = appDel.event_Name;
-    NSString *time = appDel.event_StartTime;
-    self.timeLabel.text = time;
     self.eventLocation.text = appDel.event_Address;
-    self.eventVenue.text = appDel.event_Address;
     
     monthName = [[NSMutableArray alloc]init];
     monthDate = [[NSMutableArray alloc]init];
@@ -75,6 +78,10 @@
     seat_rate = [[NSMutableArray alloc]init];
     seat_available = [[NSMutableArray alloc]init];
     Event_time_id = [[NSMutableArray alloc]init];
+    selected_Seat = [[NSMutableArray alloc]init];
+    planName_seatrate = [[NSMutableArray alloc]init];
+    plan_time_id = [[NSMutableArray alloc]init];
+    event_id = [[NSMutableArray alloc]init];
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -138,12 +145,23 @@
          NSLog(@"error: %@", error);
      }];
     
+    self.eventTime.enabled = NO;
+    self.eventPlan.enabled = NO;
+    self.timeImageView.hidden = YES;
+    self.planUmgView.hidden = YES;
+    self.minusLabel.hidden = YES;
+    self.plusLabel.hidden = YES;
+    self.countText.hidden = YES;
+    self.minusOulet.enabled = NO;
+    self.plusOutlet.enabled = NO;
+    
     datapickerView = [[UIPickerView alloc] init];
     datapickerView.delegate = self;
     datapickerView.dataSource = self;
     datapickerView.showsSelectionIndicator=YES;
     [self.eventDate setInputView:datapickerView];
     [self.eventTime setInputView:datapickerView];
+    [self.eventPlan setInputView:datapickerView];
     
     toolbar=[[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 44)];
     [toolbar setTintColor:[UIColor grayColor]];
@@ -153,10 +171,8 @@
     [toolbar setItems:[NSArray arrayWithObjects:cancel,spacePicker,done, nil]];
     [self.eventDate setInputAccessoryView:toolbar];
     [self.eventTime setInputAccessoryView:toolbar];
-    
-    self.eventTime.hidden = YES;
-    self.timeImageView.hidden = YES;
-    self.tableView.hidden = YES;
+    [self.eventPlan setInputAccessoryView:toolbar];
+    [selected_Seat removeAllObjects];
 }
 -(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
@@ -180,6 +196,10 @@
         {
             return [Eventtime count];
         }
+        else if([self.eventPlan isFirstResponder])
+        {
+            return [planName_seatrate count];
+        }
     }
     return 0;
     
@@ -199,6 +219,11 @@
             selectedTime = Eventtime[row];
             return Eventtime[row];
         }
+        else if([self.eventPlan isFirstResponder])
+        {
+            selectedPlan = planName_seatrate[row];
+            return planName_seatrate[row];
+        }
     }
     return nil;
 }
@@ -208,8 +233,19 @@
     {
         self.eventDate.text = streventDate;
         [self getTimings];
-        self.eventTime.hidden = NO;
+        self.eventTime.enabled = YES;
         self.timeImageView.hidden = NO;
+        self.eventTime.textColor = [UIColor blackColor];
+        self.eventPlan.textColor = [UIColor lightGrayColor];
+        self.eventPlan.enabled = NO;
+        self.planUmgView.hidden = YES;
+        self.minusOulet.enabled = NO;
+        self.plusOutlet.enabled = NO;
+        self.minusLabel.hidden = YES;
+        self.plusLabel.hidden = YES;
+        self.countText.text = @"0";
+        self.countText.hidden = YES;
+        [self.amountOutlet setTitle:[NSString stringWithFormat:@"%@ %@%@",@"Pay - ",@"Rs.",@"0"] forState:UIControlStateNormal];
         [self.eventDate resignFirstResponder];
     }
     else if ([self.eventTime isFirstResponder])
@@ -217,7 +253,45 @@
         self.eventTime.text = selectedTime;
         appDel.selected_Event_time = self.eventTime.text;
         [self getPlans];
+        self.eventPlan.text = @"Plan";
+        self.eventPlan.textColor = [UIColor blackColor];
+        self.minusOulet.enabled = YES;
+        self.plusOutlet.enabled = YES;
+        self.minusLabel.hidden = NO;
+        self.plusLabel.hidden = NO;
+        self.countText.text = @"0";
+        self.countText.hidden = NO;
         [self.eventTime resignFirstResponder];
+    }
+    else if ([self.eventPlan isFirstResponder])
+    {
+        if ([self.eventPlan.text isEqualToString:@"Select Your Plan"])
+        {
+            UIAlertController *alert= [UIAlertController
+                                       alertControllerWithTitle:@"Heyla"
+                                       message:@"Please select the Plan"
+                                       preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *ok = [UIAlertAction
+                                 actionWithTitle:@"OK"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     
+                                 }];
+            
+            [alert addAction:ok];
+            [self presentViewController:alert animated:YES completion:nil];
+            self.countText.text = @"0";
+            [self.amountOutlet setTitle:[NSString stringWithFormat:@"%@ %@%@",@"Pay - ",@"Rs.",@"0"] forState:UIControlStateNormal];
+        }
+        else
+        {
+            self.eventPlan.text = selectedPlan;
+            [self.eventPlan resignFirstResponder];
+            self.countText.text = @"0";
+            [self.amountOutlet setTitle:[NSString stringWithFormat:@"%@ %@%@",@"Pay - ",@"Rs.",@"0"] forState:UIControlStateNormal];
+        }
     }
 }
 -(void)Cancel
@@ -232,6 +306,12 @@
     {
         [datapickerView removeFromSuperview];
         [self.eventTime resignFirstResponder];
+        [toolbar removeFromSuperview];
+    }
+    else if ([self.eventPlan isFirstResponder])
+    {
+        [datapickerView removeFromSuperview];
+        [self.eventPlan resignFirstResponder];
         [toolbar removeFromSuperview];
     }
 }
@@ -311,7 +391,8 @@
              
              [self->Eventtime removeAllObjects];
              [self->Event_time_id removeAllObjects];
-             if ([msg isEqualToString:@"View Booking Timings"] && [status isEqualToString:@"success"])
+             
+              if ([msg isEqualToString:@"View Booking Timings"] && [status isEqualToString:@"success"])
              {
                  NSArray *Eventtiming = [responseObject objectForKey:@"Eventtiming"];
                  for (int i = 0; i < [Eventtiming count]; i++)
@@ -322,7 +403,11 @@
                      [self->Eventtime addObject:str];
                      [self->Event_time_id addObject:id_time];
                  }
+                 self.eventTime.text = @"HH : MM";
+                 self.eventPlan.text = @"Plan";
+                 [self.amountOutlet setTitle:[NSString stringWithFormat:@"%@ %@%@",@"Pay - ",@"Rs.",@"0"] forState:UIControlStateNormal];
                  [self->Eventtime insertObject:@"Select Time" atIndex:0];
+                 [self->datapickerView reloadAllComponents];
                  
              }
              else
@@ -371,8 +456,12 @@
         [self presentViewController:alert animated:YES completion:nil];
         
     }
-    else if ([self.eventTime.text isEqualToString:@""])
+    else if ([self.eventTime.text isEqualToString:@"Select Time"])
     {
+        self.eventPlan.text = @"Plan";
+        self.eventPlan.textColor = [UIColor lightGrayColor];
+        self.eventPlan.enabled = NO;
+        self.planUmgView.hidden = YES;
         UIAlertController *alert= [UIAlertController
                                    alertControllerWithTitle:@"Heyla"
                                    message:@"Select the time"
@@ -393,6 +482,7 @@
     {
         
         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        appDel.event_SelectedTime = selectedTime;
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
         [parameters setObject:appDel.event_id forKey:@"event_id"];
@@ -418,6 +508,8 @@
              {
                  [self->plan_name removeAllObjects];
                  [self->seat_rate removeAllObjects];
+                 [self->planName_seatrate  removeAllObjects];
+                 
                  NSArray *Plandetails = [responseObject objectForKey:@"Plandetails"];
                  for (int i = 0; i < [Plandetails count]; i++)
                  {
@@ -429,14 +521,24 @@
                      NSString *strseat_rate = [dict objectForKey:@"seat_rate"];
                      NSString *strshow_date = [dict objectForKey:@"show_date"];
                      NSString *strshow_time = [dict objectForKey:@"show_time"];
+                     NSString *strplan_time_id = [dict objectForKey:@"plan_time_id"];
+                     NSString *strEvent_id = [dict objectForKey:@"event_id"];
+                     NSString *planName_seat = [NSString stringWithFormat:@"%@ - %@%@",strplan_name,@"Rs.",strseat_rate];
                      NSLog(@"%@%@%@",strevent_id,strshow_date,strshow_time);
                      [self->plan_id addObject:strplan_id];
                      [self->plan_name addObject:strplan_name];
                      [self->seat_available addObject:strseat_available];
                      [self->seat_rate addObject:strseat_rate];
+                     [self->planName_seatrate addObject:planName_seat];
+                     [self->plan_time_id addObject:strplan_time_id];
+                     [self->event_id addObject:strEvent_id];
                  }
-                 self.tableView.hidden = NO;
-                 [self.tableView reloadData];
+                 self.eventPlan.enabled = YES;
+                 self.planUmgView.hidden = NO;
+                 [self.amountOutlet setTitle:[NSString stringWithFormat:@"%@ %@%@",@"Pay - ",@"Rs.",@"0"] forState:UIControlStateNormal];
+                 [self->planName_seatrate insertObject:@"Select Your Plan" atIndex:0];
+                 [self->datapickerView reloadAllComponents];
+                
              }
              else
              {
@@ -463,55 +565,6 @@
          }];
     }
 }
--(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return [plan_name count];
-}
--(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 43)];
-    /* Create custom view to display section header... */
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, tableView.frame.size.width,18)];
-    [label setFont:[UIFont fontWithName:@"Muli" size:16]];
-    NSString *string =[plan_name objectAtIndex:section];
-    /* Section header is in 0th index... */
-    [label setText:string];
-    [view addSubview:label];
-    [view setBackgroundColor:[UIColor whiteColor]];//your background color...
-    return view;
-}
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return [seat_rate count];
-}
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    BookingTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-    cell.planLabel.text = [NSString stringWithFormat:@"%@%@",@"Rs.",[seat_rate objectAtIndex:indexPath.row]];
-    return cell;
-}
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [Eventtime removeObjectAtIndex:0];
-    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    appDel.plan_id = [plan_id objectAtIndex:indexPath.row];
-    appDel.plan_name = [plan_name objectAtIndex:indexPath.section];
-    appDel.seat_rate = [seat_rate objectAtIndex:indexPath.row];
-    appDel.bookingdate = self.eventDate.text;
-    NSUInteger Eventtimeint = [Eventtime indexOfObject:appDel.selected_Event_time];
-    appDel.event_time_id = Event_time_id[Eventtimeint];
-    appDel.ticlet_seat_available = [seat_available objectAtIndex:indexPath.row];
-    
-    NSLog(@"%@",appDel.event_time_id);
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Booking" bundle:nil];
-    ReviewTicketBookingController *myNewVC = (ReviewTicketBookingController *)[storyboard instantiateViewControllerWithIdentifier:@"ReviewTicketBookingController"];
-    [self.navigationController pushViewController:myNewVC animated:YES];
-}
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 45;
-}
 /*
 #pragma mark - Navigation
 
@@ -524,5 +577,449 @@
 - (IBAction)backBtn:(id)sender;
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+- (IBAction)amountBtn:(id)sender
+{
+    if (selected_Seat.count == 0)
+    {
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:@"Heyla"
+                                   message:@""
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 
+                             }];
+        
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else if ([self.eventTime.text isEqualToString:@"HH : MM"])
+    {
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:@"Heyla"
+                                   message:@"Please Select Your Time"
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 
+                             }];
+        
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else if ([self.eventPlan.text isEqualToString:@"Plan"])
+    {
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:@"Heyla"
+                                   message:@"Please Select Your Plan"
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 
+                             }];
+        
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else if ([self.eventPlan.text isEqualToString:@"Select Your Plan"])
+    {
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:@"Heyla"
+                                   message:@"Please Select Your Plan"
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 
+                             }];
+        
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else
+    {
+        appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        NSDateFormatter* df = [[NSDateFormatter alloc]init];
+        [df setDateFormat:@"MMMM dd yyyy"];
+        NSDate *date = [df dateFromString:self.eventDate.text];
+        NSLog(@"%@",appDel.bookingdate);
+        NSDateFormatter *dfTwo = [[NSDateFormatter alloc]init];
+        [dfTwo setDateFormat:@"yyyy-MM-dd"];
+        NSString *bookingDateString = [dfTwo stringFromDate:date];
+        appDel.bookingdate = bookingDateString;
+        [Eventtime removeObjectAtIndex:0];
+        NSArray *splitArray = [self.eventPlan.text componentsSeparatedByString:@"-"];
+        NSString *planName = [splitArray objectAtIndex:0];
+        NSArray *arr = [planName componentsSeparatedByString:@" "];
+        NSString *stt = [arr objectAtIndex:0];
+        NSUInteger Eventplan_name= [plan_name indexOfObject:stt];
+        appDel.plan_time_id = plan_time_id[Eventplan_name];
+        appDel.plan_id = plan_id[Eventplan_name];
+        appDel.planEvent_id = event_id[Eventplan_name];
+        NSLog(@"%@",appDel.event_time_id);
+        int randomNumber = (arc4random() % 9999999) + 1;
+        NSString *ordeidUserID = [NSString stringWithFormat:@"%d",randomNumber];
+        NSString *order_id = [NSString stringWithFormat: @"%@-%@",
+                              ordeidUserID,appDel.user_Id];
+        appDel.order_id = order_id;
+        NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
+        [parameters setObject:order_id forKey:@"order_id"];
+        [parameters setObject:appDel.planEvent_id forKey:@"event_id"];
+        [parameters setObject:appDel.plan_id forKey:@"plan_id"];
+        [parameters setObject:appDel.plan_time_id forKey:@"plan_time_id"];
+        [parameters setObject:appDel.user_Id forKey:@"user_id"];
+        [parameters setObject:appDel.totalTickets forKey:@"number_of_seats"];
+        [parameters setObject:appDel.total_price forKey:@"total_amount"];
+        [parameters setObject:appDel.bookingdate forKey:@"booking_date"];
+        
+        AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+        manager.requestSerializer = [AFJSONRequestSerializer serializer];
+        [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        manager.responseSerializer.acceptableContentTypes = [manager.responseSerializer.acceptableContentTypes setByAddingObject:@"text/html"];
+        NSString *bookingprocess = @"apimain/bookingProcess";
+        NSArray *components = [NSArray arrayWithObjects:baseUrl,bookingprocess, nil];
+        NSString *api = [NSString pathWithComponents:components];
+        
+        [manager POST:api parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
+         {
+             NSLog(@"%@",responseObject);
+             [MBProgressHUD hideHUDForView:self.view animated:YES];
+             NSString *msg = [responseObject objectForKey:@"msg"];
+             NSString *status = [responseObject objectForKey:@"status"];
+             
+             if ([msg isEqualToString:@"Bookingprocess"] && [status isEqualToString:@"success"])
+             {
+                 [[NSUserDefaults standardUserDefaults]setObject:self->selected_Seat forKey:@"tickcount_arr"];
+                 [self performSegueWithIdentifier:@"to_AttendeesView" sender:self];
+             }
+             else
+             {
+                 UIAlertController *alert= [UIAlertController
+                                            alertControllerWithTitle:@"Heyla"
+                                            message:msg
+                                            preferredStyle:UIAlertControllerStyleAlert];
+                 
+                 UIAlertAction *ok = [UIAlertAction
+                                      actionWithTitle:@"OK"
+                                      style:UIAlertActionStyleDefault
+                                      handler:^(UIAlertAction * action)
+                                      {
+                                          
+                                      }];
+                 
+                 [alert addAction:ok];
+                 [self presentViewController:alert animated:YES completion:nil];
+             }
+         }
+              failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
+         {
+             NSLog(@"error: %@", error);
+         }];
+    }
+}
+- (IBAction)plusBtn:(id)sender
+{
+    if ([self.eventPlan.text isEqualToString:@""])
+    {
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:@"Heyla"
+                                   message:@"select your Plan"
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 
+                             }];
+        
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else if ([self.eventTime.text isEqualToString:@"HH : MM"])
+    {
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:@"Heyla"
+                                   message:@"Please Select Your Time"
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 
+                             }];
+        
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else if ([self.eventPlan.text isEqualToString:@"Plan"])
+    {
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:@"Heyla"
+                                   message:@"Please Select Your Plan"
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 
+                             }];
+        
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else if ([self.eventPlan.text isEqualToString:@"Select Your Plan"])
+    {
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:@"Heyla"
+                                   message:@"Please Select Your Plan"
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 
+                             }];
+        
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else
+    {
+        NSArray *splitArrayPN = [self.eventPlan.text componentsSeparatedByString:@"-"];
+        NSString *planName = [splitArrayPN objectAtIndex:0];
+        NSArray *arr = [planName componentsSeparatedByString:@" "];
+        NSString *stt = [arr objectAtIndex:0];
+        
+        NSUInteger Eventplan_name = [plan_name indexOfObject:stt];
+        appDel.ticlet_seat_available = seat_available[Eventplan_name];
+        
+        NSArray *splitArray = [self.eventPlan.text componentsSeparatedByString:@"-"];
+        NSString *str = [splitArray objectAtIndex:1];
+        NSArray *splitArray2 = [str componentsSeparatedByString:@"."];
+        NSString *seat = [splitArray2 objectAtIndex:1];
+        
+        appDel.bookingdate = self.eventDate.text;
+        NSString *quantity = self.countText.text;
+        int value = [quantity intValue];
+        NSNumber *number = [NSNumber numberWithInteger:value];
+        int ans = [number intValue];
+        number = [NSNumber numberWithInt:ans + 1];
+        NSString *Count =[NSString stringWithFormat:@"%@",number];
+        NSLog(@"%@",appDel.ticlet_seat_available);
+        if (Count > appDel.ticlet_seat_available)
+        {
+            UIAlertController *alert= [UIAlertController
+                                       alertControllerWithTitle:@"Heyla"
+                                       message:@""
+                                       preferredStyle:UIAlertControllerStyleAlert];
+    
+            UIAlertAction *ok = [UIAlertAction
+                                 actionWithTitle:@"OK"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+    
+                                 }];
+    
+            [alert addAction:ok];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+         else if ([Count isEqualToString:@"11"])
+        {
+            self.plusOutlet.enabled = NO;
+            UIAlertController *alert= [UIAlertController
+                                       alertControllerWithTitle:@"Heyla"
+                                       message:@"Reached Maximum count."
+                                       preferredStyle:UIAlertControllerStyleAlert];
+    
+            UIAlertAction *ok = [UIAlertAction
+                                 actionWithTitle:@"OK"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+    
+                                 }];
+    
+            [alert addAction:ok];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+        else
+        {
+            appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            self.minusOulet.enabled = YES;
+            self.countText.text = Count;
+            appDel.totalTickets = Count;
+            [selected_Seat addObject:Count];
+            float seat_rate = [seat floatValue];
+            int intpart = (int)seat_rate;
+            float decpart = seat_rate - intpart;
+            if(decpart == 0.0f)
+            {
+                //Contains no decimals
+                NSLog(@"%@",@"Contains No decimal");
+    
+                NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                f.numberStyle = NSNumberFormatterDecimalStyle;
+                NSNumber *x = [f numberFromString:seat];
+                NSNumber *y = [f numberFromString:Count];
+                NSNumber *z = @(x.doubleValue * y.doubleValue);
+                appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                appDel.total_price = [NSString stringWithFormat:@"%@",z];
+                NSLog(@"%@",appDel.total_price);
+                appDel.price = appDel.total_price;
+                [self.amountOutlet setTitle:[NSString stringWithFormat:@"%@ %@%@",@"Pay - ",@"Rs.",appDel.price] forState:UIControlStateNormal];
+        }
+     }
+   }
+}
+- (IBAction)minusBtn:(id)sender
+{
+    if ([self.eventPlan.text isEqualToString:@""])
+    {
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:@"Heyla"
+                                   message:@""
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 
+                             }];
+        
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else if ([self.eventTime.text isEqualToString:@"HH : MM"])
+    {
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:@"Heyla"
+                                   message:@"Please Select Your Time"
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 
+                             }];
+        
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else if ([self.eventPlan.text isEqualToString:@"Plan"])
+    {
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:@"Heyla"
+                                   message:@"Please Select Your Plan"
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 
+                             }];
+        
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else if ([self.eventPlan.text isEqualToString:@"Select Your Plan"])
+    {
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:@"Heyla"
+                                   message:@"Reached Maximum count."
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 
+                             }];
+        
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else
+    {
+        NSArray *splitArray = [self.eventPlan.text componentsSeparatedByString:@"-"];
+        NSString *str = [splitArray objectAtIndex:1];
+        NSArray *splitArray2 = [str componentsSeparatedByString:@"."];
+        NSString *seat = [splitArray2 objectAtIndex:1];
+        NSString *quantity = self.countText.text;
+        int value = [quantity intValue];
+        NSNumber *number = [NSNumber numberWithInteger:value];
+        int ans = [number intValue];
+        number = [NSNumber numberWithInt:ans - 1];
+        NSString *Count = [NSString stringWithFormat:@"%@", number];
+        if([Count isEqualToString:@"-1"])
+        {
+            self.countText.text = @"0";
+            [self.amountOutlet setTitle:[NSString stringWithFormat:@"%@ %@%@",@"Pay - ",@"RS.",@"0"] forState:UIControlStateNormal];
+            self.minusOulet.enabled = NO;
+        }
+        else
+        {
+            appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            self.minusOulet.enabled = YES;
+            [self.amountOutlet setTitle:[NSString stringWithFormat:@"%@ %@%@",@"Pay - ",@"RS.",Count] forState:UIControlStateNormal];
+            self.countText.text = Count;
+            [selected_Seat removeLastObject];
+            appDel.totalTickets = Count;
+            float seat_rate = [seat  floatValue];
+            int intpart = (int)seat_rate;
+            float decpart = seat_rate - intpart;
+            if(decpart == 0.0f)
+            {
+                //Contains no decimals
+                NSLog(@"%@",@"Contains No decimal");
+    
+                NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                f.numberStyle = NSNumberFormatterDecimalStyle;
+                NSNumber *x = [f numberFromString:seat];
+                NSNumber *y = [f numberFromString:Count];
+                NSNumber *z = @(x.doubleValue * y.doubleValue);
+                appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                appDel.total_price = [NSString stringWithFormat:@"%@",z];
+                NSLog(@"%@",appDel.total_price);
+                appDel.price = appDel.total_price;
+                [self.amountOutlet setTitle:[NSString stringWithFormat:@"%@ %@%@",@"Pay - ",@"Rs.",appDel.price] forState:UIControlStateNormal];
+        }
+      }
+   }
+}
+-(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
+{
+    return NO;
 }
 @end

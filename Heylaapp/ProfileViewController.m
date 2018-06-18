@@ -40,7 +40,6 @@
     NSString *strOccupation;
     NSString *strGender;
     NSString *newLetterResult;
-    UIImage *chosenImage;
     NSString *imageName;
     
     NSString *strcountry_id;
@@ -49,15 +48,17 @@
     NSString *strnews_letter;
     NSData *image;
 }
+@property (nonatomic, strong) UIImage *chosenImage;
+@property (nonatomic, strong) UIImage *cropImage;
 @end
-
 @implementation ProfileViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+    self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
+
     _fullName.delegate = self;
     _userName.delegate = self;
     _addressLine.delegate = self;
@@ -72,13 +73,20 @@
     _state.delegate = self;
     _city.delegate = self;
     
+    self.profImageView.layer.cornerRadius = self.profImageView.frame.size.width / 2;
+    self.profImageView.clipsToBounds = YES;
     NSLog(@"%@",appDel.login_type);
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
     if ([appDel.login_type isEqualToString:@"FB"])
     {
-        NSData *data = [[NSUserDefaults standardUserDefaults]objectForKey:@"picture_Url"];
-        UIImage *image = [UIImage imageWithData:data];
+        NSURL *url = [NSURL URLWithString:[[NSUserDefaults standardUserDefaults]objectForKey:@"picture_Url"]];
+        UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
         self.profImageView.image = image;
+        self.profImageView.layer.cornerRadius = self.profImageView.frame.size.width / 2;
+        self.profImageView.clipsToBounds = YES;
+        self.profImageView.layer.borderWidth = 4.0f;
+        self.profImageView.layer.borderColor = [UIColor whiteColor].CGColor;
+        [self scaleAndRotateImage:image];
     }
     else
     {
@@ -89,21 +97,12 @@
         [self.profImageView setImageWithURLRequest:request placeholderImage:placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image)
          {
              profile.profImageView.image = image;
-             
-             // Begin a new image that will be the new image with the rounded corners
-             // (here with the size of an UIImageView)
-             UIGraphicsBeginImageContextWithOptions(profile.profImageView.bounds.size, NO, [UIScreen mainScreen].scale);
-             
-             // Add a clip before drawing anything, in the shape of an rounded rect
-             [[UIBezierPath bezierPathWithRoundedRect:profile.profImageView.bounds
-                                         cornerRadius:50.0] addClip];
-             // Draw your image
-             [image drawInRect:profile.profImageView.bounds];
-             
-             // Get the image, here setting the UIImageView image
-             profile.profImageView.image = UIGraphicsGetImageFromCurrentImageContext();
-             
-             // Lets forget about that we were drawing
+             profile.profImageView.layer.cornerRadius = self.profImageView.frame.size.width / 2;
+             profile.profImageView.clipsToBounds = YES;
+             profile.profImageView.layer.borderWidth = 4.0f;
+             profile.profImageView.layer.borderColor = [UIColor whiteColor].CGColor;
+             [profile scaleAndRotateImage:image];
+
              UIGraphicsEndImageContext();
          } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
              
@@ -111,7 +110,7 @@
              
          }];
     }
-    _save.layer.cornerRadius = 8;
+    _save.layer.cornerRadius = 5.0;
     _save.clipsToBounds = YES;
 
     listpickerView = [[UIPickerView alloc] init];
@@ -236,7 +235,7 @@
              NSLog(@"error: %@", error);
          }];
         
-    self.fullName.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"fullName"];
+    self.fullName.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"statFull_Name"];
     self.userName.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"statUser_Name"];
     self.dobTextFiled.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"dob"];
     self.occupation.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"occupation"];
@@ -519,8 +518,6 @@
             self.state.text = strState;
             [self.state resignFirstResponder];
         }
-        
-        
     }
     else if ([self.city isFirstResponder])
     {
@@ -680,28 +677,56 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    
-    chosenImage = info[UIImagePickerControllerOriginalImage];
-    self.profImageView.image = chosenImage;
-    chosenImage=[self scaleAndRotateImage:chosenImage];
-    image = UIImageJPEGRepresentation(chosenImage, 0.1);
-    
-    UIGraphicsBeginImageContextWithOptions(self.profImageView.bounds.size, NO, [UIScreen mainScreen].scale);
-
-    // Add a clip before drawing anything, in the shape of an rounded rect
-    [[UIBezierPath bezierPathWithRoundedRect:self.profImageView.bounds
-                                cornerRadius:50.0] addClip];
-    // Draw your image
-    [chosenImage drawInRect:self.profImageView.bounds];
-
-    // Get the image, here setting the UIImageView image
-    self.profImageView.image = UIGraphicsGetImageFromCurrentImageContext();
-
-    // Lets forget about that we were drawing
-    UIGraphicsEndImageContext();
-
-    [self profile_Pic];
+    _chosenImage = info[UIImagePickerControllerOriginalImage];
     [picker dismissViewControllerAnimated:YES completion:nil];
+    [self changeImage];
+
+}
+-(void)changeImage
+{
+    PECropViewController *controller = [[PECropViewController alloc] init];
+    controller.delegate = self;
+    controller.image = self->_chosenImage;
+    
+    UIImage *image = self.chosenImage;
+    CGFloat width = image.size.width;
+    CGFloat height = image.size.height;
+    CGFloat length = MIN(width, height);
+    controller.imageCropRect = CGRectMake((width - length) / 4,
+                                          (height - length) / 4,
+                                          length,
+                                          length);
+    
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
+    }
+    
+    [self presentViewController:navigationController animated:YES completion:NULL];
+    
+}
+
+- (void)cropViewController:(PECropViewController *)controller didFinishCroppingImage:(UIImage *)croppedImage transform:(CGAffineTransform)transform cropRect:(CGRect)cropRect
+{
+    [controller dismissViewControllerAnimated:YES completion:NULL];
+    self.profImageView.image = croppedImage;
+    _cropImage = croppedImage;
+    image = UIImageJPEGRepresentation(_cropImage, 0.1);
+    [self scaleAndRotateImage:croppedImage];
+    self.profImageView.layer.cornerRadius = self.profImageView.frame.size.width / 2;
+    self.profImageView.clipsToBounds = YES;
+    self.profImageView.layer.borderWidth = 4.0f;
+    self.profImageView.layer.borderColor = [UIColor whiteColor].CGColor;
+    [self profile_Pic];
+}
+- (void)cropViewControllerDidCancel:(PECropViewController *)controller
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+    }
+    
+    [controller dismissViewControllerAnimated:YES completion:NULL];
 }
 - (IBAction)newsLetterBtn:(id)sender
 {
@@ -716,7 +741,6 @@
         [_newsLetter setSelected:NO];
         newsLetterFlag = @"0";
         [[NSUserDefaults standardUserDefaults]setObject:@"N" forKey:@"new_Letter_Key"];
-
     }
 }
 - (IBAction)saveBtn:(id)sender
@@ -799,7 +823,7 @@
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
         
-        [[NSUserDefaults standardUserDefaults]setObject:self.fullName.text forKey:@"fullName"];
+        [[NSUserDefaults standardUserDefaults]setObject:self.fullName.text forKey:@"statFull_Name"];
         [[NSUserDefaults standardUserDefaults]setObject:self.userName.text forKey:@"statUser_Name"];
         [[NSUserDefaults standardUserDefaults]setObject:self.dobTextFiled.text forKey:@"dob"];
         [[NSUserDefaults standardUserDefaults]setObject:self.occupation.text forKey:@"occupation"];
@@ -882,8 +906,9 @@
 }
 -(void)profile_Pic
 {
-    CGImageRef cgref = [chosenImage CGImage];
-    CIImage *cim = [chosenImage CIImage];
+    [self scaleAndRotateImage:_cropImage];
+    CGImageRef cgref = [_cropImage CGImage];
+    CIImage *cim = [_cropImage CIImage];
     
     if (cim == nil && cgref == NULL)
     {
@@ -893,7 +918,6 @@
     {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
-//        NSData *imageData = UIImagePNGRepresentation(chosenImage);
         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
         NSString *url = [NSString stringWithFormat:@"%@/%@",@"http://heylaapp.com/apimain/profilePictureUpload",appDel.user_Id];
         
@@ -1190,4 +1214,5 @@
 {
     
 }
+
 @end

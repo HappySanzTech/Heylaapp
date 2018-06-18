@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "ACFloatingTextField.h"
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import <MapKit/MapKit.h>
+#import <CoreLocation/CoreLocation.h>
 
-@interface LoginViewController : UIViewController <UITextFieldDelegate>
+@interface LoginViewController : UIViewController <UITextFieldDelegate,CLLocationManagerDelegate,MKMapViewDelegate>
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIButton *signIn;
 - (IBAction)signInBtn:(id)sender;

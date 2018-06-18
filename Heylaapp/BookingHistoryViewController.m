@@ -51,8 +51,7 @@
     show_date = [[NSMutableArray alloc]init];
     total_amount = [[NSMutableArray alloc]init];
     
-    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;       [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
     [parameters setObject:appDel.user_Id forKey:@"user_id"];
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
@@ -211,12 +210,32 @@
     BookingHistoryDetailsViewController *myNewVC = (BookingHistoryDetailsViewController *)[storyboard instantiateViewControllerWithIdentifier:@"BookingHistoryDetailsViewController"];
     [self.navigationController pushViewController:myNewVC animated:YES];
 }
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     
-    return 247;
+    return 245;
 }
 - (IBAction)backBtn:(id)sender
 {
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//    UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"NavigationController"];
+//    [navigationController setViewControllers:@[[storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"]]];
+//
+//    SideMenuMainViewController *sideMenuMainViewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"SideMenuMainViewController"]; //or
+//    sideMenuMainViewController.rootViewController = navigationController;
+//    [sideMenuMainViewController setupWithType:0];
+//    self.window.rootViewController = navigationController;
+//    [self.window makeKeyAndVisible];
+//
+//    UIWindow *window = UIApplication.sharedApplication.delegate.window;
+//    window.rootViewController = sideMenuMainViewController;
+//
+//    [UIView transitionWithView:window
+//                      duration:0.3
+//                       options:UIViewAnimationOptionTransitionCrossDissolve
+//                    animations:nil
+//                    completion:nil];
     [self dismissViewControllerAnimated:YES completion:nil];
+
 }
 @end

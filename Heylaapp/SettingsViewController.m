@@ -9,7 +9,9 @@
 #import "SettingsViewController.h"
 
 @interface SettingsViewController ()
-
+{
+    NSArray *menuItems;
+}
 @end
 
 @implementation SettingsViewController
@@ -19,6 +21,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
+    menuItems = @[@"basic",@"Profile",@"editProfile",@"Support",@"report",@"privacy", @"about"];
+
+    self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
 
 }
 - (void)didReceiveMemoryWarning
@@ -39,28 +44,44 @@
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-- (IBAction)editProfBtn:(id)sender
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    ProfileViewController *profile = [storyboard instantiateViewControllerWithIdentifier:@"ProfileViewController"];
-    [self presentViewController:profile animated:YES completion:nil];
+    return 1;
 }
-- (IBAction)changeNumBtn:(id)sender
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    ChangeNumberViewController *changeNumberViewController = [storyboard instantiateViewControllerWithIdentifier:@"ChangeNumberViewController"];
-    [self.navigationController pushViewController:changeNumberViewController animated:YES];
+    return menuItems.count;
 }
-- (IBAction)chNgePaswrdBtn:(id)sender
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    ForgotPasswordViewController *forgotPasswordViewController = [storyboard instantiateViewControllerWithIdentifier:@"ForgotPasswordViewController"];
-    [self.navigationController pushViewController:forgotPasswordViewController animated:YES];
+    NSString *CellIdentifier = [menuItems objectAtIndex:indexPath.row];
+    SettingsTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    return cell;
 }
-- (IBAction)verifyMailBtn:(id)sender
-{
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    ProfileViewController *profile = [storyboard instantiateViewControllerWithIdentifier:@"ProfileViewController"];
-    [self presentViewController:profile animated:YES completion:nil];
-}
+//- (IBAction)editProfBtn:(id)sender
+//{
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//    ProfileViewController *profile = [storyboard instantiateViewControllerWithIdentifier:@"ProfileViewController"];
+//    [self presentViewController:profile animated:YES completion:nil];
+//}
+//- (IBAction)changeNumBtn:(id)sender
+//{
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//    ChangeNumberViewController *changeNumberViewController = [storyboard instantiateViewControllerWithIdentifier:@"ChangeNumberViewController"];
+//    [self.navigationController pushViewController:changeNumberViewController animated:YES];
+//}
+//- (IBAction)chNgePaswrdBtn:(id)sender
+//{
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//    ForgotPasswordViewController *forgotPasswordViewController = [storyboard instantiateViewControllerWithIdentifier:@"ForgotPasswordViewController"];
+//    [self.navigationController pushViewController:forgotPasswordViewController animated:YES];
+//}
+//- (IBAction)verifyMailBtn:(id)sender
+//{
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//    ProfileViewController *profile = [storyboard instantiateViewControllerWithIdentifier:@"ProfileViewController"];
+//    [self presentViewController:profile animated:YES completion:nil];
+//}
+
 @end

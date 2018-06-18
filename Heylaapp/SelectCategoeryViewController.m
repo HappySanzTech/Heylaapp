@@ -41,6 +41,17 @@
     _getStart.layer.cornerRadius = 8;
     _getStart.clipsToBounds = YES;
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
+    NSString *str = [[NSUserDefaults standardUserDefaults]objectForKey:@"from_sideMenu"];
+    if ([str isEqualToString:@"YES"])
+    {
+        _backOutlet.enabled = YES;
+        _backOutlet.tintColor = [UIColor whiteColor];
+    }
+    else
+    {
+        _backOutlet.enabled = NO;
+        _backOutlet.tintColor = [UIColor clearColor];
+    }
     self.collectionView.allowsMultipleSelection = YES;
     [self User];
     setValue= @"2";
@@ -320,10 +331,7 @@
 }
 - (IBAction)backBtn:(id)sender
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    SelectCityPageViewController *selectCity = [storyboard instantiateViewControllerWithIdentifier:@"SelectCityPageViewController"];
-    [self.navigationController pushViewController:selectCity animated:YES];
-    
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (IBAction)selectAllBtn:(id)sender
 {

@@ -12,5 +12,5 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 - (IBAction)backBtn:(id)sender;
 - (IBAction)payNowbtn:(id)sender;
-
+@property(strong,nonatomic) UIWindow *window;
 @end

@@ -15,6 +15,13 @@
 {
     NSArray *searchResultsArray;
 }
+@property (weak, nonatomic) IBOutlet UIView *mainView_tv;
+- (IBAction)leaderBoardProfileBtn:(id)sender;
+@property (weak, nonatomic) IBOutlet UIView *bookingView;
+@property (weak, nonatomic) IBOutlet UIView *reviewView;
+@property (weak, nonatomic) IBOutlet UIView *checkInView;
+@property (weak, nonatomic) IBOutlet UIView *eventShareView;
+@property (weak, nonatomic) IBOutlet UIView *loginView;
 - (IBAction)daySegmentButton:(id)sender;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *daySegment;
 - (IBAction)profileButton:(id)sender;
@@ -26,8 +33,7 @@
 - (IBAction)leaderBoardeventShareBtn:(id)sender;
 - (IBAction)leaderBoardLoginBtn:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *leaderBoardLoginOtlet;
-@property (weak, nonatomic) IBOutlet UIImageView *imageView;
-- (IBAction)menuBtn:(id)sender;
+@property (weak, nonatomic) IBOutlet UIImageView *LeaderBoardimageView;
 @property (strong, nonatomic) IBOutlet UIButton *floating;
 - (IBAction)floatibgBtn:(id)sender;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
@@ -38,11 +44,6 @@
 - (IBAction)advanceFilterBtn:(id)sender;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *advanceFilter;
 @property (strong, nonatomic) IBOutlet UIView *leaderBoardView;
-@property (strong, nonatomic) IBOutlet UIView *lbViewOne;
-@property (strong, nonatomic) IBOutlet UIView *lbViewTwo;
-@property (strong, nonatomic) IBOutlet UIView *lbViewThree;
-@property (strong, nonatomic) IBOutlet UIView *lbViewFour;
-@property (strong, nonatomic) IBOutlet UIView *lbViewFive;
 @property (strong, nonatomic) IBOutlet UILabel *userName;
 @property (strong, nonatomic) IBOutlet UILabel *bookingPoints;
 @property (strong, nonatomic) IBOutlet UILabel *bookingCount;
@@ -55,4 +56,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *loginPoints;
 @property (strong, nonatomic) IBOutlet UILabel *loginCount;
 @property (strong, nonatomic) IBOutlet UILabel *totalPoints;
+-(UIImage *)makeRoundedImage:(UIImage *) image
+                      radius: (float) radius;
 @end

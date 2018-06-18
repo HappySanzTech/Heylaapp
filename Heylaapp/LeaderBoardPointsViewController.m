@@ -27,7 +27,7 @@
     event_venue = [[NSMutableArray alloc]init];
     
     NSString *check = [[NSUserDefaults standardUserDefaults]objectForKey:@"LeaderBoardType"];
-
+    self.navigationItem.title = check;
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];

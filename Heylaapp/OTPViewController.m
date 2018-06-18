@@ -307,8 +307,7 @@
                      }
                      else
                      {
-                         ProfileViewController *profileViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ProfileViewController"];
-                         [self presentViewController:profileViewController animated:NO completion:nil];
+                         [self performSegueWithIdentifier:@"to_profile" sender:self];
                      }
 
                      }

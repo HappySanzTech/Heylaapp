@@ -11,6 +11,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
+
 @interface LoginViewController ()
 {
     NSString *signInPasswordEyeFlag;
@@ -21,6 +22,9 @@
     NSString *fbprofilePic;
     NSString *fbID;
     AppDelegate *appDel;
+    CLLocationManager *objLocationManager;
+    double latitude_UserLocation, longitude_UserLocation;
+    NSString *address;
 }
 @end
 
@@ -106,9 +110,51 @@
             checkBoxFlage =@"0";
         }
     }
+    [self loadUserLocation];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                           action:@selector(dismissKeyboard)];
     [self.view addGestureRecognizer:tap];
+}
+- (void)loadUserLocation
+{
+    objLocationManager = [[CLLocationManager alloc] init];
+    objLocationManager.delegate = self;
+    objLocationManager.distanceFilter = kCLDistanceFilterNone;
+    objLocationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    if ([objLocationManager respondsToSelector:@selector(requestWhenInUseAuthorization)])
+    {
+        [objLocationManager requestWhenInUseAuthorization];
+    }
+    [objLocationManager startUpdatingLocation];
+}
+- (void)locationManager:(CLLocationManager *)manager
+     didUpdateLocations:(NSArray *)locations __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_6_0)
+{
+    CLLocation *newLocation = [locations objectAtIndex:0];
+    NSLog(@"NewLocation %f %f", newLocation.coordinate.latitude, newLocation.coordinate.longitude);
+    NSLog(@"%@",newLocation);
+    [objLocationManager stopUpdatingLocation];
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init] ;
+    [geocoder reverseGeocodeLocation:newLocation completionHandler:^(NSArray *placemarks, NSError *error)
+     {
+         if (!(error))
+         {
+             CLPlacemark *placemark = [placemarks objectAtIndex:0];
+             NSString *address = [NSString stringWithFormat:@"%@, %@, %@, %@, %@, %@",
+                                  placemark.thoroughfare,
+                                  placemark.locality,
+                                  placemark.subLocality,
+                                  placemark.administrativeArea,
+                                  placemark.postalCode,
+                                  placemark.country];
+             NSLog(@"%@", address);
+             NSArray *splitArray = [address componentsSeparatedByString:@","];
+             NSString *City = [splitArray objectAtIndex:1];
+             NSArray *spiltSpace = [City componentsSeparatedByString:@" "];
+             NSString *locatedCity = [spiltSpace objectAtIndex:1];
+             [[NSUserDefaults standardUserDefaults]setObject:locatedCity forKey:@"locatedCity"];
+         }
+     }];
 }
 -(void)cancelNumberPad
 {
@@ -239,21 +285,23 @@
 {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields" : @"id,email,first_name,last_name,link,locale"}]
-     startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-         
+     startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+    {
          if (!error)
          {
              NSLog(@"fetched user:%@  and Email : %@", result,result[@"email"]);
              NSLog(@"fetched user:%@  and Email : %@", result,result[@"first_name"]);
+             self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
              self->fbID=[result objectForKey:@"id"];
              NSString *firstName = [result objectForKey:@"first_name"];
              NSString *lastName = [result objectForKey:@"last_name"];
              self->facebookEmail_id = [result objectForKey:@"email"];
              self->facebookName = [NSString stringWithFormat:@"%@%@",firstName,lastName];
-             self->fbprofilePic= [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large",self->fbID];
+             self->fbprofilePic = [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large",self->fbID];
              NSURL *fbPicURL = [NSURL URLWithString:self->fbprofilePic];
-             NSData *imgData = [NSData dataWithContentsOfURL:fbPicURL];
-             [[NSUserDefaults standardUserDefaults]setObject:imgData forKey:@"picture_Url"];
+             self->appDel.picture_url = fbPicURL.absoluteString;
+             NSLog(@"%@",self->appDel.picture_url);
+             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.picture_url forKey:@"picture_Url"];
              [self facebookLogin];
          }
      }];
@@ -285,8 +333,6 @@
          NSString *status = [responseObject objectForKey:@"status"];
          if ([msg isEqualToString:@"Login Successfully"] && [status isEqualToString:@"Success"])
          {
-             self->appDel.user_name = [[NSUserDefaults standardUserDefaults]objectForKey:@"statUser_Name"];
-             self->appDel.mobile_no = [[NSUserDefaults standardUserDefaults]objectForKey:@"statemobile_no"];
              NSDictionary *dict = [responseObject objectForKey:@"userData"];
              self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
              NSString *user_id = [dict objectForKey:@"user_id"];
@@ -313,31 +359,33 @@
              self->appDel.state_id = [dict objectForKey:@"state_id"];
              self->appDel.state_name = [dict objectForKey:@"state_name"];
              NSString *userName = [dict objectForKey:@"user_name"];
-             self->appDel.user_name = [[NSUserDefaults standardUserDefaults]objectForKey:@"statUser_Name"];
+             
              self->appDel.user_role = [dict objectForKey:@"user_role"];
              self->appDel.user_role_name = [dict objectForKey:@"user_role_name"];
              self->appDel.zip = [dict objectForKey:@"zip"];
              self->appDel.user_type = @"1";
+             self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
              NSLog(@"%@",self->appDel.picture_url);
-             if (!self->appDel.picture_url.length)
-             {
-                 self->appDel.login_type = @"FB";
+//             if (![self->appDel.picture_url isEqualToString:@""])
+//             {
+                 NSString *log_Type = @"FB";
+                 [[NSUserDefaults standardUserDefaults]setObject:log_Type forKey:@"login_type"];
+                 self->appDel.login_type = [[NSUserDefaults standardUserDefaults]objectForKey:@"login_type"];
                  self->fbprofilePic= [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=large",self->fbID];
-                 NSURL *fbPicURL = [NSURL URLWithString:self->fbprofilePic];
-                 NSData *imgData = [NSData dataWithContentsOfURL:fbPicURL];
-                 [[NSUserDefaults standardUserDefaults]setObject:imgData forKey:@"picture_Url"];
-             }
-             else
-             {
-                 self->appDel.login_type = @"";
-                 [[NSUserDefaults standardUserDefaults]setObject:self->appDel.picture_url forKey:@"picture_Url"];
-             }
-             [[NSUserDefaults standardUserDefaults]setObject:userName forKey:@"statUser_Name"];
+                 [[NSUserDefaults standardUserDefaults]setObject:self->fbprofilePic forKey:@"picture_Url"];
+//             }
+//             else
+//             {
+//                 NSString *log_Type = @"";
+//                 [[NSUserDefaults standardUserDefaults]setObject:log_Type forKey:@"login_type"];
+//                 self->appDel.login_type = [[NSUserDefaults standardUserDefaults]objectForKey:@"login_type"];
+//                 [[NSUserDefaults standardUserDefaults]setObject:self->appDel.picture_url forKey:@"picture_Url"];
+//             }
              [[NSUserDefaults standardUserDefaults]setObject:mobile_no forKey:@"statemobile_no"];
              [[NSUserDefaults standardUserDefaults]setObject:emailId forKey:@"statemail_id"];
              [[NSUserDefaults standardUserDefaults]setObject:user_id forKey:@"stat_user_id"];
              [[NSUserDefaults standardUserDefaults]setObject:@"1" forKey:@"stat_user_type"];
-             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.full_name forKey:@"fullName"];
+             [[NSUserDefaults standardUserDefaults]setObject:self->appDel.full_name forKey:@"statFull_Name"];
              [[NSUserDefaults standardUserDefaults]setObject:userName forKey:@"statUser_Name"];
              [[NSUserDefaults standardUserDefaults]setObject:self->appDel.birth_date forKey:@"dobTextFiled"];
              [[NSUserDefaults standardUserDefaults]setObject:self->appDel.occupation forKey:@"occupation"];
@@ -353,6 +401,7 @@
              [[NSUserDefaults standardUserDefaults]setObject:self->appDel.state_id forKey:@"state_id"];
              [[NSUserDefaults standardUserDefaults]setObject:self->appDel.city_id forKey:@"city_id"];
              [[NSUserDefaults standardUserDefaults]setObject:@"signIn" forKey:@"status"];
+             [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"from_sideMenu"];
              [self performSegueWithIdentifier:@"facebook_CityPage" sender:self];
          }
          else
@@ -466,7 +515,7 @@
 
              if ([msg isEqualToString:@"Signup Successfully"] && [status isEqualToString:@"Success"])
              {
-                 [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"fullName"];
+                 [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"statFull_Name"];
                  [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"statUser_Name"];
                  [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"dob"];
                  [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"occupation"];
@@ -482,7 +531,9 @@
                  [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"state_id"];
                  [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"city_id"];
                  [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"new_Letter"];
-                 self->appDel.login_type = @"";
+                 NSString *log_Type = @"";
+                 [[NSUserDefaults standardUserDefaults]setObject:log_Type forKey:@"login_type"];
+                 self->appDel.login_type = [[NSUserDefaults standardUserDefaults]objectForKey:@"login_type"];
                  self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
                  self->appDel.user_type = @"1";
                  [[NSUserDefaults standardUserDefaults]setObject:@"1" forKey:@"stat_user_type"];
@@ -658,7 +709,9 @@
                          self->appDel.country_id = [dict objectForKey:@"country_id"];
                          self->appDel.country_name = [dict objectForKey:@"country_name"];
                          self->appDel.email_verify_status = [dict objectForKey:@"email_verify_status"];
-                         self->appDel.full_name = [dict objectForKey:@"full_name"];
+                         NSString *full_Name = [dict objectForKey:@"full_name"];
+                         [[NSUserDefaults standardUserDefaults]setObject:full_Name forKey:@"statFull_Name"];
+                         self->appDel.full_name = [[NSUserDefaults standardUserDefaults]objectForKey:@"statFull_Name"];
                          self->appDel.gender = [dict objectForKey:@"gender"];
                          self->appDel.newsletter_status = [dict objectForKey:@"newsletter_status"];
                          self->appDel.occupation = [dict objectForKey:@"occupation"];
@@ -675,20 +728,20 @@
                          NSString *mobile_no = [dict objectForKey:@"mobile_no"];
                          self->appDel.mobile_no = [[NSUserDefaults standardUserDefaults]objectForKey:@"statemobile_no"];
                          NSString *userName = [dict objectForKey:@"user_name"];
+                         [[NSUserDefaults standardUserDefaults]setObject:userName forKey:@"statUser_Name"];
                          self->appDel.user_name = [[NSUserDefaults standardUserDefaults]objectForKey:@"statUser_Name"];
-                         self->appDel.login_type = @"";
+                         NSString *log_Type = @"";
+                         [[NSUserDefaults standardUserDefaults]setObject:log_Type forKey:@"login_type"];
+                         self->appDel.login_type = [[NSUserDefaults standardUserDefaults]objectForKey:@"login_type"];
                          self->appDel.user_type = @"1";
                          NSLog(@"%@",self->appDel.user_Id);
-                         
-                         [[NSUserDefaults standardUserDefaults]setObject:userName forKey:@"statUser_Name"];
                          [[NSUserDefaults standardUserDefaults]setObject:@"1" forKey:@"stat_user_type"];
                          [[NSUserDefaults standardUserDefaults]setObject:emailId forKey:@"statemail_id"];
                          [[NSUserDefaults standardUserDefaults]setObject:@"signIn" forKey:@"status"];
                          [[NSUserDefaults standardUserDefaults]setObject:picture forKey:@"picture_Url"];
                          [[NSUserDefaults standardUserDefaults]setObject:user_id forKey:@"stat_user_id"];
                          [[NSUserDefaults standardUserDefaults]setObject:mobile_no forKey:@"statemobile_no"];
-                         [[NSUserDefaults standardUserDefaults]setObject:self->appDel.full_name forKey:@"fullName"];
-                         [[NSUserDefaults standardUserDefaults]setObject:userName forKey:@"statUser_Name"];
+                         [[NSUserDefaults standardUserDefaults]setObject:self->appDel.full_name forKey:@"statFull_Name"];
                          [[NSUserDefaults standardUserDefaults]setObject:self->appDel.birth_date forKey:@"dob"];
                          [[NSUserDefaults standardUserDefaults]setObject:self->appDel.occupation forKey:@"occupation"];
                          [[NSUserDefaults standardUserDefaults]setObject:self->appDel.gender forKey:@"gender"];
@@ -703,6 +756,7 @@
                          [[NSUserDefaults standardUserDefaults]setObject:self->appDel.state_id forKey:@"state_id"];
                          [[NSUserDefaults standardUserDefaults]setObject:self->appDel.city_id forKey:@"city_id"];
                          [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"for_Alert"];
+                         [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"from_sideMenu"];
                          [self performSegueWithIdentifier:@"to_countryPage" sender:self];
                      }
                      else
@@ -772,6 +826,7 @@
              self->appDel.user_type = @"2";
              [[NSUserDefaults standardUserDefaults]setObject:@"2" forKey:@"stat_user_type"];
              [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"for_Alert"];
+             [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"from_sideMenu"];
              [self performSegueWithIdentifier:@"to_countryPage" sender:self];
          }
          else

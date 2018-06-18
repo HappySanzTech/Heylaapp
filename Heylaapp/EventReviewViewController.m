@@ -40,6 +40,7 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
     [parameters setObject:appDel.event_id forKey:@"event_id"];
+    [parameters setObject:appDel.user_Id forKey:@"user_id"];
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
@@ -101,8 +102,8 @@
      {
          NSLog(@"error: %@", error);
      }];
+    self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
 }
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -196,9 +197,42 @@
 }
 - (IBAction)plusBtn:(id)sender
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Booking" bundle:nil];
-    AddingReviewViewController *myNewVC = (AddingReviewViewController *)[storyboard instantiateViewControllerWithIdentifier:@"AddingReviewViewController"];
-    [self.navigationController pushViewController:myNewVC animated:YES];
+    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    if ([appDel.user_type isEqualToString:@"2"])
+    {
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:@"Heyla"
+                                   message:@"Login to Access"
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 LoginViewController *loginViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+                                 [self presentViewController:loginViewController animated:NO completion:nil];
+                             }];
+        
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleDefault
+                                 handler:^(UIAlertAction * action)
+                                 {
+                                     
+                                 }];
+        
+        [alert addAction:ok];
+        [alert addAction:cancel];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else
+    {
+        [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"addreview"];
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Booking" bundle:nil];
+        AddingReviewViewController *myNewVC = (AddingReviewViewController *)[storyboard instantiateViewControllerWithIdentifier:@"AddingReviewViewController"];
+        [self.navigationController pushViewController:myNewVC animated:YES];
+    }
 }
 -(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {

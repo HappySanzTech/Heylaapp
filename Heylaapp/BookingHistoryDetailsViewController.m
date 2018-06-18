@@ -154,7 +154,7 @@
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 117;
+    return 94;
 }
 - (IBAction)backBtn:(id)sender
 {

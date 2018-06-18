@@ -40,8 +40,6 @@
     NSMutableArray *start_time;
     NSMutableArray *end_time;
     NSMutableArray *Eventdetails;
-    NSMutableArray *date_label;
-    NSMutableArray *month_label;
     NSMutableArray *wishlist_id;
     NSArray *EventdetailsArr;
 }
@@ -83,8 +81,6 @@
     start_date = [[NSMutableArray alloc]init];
     start_time = [[NSMutableArray alloc]init];
     end_time = [[NSMutableArray alloc]init];
-    date_label = [[NSMutableArray alloc]init];
-    month_label = [[NSMutableArray alloc]init];
     wishlist_id = [[NSMutableArray alloc]init];
     [self whistList];
     self.tableView.allowsMultipleSelectionDuringEditing = NO;
@@ -147,6 +143,7 @@
              [self->start_date removeAllObjects];
              [self->start_time removeAllObjects];
              [self->end_time removeAllObjects];
+             
              for (int i = 0; i < [self->EventdetailsArr count]; i++)
              {
                  NSDictionary *dict = [self->EventdetailsArr objectAtIndex:i];
@@ -171,7 +168,7 @@
                  NSString *strEvent_status = [dict objectForKey:@"event_status"];
                  NSString *strEvent_type = [dict objectForKey:@"event_type"];
                  NSString *strEvent_venue = [dict objectForKey:@"event_venue"];
-                 NSString *stHotspot_status = [dict objectForKey:@"hotspot_status"];
+                 NSString *strHotspot_status = [dict objectForKey:@"hotspot_status"];
                  NSString *strPopularity = [dict objectForKey:@"popularity"];
                  NSString *strPrimary_contact_no = [dict objectForKey:@"primary_contact_no"];
                  NSString *strSecondary_contact_no = [dict objectForKey:@"secondary_contact_no"];
@@ -180,18 +177,15 @@
                  NSString *strEnd_time = [dict objectForKey:@"end_time"];
                  NSString *strWishlist_id = [dict objectForKey:@"wishlist_id"];
                  
+                 
                  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                  [dateFormatter setDateFormat:@"yyyy-MM-dd"];
                  NSDate *date = [[NSDate alloc] init];
                  date = [dateFormatter dateFromString:strStart_date];
                  // converting into our required date format
-                 [dateFormatter setDateFormat:@"EEEE, MMM dd, yyyy"];
+                 [dateFormatter setDateFormat:@"MMMM dd yyyy"];
                  NSString *reqDateString = [dateFormatter stringFromDate:date];
                  NSLog(@"date is %@", reqDateString);
-                 
-                 NSArray *testArray = [reqDateString componentsSeparatedByString:@" "];
-                 NSString *strdate = [testArray objectAtIndex:1];
-                 NSString *strMonth = [testArray objectAtIndex:2];
                  
                  [self->adv_status addObject:strAdv_status];
                  [self->booking_status addObject:strBooking_status];
@@ -214,24 +208,22 @@
                  [self->event_status addObject:strEvent_status];
                  [self->event_type addObject:strEvent_type];
                  [self->event_venue addObject:strEvent_venue];
-                 [self->hotspot_status addObject:stHotspot_status];
+                 [self->hotspot_status addObject:strHotspot_status];
                  [self->popularity addObject:strPopularity];
                  [self->primary_contact_no addObject:strPrimary_contact_no];
                  [self->secondary_contact_no addObject:strSecondary_contact_no];
                  [self->start_date addObject:strStart_date];
                  [self->start_time addObject:strStart_time];
                  [self->end_time addObject:strEnd_time];
-                 [self->date_label addObject:strdate];
-                 [self->month_label addObject:strMonth];
                  [self->wishlist_id addObject:strWishlist_id];
                  
              }
-             [MBProgressHUD hideHUDForView:self.view animated:YES];
-             
+             self.tableView.hidden = NO;
              [self.tableView reloadData];
          }
          else
          {
+             self.tableView.hidden = YES;
              UIAlertController *alert= [UIAlertController
                                         alertControllerWithTitle:@"Heyla"
                                         message:msg
@@ -279,31 +271,53 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HomeViewTableCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
-    
-    cell.eventName.text = [event_name objectAtIndex:indexPath.row];
-    cell.dateLabel.text = [date_label objectAtIndex:indexPath.row];
-    cell.monthLabel.text = [month_label objectAtIndex:indexPath.row];
-    NSString *imageUrl = [event_banner objectAtIndex:indexPath.row];
-    __weak HomeViewTableCell *weakCell = cell;
-    UIImage *placeholderImage = [UIImage imageNamed:@"placeholder.jpg"];
-    NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:imageUrl]];
-    [cell.eventImageView setImageWithURLRequest:request placeholderImage:placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image)
-     {
-         weakCell.eventImageView.image = image;
-         
-     } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
-         
-         NSLog(@"%@",error);
-         
-     }];
-    
-    cell.eventLocation.text = [event_venue objectAtIndex:indexPath.row];
-    cell.eventStatus.text = [event_type objectAtIndex:indexPath.row];
-    cell.eventTime.text = [start_time objectAtIndex:indexPath.row];
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
-    
-    return cell;
+    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    NSString *strhotSpot = [hotspot_status objectAtIndex:indexPath.row];
+    if ([strhotSpot isEqualToString:@"Y"])
+    {
+        HomeViewTableCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
+        cell.eventName.text = [event_name objectAtIndex:indexPath.row];
+        cell.eventTime.text = [event_venue objectAtIndex:indexPath.row];
+        NSString *imageUrl = [event_banner objectAtIndex:indexPath.row];
+        __weak HomeViewTableCell *weakCell = cell;
+        UIImage *placeholderImage = [UIImage imageNamed:@"placeholder.jpg"];
+        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:imageUrl]];
+        [cell.eventImageView setImageWithURLRequest:request placeholderImage:placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image)
+         {
+             weakCell.eventImageView.image = image;
+             
+         } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+             
+             NSLog(@"%@",error);
+             
+         }];
+        cell.eventStatus.text = [event_type objectAtIndex:indexPath.row];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        
+        return cell;
+    }
+    else
+    {
+        HomeViewTableCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
+        cell.eventName.text = [event_name objectAtIndex:indexPath.row];
+        cell.eventTime.text = [NSString stringWithFormat:@"%@ %@",[start_date objectAtIndex:indexPath.row],[end_date objectAtIndex:indexPath.row]];
+        NSString *imageUrl = [event_banner objectAtIndex:indexPath.row];
+        __weak HomeViewTableCell *weakCell = cell;
+        UIImage *placeholderImage = [UIImage imageNamed:@"placeholder.jpg"];
+        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:imageUrl]];
+        [cell.eventImageView setImageWithURLRequest:request placeholderImage:placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image)
+         {
+             weakCell.eventImageView.image = image;
+             
+         } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+             
+             NSLog(@"%@",error);
+             
+         }];
+        cell.eventStatus.text = [event_type objectAtIndex:indexPath.row];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        return cell;
+    }
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -352,8 +366,8 @@
     appDel.booking_status = booking_status[intbooking_status];
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    EventDetailViewController *oTPViewController = [storyboard instantiateViewControllerWithIdentifier:@"EventDetailViewController"];
-    [self presentViewController:oTPViewController animated:NO completion:nil];
+    EventDetailViewController *eventDetailViewController = [storyboard instantiateViewControllerWithIdentifier:@"EventDetailViewController"];
+    [self.navigationController pushViewController:eventDetailViewController animated:YES];
 }
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -386,7 +400,7 @@
              NSString *msg = [responseObject objectForKey:@"msg"];
              NSString *status = [responseObject objectForKey:@"status"];
              self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-//             self->appDel.review_id = [responseObject objectForKey:@"review_id"];
+//           self->appDel.review_id = [responseObject objectForKey:@"review_id"];
              
              if ([msg isEqualToString:@"Wishlist Deleted"] && [status isEqualToString:@"success"])
              {
@@ -434,6 +448,25 @@
 }
 - (IBAction)backBtn:(id)sender
 {
-    [self dismissViewControllerAnimated:YES completion:Nil];
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//    UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"NavigationController"];
+//    [navigationController setViewControllers:@[[storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"]]];
+//
+//    SideMenuMainViewController *sideMenuMainViewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"SideMenuMainViewController"]; //or
+//    sideMenuMainViewController.rootViewController = navigationController;
+//    [sideMenuMainViewController setupWithType:0];
+//    self.window.rootViewController = navigationController;
+//    [self.window makeKeyAndVisible];
+//
+//    UIWindow *window = UIApplication.sharedApplication.delegate.window;
+//    window.rootViewController = sideMenuMainViewController;
+//
+//    [UIView transitionWithView:window
+//                      duration:0.3
+//                       options:UIViewAnimationOptionTransitionCrossDissolve
+//                    animations:nil
+//                    completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
+
 }
 @end

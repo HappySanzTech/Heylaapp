@@ -26,7 +26,10 @@
     NSString *selectedDateToday;
     NSString *selectedDateTommorow;
     NSString *selectedDate;
+    NSString *sliderFinalValue;
+
 }
+@property(nonatomic) float maximumValue;
 @end
 @implementation AdvanceFilterViewController
 
@@ -74,7 +77,7 @@
     [eventTypeArray addObject:@"Free"];
     
     [eventCategoeryArray addObject:@"Select Event Category"];
-    [eventCategoeryArray addObject:@"General"];
+    [eventCategoeryArray addObject:@"Hotspot"];
     [eventCategoeryArray addObject:@"Popular"];
 
     preference = [[NSUserDefaults standardUserDefaults]objectForKey:@"preferenceName_Array"];
@@ -117,6 +120,41 @@
     selectedDate =@"";
     selectedDateToday =@"";
     selectedDateTommorow =@"";
+    sliderFinalValue = @"";
+    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
+    [parameters setObject:appDel.user_Id forKey:@"user_id"];
+    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    manager.responseSerializer.acceptableContentTypes = [manager.responseSerializer.acceptableContentTypes setByAddingObject:@"text/html"];
+    
+    NSString *bookingPricerange = @"apimain/bookingPricerange/";
+    NSArray *components = [NSArray arrayWithObjects:baseUrl,bookingPricerange, nil];
+    NSString *api = [NSString pathWithComponents:components];
+    
+    [manager POST:api parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
+     {
+         
+         NSLog(@"%@",responseObject);
+         [MBProgressHUD hideHUDForView:self.view animated:YES];
+         NSString *msg = [responseObject objectForKey:@"msg"];
+         NSString *status = [responseObject objectForKey:@"status"];
+         
+         if ([msg isEqualToString:@"Price Range"] && [status isEqualToString:@"success"])
+         {
+             NSString *Value = [responseObject objectForKey:@"Pricerange"];
+             self.sliderSelectedValue.text = [NSString stringWithFormat:@"%@%@",@"Rs.",Value] ;
+             self->_maximumValue = [Value floatValue];
+             self->_slider.maximumValue = self->_maximumValue;
+             self->_slider.minimumValue = 0;
+         }
+     }
+          failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
+     {
+         NSLog(@"error: %@", error);
+     }];
     
 }
 -(void)ShowSelectedDate
@@ -389,9 +427,11 @@
         [parameters setObject:self.fromDate.text forKey:@"from_date"];
         [parameters setObject:self.toDate.text forKey:@"to_date"];
         [parameters setObject:self.eventType.text forKey:@"event_type"];
-        [parameters setObject:self.eventCategoery.text forKey:@"event_type_category"];
-        [parameters setObject:self.eventPreference.text forKey:@"selected_category"];
+        [parameters setObject:self.eventCategoery.text forKey:@"event_category"];
+        [parameters setObject:self.eventPreference.text forKey:@"selected_preference"];
         [parameters setObject:self.eventCity.text forKey:@"selected_city"];
+        [parameters setObject:sliderFinalValue forKey:@"price_range"];
+
         
         AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
         manager.requestSerializer = [AFJSONRequestSerializer serializer];
@@ -461,5 +501,20 @@
 - (IBAction)progImgBTn:(id)sender
 {
     
+}
+- (IBAction)sliderButton:(id)sender
+{
+    NSString *strsliderValue = [NSString stringWithFormat:@"%@%d",@"Rs.",(int)floorf(self->_slider.value)];
+    NSString *strVal = [NSString stringWithFormat:@"%@",strsliderValue];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    sliderFinalValue = [NSString stringWithFormat:@"%d%@",(int)floorf(self->_slider.value),@".00"];
+    
+    // Configure for text only and offset down
+    hud.mode = MBProgressHUDModeText;
+    hud.label.text = [NSString stringWithFormat:@"%@ %@ - %@%@",@"Price Range:",@"Rs.0",strVal,@".00"];
+    hud.margin = 10.f;
+    hud.yOffset = 200.f;
+    hud.removeFromSuperViewOnHide = YES;
+    [hud hideAnimated:YES afterDelay:2];
 }
 @end
