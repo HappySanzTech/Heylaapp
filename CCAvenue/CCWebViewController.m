@@ -132,7 +132,7 @@
             [[NSUserDefaults standardUserDefaults]setObject:@"TC" forKey:@"TranscationStatus"];
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Booking" bundle:nil];
             CCResultViewController *controller = [storyboard instantiateViewControllerWithIdentifier:@"CCResultViewController"];
-            [self.navigationController pushViewController:controller animated:YES];
+            [self.navigationController presentViewController:controller animated:YES completion:nil];
         }
         else if (([html rangeOfString:@"Success"].location != NSNotFound))
         {
@@ -140,7 +140,7 @@
             [[NSUserDefaults standardUserDefaults]setObject:@"TS" forKey:@"TranscationStatus"];
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Booking" bundle:nil];
             CCResultViewController *controller = [storyboard instantiateViewControllerWithIdentifier:@"CCResultViewController"];
-            [self.navigationController pushViewController:controller animated:YES];
+            [self.navigationController presentViewController:controller animated:YES completion:nil];
             
         }
         else if (([html rangeOfString:@"Fail"].location != NSNotFound))
@@ -149,7 +149,7 @@
             [[NSUserDefaults standardUserDefaults]setObject:@"TF" forKey:@"TranscationStatus"];
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Booking" bundle:nil];
             CCResultViewController *controller = [storyboard instantiateViewControllerWithIdentifier:@"CCResultViewController"];
-            [self.navigationController pushViewController:controller animated:YES];
+            [self.navigationController presentViewController:controller animated:YES completion:nil];
         }
         
 //        CCResultViewController* controller = [self.storyboard instantiateViewControllerWithIdentifier:@"CCResultViewController"];

@@ -309,9 +309,11 @@
          {
              weakCell.eventImageView.image = image;
              
-         } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
+         }
+         failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error)
+        {
              
-             NSLog(@"%@",error);
+         NSLog(@"%@",error);
              
          }];
         cell.eventStatus.text = [event_type objectAtIndex:indexPath.row];

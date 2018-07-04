@@ -156,6 +156,17 @@
          NSLog(@"error: %@", error);
      }];
     
+    _today.layer.borderColor = [UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0].CGColor;
+    _today.layer.borderWidth = 1.0;
+    [_today setTitleColor:[UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0] forState:UIControlStateNormal];
+    
+    _tommorow.layer.borderColor = [UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0].CGColor;
+     _tommorow.layer.borderWidth = 1.0;
+    [_tommorow setTitleColor:[UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0] forState:UIControlStateNormal];
+    
+    _viewDate.layer.borderColor = [UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0].CGColor;
+    _viewDate.layer.borderWidth = 1.0;
+    self.dateTextFiled.textColor = [UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0];
 }
 -(void)ShowSelectedDate
 {
@@ -178,6 +189,7 @@
         NSDateFormatter *formatter=[[NSDateFormatter alloc]init];
         [formatter setDateFormat:@"YYYY-MM-dd"];
         self.dateTextFiled.text=[NSString stringWithFormat:@"%@",[formatter stringFromDate:datePicker.date]];
+        self.dateTextFiled.textColor = [UIColor whiteColor];
         selectedDate = self.dateTextFiled.text;
         [self.dateTextFiled resignFirstResponder];
     }
@@ -201,6 +213,7 @@
     {
         [datePicker removeFromSuperview];
         [self.dateTextFiled resignFirstResponder];
+        self.dateTextFiled.textColor = [UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0];
         [toolBar removeFromSuperview];
     }
 }
@@ -369,11 +382,16 @@
     _today.layer.backgroundColor = [UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0].CGColor;
     [_today setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
-    _tommorow.layer.backgroundColor = [UIColor colorWithRed:202/255.0 green:202/255.0 blue:202/255.0 alpha:1.0].CGColor;
-    [_tommorow setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    _tommorow.layer.backgroundColor = [UIColor whiteColor].CGColor;
+    _tommorow.layer.borderColor = [UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0].CGColor;
+    _tommorow.layer.borderWidth = 1.0;
+    [_tommorow setTitleColor:[UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0] forState:UIControlStateNormal];
     
-    _viewDate.layer.backgroundColor = [UIColor colorWithRed:202/255.0 green:202/255.0 blue:202/255.0 alpha:1.0].CGColor;
-    
+    _viewDate.layer.backgroundColor = [UIColor whiteColor].CGColor;
+    _viewDate.layer.borderColor = [UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0].CGColor;
+    _viewDate.layer.borderWidth = 1.0;
+    self.dateTextFiled.textColor = [UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0];
+
     NSDate *today = [NSDate date];
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
     [dateFormat setDateFormat:@"YYYY-MM-dd"];
@@ -382,13 +400,16 @@
 }
 - (IBAction)tomorrowBtn:(id)sender
 {
-    _today.layer.backgroundColor = [UIColor colorWithRed:202/255.0 green:202/255.0 blue:202/255.0 alpha:1.0].CGColor;
-    [_today setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    _today.layer.backgroundColor = [UIColor whiteColor].CGColor;
+    [_today setTitleColor:[UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0] forState:UIControlStateNormal];
     
     _tommorow.layer.backgroundColor = [UIColor colorWithRed:68/255.0 green:142/255.0 blue:204/255.0 alpha:1.0].CGColor;
     [_tommorow setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
-    _viewDate.layer.backgroundColor = [UIColor colorWithRed:202/255.0 green:202/255.0 blue:202/255.0 alpha:1.0].CGColor;
+    _viewDate.layer.backgroundColor = [UIColor whiteColor].CGColor;
+    _viewDate.layer.borderColor = [UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0].CGColor;
+    _viewDate.layer.borderWidth = 1.0;
+    self.dateTextFiled.textColor = [UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0];
     
     NSCalendar *cal = [NSCalendar currentCalendar];
     NSDate *tomorrow = [cal dateByAddingUnit:NSCalendarUnitDay
@@ -410,10 +431,11 @@
     self.fromDate.text = @"";
     self.toDate.text = @"";
     self.dateTextFiled.text = @"";
-    _today.layer.backgroundColor = [UIColor colorWithRed:202/255.0 green:202/255.0 blue:202/255.0 alpha:1.0].CGColor;
-    [_today setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    _tommorow.layer.backgroundColor = [UIColor colorWithRed:202/255.0 green:202/255.0 blue:202/255.0 alpha:1.0].CGColor;
-    [_tommorow setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    _today.layer.backgroundColor = [UIColor whiteColor].CGColor;
+    [_today setTitleColor:[UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0] forState:UIControlStateNormal];
+    _tommorow.layer.backgroundColor = [UIColor whiteColor].CGColor;
+    [_tommorow setTitleColor:[UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0] forState:UIControlStateNormal];
+    self.dateTextFiled.textColor = [UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0];
 }
 
 - (IBAction)searchBtn:(id)sender
@@ -488,13 +510,19 @@
 {
     if (textField == self.dateTextFiled)
     {
-        _today.layer.backgroundColor = [UIColor colorWithRed:202/255.0 green:202/255.0 blue:202/255.0 alpha:1.0].CGColor;
-        [_today setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _today.layer.backgroundColor = [UIColor whiteColor].CGColor;
+        _today.layer.borderColor = [UIColor colorWithRed:63/255.0 green:142/255.0 blue:204/255.0 alpha:1.0].CGColor;
+        _today.layer.borderWidth = 1.0;
+        [_today setTitleColor:[UIColor colorWithRed:63/255.0 green:142/255.0 blue:204/255.0 alpha:1.0] forState:UIControlStateNormal];
         
-        _tommorow.layer.backgroundColor = [UIColor colorWithRed:202/255.0 green:202/255.0 blue:202/255.0 alpha:1.0].CGColor;
-        [_tommorow setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _tommorow.layer.backgroundColor = [UIColor whiteColor].CGColor;
+        _tommorow.layer.borderColor = [UIColor colorWithRed:63/255.0 green:142/255.0 blue:204/255.0 alpha:1.0].CGColor;
+        _tommorow.layer.borderWidth = 1.0;
+        [_tommorow setTitleColor:[UIColor colorWithRed:63/255.0 green:142/255.0 blue:204/255.0 alpha:1.0] forState:UIControlStateNormal];
         
         _viewDate.layer.backgroundColor = [UIColor colorWithRed:68/255.0 green:142/255.0 blue:204/255.0 alpha:1.0].CGColor;
+         self.dateTextFiled.textColor = [UIColor whiteColor];
+        
     }
     return YES;
 }
