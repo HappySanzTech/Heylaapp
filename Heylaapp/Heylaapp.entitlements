@@ -6,7 +6,7 @@
 	<string>development</string>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)com.palprotech.heylaapp</string>
+		<string>$(AppIdentifierPrefix)com.visionpalpro.heylaapp</string>
 	</array>
 </dict>
 </plist>

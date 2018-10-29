@@ -66,7 +66,7 @@
     _eventCategoery.delegate = self;
     _eventPreference.delegate = self;
     _eventCity.delegate = self;
-
+    
     eventTypeArray = [[NSMutableArray alloc]init];
     eventCategoeryArray = [[NSMutableArray alloc]init];
     preference = [[NSMutableArray alloc]init];
@@ -79,9 +79,10 @@
     [eventCategoeryArray addObject:@"Select Event Category"];
     [eventCategoeryArray addObject:@"Hotspot"];
     [eventCategoeryArray addObject:@"Popular"];
-
+    
     preference = [[NSUserDefaults standardUserDefaults]objectForKey:@"preferenceName_Array"];
-    eventCityArray = [[NSUserDefaults standardUserDefaults]objectForKey:@"cityName_Array"];
+   // eventCityArray = [[NSUserDefaults standardUserDefaults]objectForKey:@"cityName_Array"];
+    
     datePicker=[[UIDatePicker alloc]init];
     datePicker.datePickerMode=UIDatePickerModeDate;
     [self.fromDate setInputView:datePicker];
@@ -105,7 +106,7 @@
     [self.eventCategoery setInputView:listpickerView];
     [self.eventPreference setInputView:listpickerView];
     [self.eventCity setInputView:listpickerView];
-
+    
     
     listToolBar=[[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 44)];
     [listToolBar setTintColor:[UIColor grayColor]];
@@ -122,7 +123,6 @@
     selectedDateTommorow =@"";
     sliderFinalValue = @"";
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
     [parameters setObject:appDel.user_Id forKey:@"user_id"];
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
@@ -138,7 +138,6 @@
      {
          
          NSLog(@"%@",responseObject);
-         [MBProgressHUD hideHUDForView:self.view animated:YES];
          NSString *msg = [responseObject objectForKey:@"msg"];
          NSString *status = [responseObject objectForKey:@"status"];
          
@@ -167,6 +166,64 @@
     _viewDate.layer.borderColor = [UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0].CGColor;
     _viewDate.layer.borderWidth = 1.0;
     self.dateTextFiled.textColor = [UIColor colorWithRed:68/255.0 green:142/255.0 blue:203/255.0 alpha:1.0];
+}
+-(void)viewWillAppear:(BOOL)animated
+{
+    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
+    [parameters setObject:appDel.user_Id forKey:@"user_id"];
+    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    manager.responseSerializer.acceptableContentTypes = [manager.responseSerializer.acceptableContentTypes setByAddingObject:@"text/html"];
+    
+    NSString *selectAllCity = @"apimain/selectAllCity/";
+    NSArray *components = [NSArray arrayWithObjects:baseUrl,selectAllCity, nil];
+    NSString *api = [NSString pathWithComponents:components];
+    
+    [manager POST:api parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
+     {
+         
+         NSLog(@"%@",responseObject);
+         NSString *msg = [responseObject objectForKey:@"msg"];
+         NSString *status = [responseObject objectForKey:@"status"];
+         
+         if ([msg isEqualToString:@"View Cities"] && [status isEqualToString:@"success"])
+         {
+                NSArray *cities = [responseObject objectForKey:@"Cities"];
+                [self->eventCityArray removeAllObjects];
+             
+             for (int i =0; i < [cities count]; i++)
+             {
+                 NSDictionary *dict = [cities objectAtIndex:i];
+                 NSString *strCity_name = [dict objectForKey:@"city_name"];
+                 [self->eventCityArray addObject:strCity_name];
+             }
+                  [self->eventCityArray insertObject:@"Select Your City" atIndex:0];
+         }
+         else
+         {
+             UIAlertController *alert= [UIAlertController
+                                        alertControllerWithTitle:@"Heyla"
+                                        message:msg
+                                        preferredStyle:UIAlertControllerStyleAlert];
+             
+             UIAlertAction *ok = [UIAlertAction
+                                  actionWithTitle:@"OK"
+                                  style:UIAlertActionStyleDefault
+                                  handler:^(UIAlertAction * action)
+                                  {
+                                      
+                                  }];
+             
+             [alert addAction:ok];
+             [self presentViewController:alert animated:YES completion:nil];
+         }
+     }
+          failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
+     {
+         NSLog(@"error: %@", error);
+     }];
 }
 -(void)ShowSelectedDate
 {
@@ -275,7 +332,9 @@
     return nil;
 }
 
--(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+-(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    
     if (pickerView == listpickerView)
     {
         if([self.eventType isFirstResponder])
@@ -440,6 +499,26 @@
 
 - (IBAction)searchBtn:(id)sender
 {
+    if ([self.eventCity.text isEqualToString:@"Select Your City"])
+    {
+        UIAlertController *alert= [UIAlertController
+                                   alertControllerWithTitle:@"Heyla"
+                                   message:@"Please select the city"
+                                   preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *ok = [UIAlertAction
+                             actionWithTitle:@"OK"
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction * action)
+                             {
+                                 
+                             }];
+        
+        [alert addAction:ok];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    else
+    {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
         NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
@@ -453,7 +532,7 @@
         [parameters setObject:self.eventPreference.text forKey:@"selected_preference"];
         [parameters setObject:self.eventCity.text forKey:@"selected_city"];
         [parameters setObject:sliderFinalValue forKey:@"price_range"];
-
+        
         
         AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
         manager.requestSerializer = [AFJSONRequestSerializer serializer];
@@ -504,7 +583,7 @@
          {
              NSLog(@"error: %@", error);
          }];
-
+    }
 }
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {

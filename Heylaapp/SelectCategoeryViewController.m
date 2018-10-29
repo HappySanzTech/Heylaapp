@@ -172,7 +172,7 @@
         [cell.image_View setImageWithURLRequest:request placeholderImage:placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image)
          {
              weakCell.image_View.image = image;
-             
+
          } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
              
              NSLog(@"%@",error);
@@ -194,7 +194,8 @@
         [cell.image_View setImageWithURLRequest:request placeholderImage:placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image)
          {
              weakCell.image_View.image = image;
-             
+//             weakCell.image_View.frame = CGRectMake(44, 35, 80, 80);
+
          } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
              
              NSLog(@"%@",error);
@@ -219,7 +220,8 @@
             [cell.image_View setImageWithURLRequest:request placeholderImage:placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image)
              {
                  weakCell.image_View.image = image;
-                 
+//                 weakCell.image_View.frame = CGRectMake(44, 35, 80, 80);
+
              } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
                  
                  NSLog(@"%@",error);
@@ -350,11 +352,11 @@
 }
 - (IBAction)getStartBtn:(id)sender
 {
-        if ([selectedValue count] == 0 || [selectedValue count] < 4)
+        if ([selectedValue count] < 1)
         {
             UIAlertController *alert= [UIAlertController
                                        alertControllerWithTitle:@"Heyla"
-                                       message:@"Please select any four"
+                                       message:@"Please select any One"
                                        preferredStyle:UIAlertControllerStyleAlert];
             
             UIAlertAction *ok = [UIAlertAction

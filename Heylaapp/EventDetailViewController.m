@@ -15,6 +15,11 @@
     NSString *eyeImageFlag;
     NSString *reviewCount;
     UIBarButtonItem *wishlistButton;
+    
+    NSDateFormatter *dateFormatter;
+    NSDate *date;
+    NSString *reqStartDateString;
+    NSString *reqEndDateString;
 }
 @end
 
@@ -25,7 +30,9 @@
     [super viewDidLoad];
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
     wishlistButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"favWhishlist"] style:UIBarButtonItemStylePlain target:self action:@selector(Add:)];
+    wishlistButton.width = 20.0;
     self.navigationItem.rightBarButtonItem = wishlistButton;
+    
     wishlistButton.tintColor = [UIColor whiteColor];
     self.mainView.layer.cornerRadius = 8.0;
     self.mainView.clipsToBounds = YES;
@@ -34,6 +41,7 @@
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
     [self.despTextView setContentOffset:CGPointZero animated:NO];
+    NSLog(@"%@",appDel.booking_status);
     if ([appDel.booking_status isEqualToString:@"Y"])
     {
         self.bseView.hidden = NO;
@@ -60,8 +68,6 @@
      }];
     self.eventNameLabel.text = appDel.event_Name;
     self.adressLabel.text = appDel.event_Address;
-    
-    
     if ([appDel.event_type isEqualToString:@"Hotspot"])
     {
         self.dateLabel.hidden = YES;
@@ -71,11 +77,30 @@
     {
         self.dateLabel.hidden = NO;
         self.dateImage.hidden = NO;
-        self.dateLabel.text = [NSString stringWithFormat:@"%@ - %@",appDel.event_StartDate,appDel.event_EndDate];
-        NSLog(@"%@%@",appDel.event_StartDate,appDel.event_EndDate);
+        
+        self->dateFormatter = [[NSDateFormatter alloc] init];
+        [self->dateFormatter setDateFormat:@"MMMM dd yyyy"];
+        self->date = [[NSDate alloc] init];
+        self->date = [self->dateFormatter dateFromString:appDel.event_StartDate];
+        // converting into our required date format
+        [self->dateFormatter setDateFormat:@"dd-MM-yyyy"];
+        self->reqStartDateString = [self->dateFormatter stringFromDate:self->date];
+        NSLog(@"date is %@", self->reqStartDateString);
+        
+        self->dateFormatter = [[NSDateFormatter alloc] init];
+        [self->dateFormatter setDateFormat:@"MMMM dd yyyy"];
+        self->date = [[NSDate alloc] init];
+        self->date = [self->dateFormatter dateFromString:appDel.event_EndDate];
+        // converting into our required date format
+        [self->dateFormatter setDateFormat:@"dd-MM-yyyy"];
+        self->reqEndDateString = [self->dateFormatter stringFromDate:self->date];
+        NSLog(@"date is %@",self->reqEndDateString);
+        
+        self.dateLabel.text = [NSString stringWithFormat:@"%@ to %@",reqStartDateString,reqEndDateString];
+        NSLog(@"%@%@",reqStartDateString,reqEndDateString);
 
     }
-    self.timeLabel.text = [NSString stringWithFormat:@"%@-%@",appDel.event_StartTime,appDel.event_EndTime];
+    self.timeLabel.text = [NSString stringWithFormat:@"%@ to %@",appDel.event_StartTime,appDel.event_EndTime];
     NSLog(@"%@%@%@",appDel.event_StartTime,appDel.event_EndTime,self.timeLabel.text);
     self.despTextView.text = appDel.event_description;
     self.mobileNumberLabel.text = [NSString stringWithFormat:@"%@ %@,%@",@"Mobile Number :",appDel.event_PrimaryContactNumber,appDel.event_secondaryContactNumber];;
@@ -84,9 +109,43 @@
     eyeImageFlag = @"0";
     NSString *popularity = appDel.event_popularity;
     self.poularityCount.text = [NSString stringWithFormat:@"%@ %@",popularity,@"Views"] ;
+    
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    self.reviewNameLabel.text = appDel.reviewUsername;
-    self.reviewComments.text = appDel.reviewComments;
+    if ([appDel.reviewUsername isEqualToString:@""] && [appDel.reviewComments isEqualToString:@""])
+    {
+        self.reviewNameLabel.hidden = YES;
+        self.reviewComments.hidden = YES;
+        self.reviewmoreButnOtlet.hidden = YES;
+        self.reviewTitleLabel.hidden = YES;
+        self.reviewDownView.hidden = YES;
+        self.writeReviewOutlet.hidden = YES;
+    
+        self.starImageOne.hidden = YES;
+        self.starImageTwo.hidden = YES;
+        self.starImageThree.hidden = YES;
+        self.starImageFour.hidden = YES;
+        self.starImageFive.hidden = YES;
+        
+        CGRect dateFrame = _reviewDownView.frame;
+        dateFrame.origin.y = _reviewTitleLabel.frame.origin.y + 30;
+        [_reviewDownView setFrame:dateFrame];
+    }
+    else
+    {
+        self.starImageOne.hidden = NO;
+        self.starImageTwo.hidden = NO;
+        self.starImageThree.hidden = NO;
+        self.starImageFour.hidden = NO;
+        self.starImageFive.hidden = NO;
+
+        self.reviewNameLabel.hidden = NO;
+        self.reviewComments.hidden = NO;
+        self.reviewmoreButnOtlet.hidden = NO;
+        self.reviewNameLabel.text = appDel.reviewUsername;
+        self.reviewComments.text = appDel.reviewComments;
+
+    }
+    
     if ([appDel.reviewComments isEqualToString:@""] && [appDel.event_rating isEqualToString:@""])
     {
         self.starImageOne.image = [UIImage imageNamed:@"star icon"];
@@ -94,28 +153,19 @@
         self.starImageThree.image = [UIImage imageNamed:@"star icon"];
         self.starImageFour.image = [UIImage imageNamed:@"star icon"];
         self.starImageFive.image = [UIImage imageNamed:@"star icon"];
+    
+        self.starImageOne.hidden = YES;
+        self.starImageTwo.hidden = YES;
+        self.starImageThree.hidden = YES;
+        self.starImageFour.hidden = YES;
+        self.starImageFive.hidden = YES;
         
-        UIAlertController *alert= [UIAlertController
-                                   alertControllerWithTitle:@"Heyla"
-                                   message:@"Review not Found"
-                                   preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction *ok = [UIAlertAction
-                             actionWithTitle:@"OK"
-                             style:UIAlertActionStyleDefault
-                             handler:^(UIAlertAction * action)
-                             {
-                                 
-                             }];
-        
-        [alert addAction:ok];
-        [self presentViewController:alert animated:YES completion:nil];
     }
     else
     {
         if ([appDel.event_rating isEqualToString:@"1"])
         {
-            self.starImageOne.image = [UIImage imageNamed:@"Star"];
+            self.starImageOne.image = [UIImage imageNamed:@"star icon_selected"];
             self.starImageTwo.image = [UIImage imageNamed:@"star icon"];
             self.starImageThree.image = [UIImage imageNamed:@"star icon"];
             self.starImageFour.image = [UIImage imageNamed:@"star icon"];
@@ -123,44 +173,47 @@
         }
         if ([appDel.event_rating isEqualToString:@"2"])
         {
-            self.starImageOne.image = [UIImage imageNamed:@"Star"];
-            self.starImageTwo.image = [UIImage imageNamed:@"Star"];
+            self.starImageOne.image = [UIImage imageNamed:@"star icon_selected"];
+            self.starImageTwo.image = [UIImage imageNamed:@"star icon_selected"];
             self.starImageThree.image = [UIImage imageNamed:@"star icon"];
             self.starImageFour.image = [UIImage imageNamed:@"star icon"];
             self.starImageFive.image = [UIImage imageNamed:@"star icon"];
         }
         if ([appDel.event_rating isEqualToString:@"3"])
         {
-            self.starImageOne.image = [UIImage imageNamed:@"Star"];
-            self.starImageTwo.image = [UIImage imageNamed:@"Star"];
-            self.starImageThree.image = [UIImage imageNamed:@"Star"];
+            self.starImageOne.image = [UIImage imageNamed:@"star icon_selected"];
+            self.starImageTwo.image = [UIImage imageNamed:@"star icon_selected"];
+            self.starImageThree.image = [UIImage imageNamed:@"star icon_selected"];
             self.starImageFour.image = [UIImage imageNamed:@"star icon"];
             self.starImageFive.image = [UIImage imageNamed:@"star icon"];
         }
         if ([appDel.event_rating isEqualToString:@"4"])
         {
-            self.starImageOne.image = [UIImage imageNamed:@"Star"];
-            self.starImageTwo.image = [UIImage imageNamed:@"Star"];
-            self.starImageThree.image = [UIImage imageNamed:@"Star"];
-            self.starImageFour.image = [UIImage imageNamed:@"Star"];
+            self.starImageOne.image = [UIImage imageNamed:@"star icon_selected"];
+            self.starImageTwo.image = [UIImage imageNamed:@"star icon_selected"];
+            self.starImageThree.image = [UIImage imageNamed:@"star icon_selected"];
+            self.starImageFour.image = [UIImage imageNamed:@"star icon_selected"];
             self.starImageFive.image = [UIImage imageNamed:@"star icon"];
         }
         if ([appDel.event_rating isEqualToString:@"5"])
         {
-            self.starImageOne.image = [UIImage imageNamed:@"Star"];
-            self.starImageTwo.image = [UIImage imageNamed:@"Star"];
-            self.starImageThree.image = [UIImage imageNamed:@"Star"];
-            self.starImageFour.image = [UIImage imageNamed:@"Star"];
-            self.starImageFive.image = [UIImage imageNamed:@"Star"];
+            self.starImageOne.image = [UIImage imageNamed:@"star icon_selected"];
+            self.starImageTwo.image = [UIImage imageNamed:@"star icon_selected"];
+            self.starImageThree.image = [UIImage imageNamed:@"star icon_selected"];
+            self.starImageFour.image = [UIImage imageNamed:@"star icon_selected"];
+            self.starImageFive.image = [UIImage imageNamed:@"star icon_selected"];
         }
     }
+    self.mapView.layer.cornerRadius = 6.0;
     [self loadUserLocation];
 }
 -(void)viewWillAppear:(BOOL)animated
 {
+    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
     [parameters setObject:appDel.user_Id forKey:@"user_id"];
     [parameters setObject:appDel.event_id forKey:@"event_id"];
+    
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
@@ -538,7 +591,7 @@
                      NSString *eventDescription = self->appDel.event_description;
                      NSString *eventLocation = self->appDel.event_Address;
                      NSString *eventtime = [NSString stringWithFormat:@"%@ %@ %@ / %@",@"To",@":",self->appDel.event_StartTime,self->appDel.event_EndTime];
-//                     NSString *eventDate = [NSString stringWithFormat:@"%@ %@ %@ / %@",@"From",@":",self->appDel.event_StartDate,self->appDel.event_EndDate];
+//                   NSString *eventDate = [NSString stringWithFormat:@"%@ %@ %@ / %@",@"From",@":",self->appDel.event_StartDate,self->appDel.event_EndDate];
                      NSArray *items = @[eventName,eventtime,eventDescription,eventLocation,urlReq];
                      UIActivityViewController *controller = [[UIActivityViewController alloc]initWithActivityItems:items applicationActivities:nil];
                      [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -563,26 +616,26 @@
              }
              else
              {
-                 UIAlertController *alert= [UIAlertController
-                                            alertControllerWithTitle:@"Heyla"
-                                            message:msg
-                                            preferredStyle:UIAlertControllerStyleAlert];
+                     UIAlertController *alert= [UIAlertController
+                                                alertControllerWithTitle:@"Heyla"
+                                                message:msg
+                                                preferredStyle:UIAlertControllerStyleAlert];
                  
-                 UIAlertAction *ok = [UIAlertAction
-                                      actionWithTitle:@"OK"
-                                      style:UIAlertActionStyleDefault
-                                      handler:^(UIAlertAction * action)
-                                      {
-                                          
-                                      }];
+                     UIAlertAction *ok = [UIAlertAction
+                                          actionWithTitle:@"OK"
+                                          style:UIAlertActionStyleDefault
+                                          handler:^(UIAlertAction * action)
+                                          {
+                                              
+                                          }];
                  
-                 [alert addAction:ok];
-                 [self presentViewController:alert animated:YES completion:nil];
+                     [alert addAction:ok];
+                     [self presentViewController:alert animated:YES completion:nil];
              }
          }
-              failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
+                     failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
          {
-             NSLog(@"error: %@", error);
+                     NSLog(@"error: %@", error);
          }];
         
     }
@@ -824,5 +877,57 @@
 -(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
     return NO;
+}
+- (IBAction)report_Btn:(id)sender
+{
+    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
+    [parameters setObject:appDel.reviewList_id forKey:@"review_id"];
+    
+    AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    manager.responseSerializer.acceptableContentTypes = [manager.responseSerializer.acceptableContentTypes setByAddingObject:@"text/html"];
+    
+    NSString *report_abuse = @"apimain/report_abuse";
+    NSArray *components = [NSArray arrayWithObjects:baseUrl,report_abuse, nil];
+    NSString *api = [NSString pathWithComponents:components];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    [manager POST:api parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
+     {
+         
+         NSLog(@"%@",responseObject);
+         [MBProgressHUD hideHUDForView:self.view animated:YES];
+         NSString *msg = [responseObject objectForKey:@"msg"];
+         NSString *status = [responseObject objectForKey:@"status"];
+         NSLog(@"%@",msg);
+         
+         if ([status isEqualToString:@"success"])
+         {
+             UIAlertController *alert= [UIAlertController
+                                        alertControllerWithTitle:@"Heyla"
+                                        message:msg
+                                        preferredStyle:UIAlertControllerStyleAlert];
+             
+             UIAlertAction* ok = [UIAlertAction
+                                  actionWithTitle:@"OK"
+                                  style:UIAlertActionStyleDefault
+                                  handler:^(UIAlertAction * action)
+                                  {
+                                      
+                                  }];
+             [alert addAction:ok];
+             [self presentViewController:alert animated:YES completion:nil];
+         }
+         else
+         {
+            
+         }
+     }
+          failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
+     {
+         NSLog(@"error: %@", error);
+     }];
 }
 @end

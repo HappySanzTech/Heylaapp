@@ -14,6 +14,11 @@
     CLLocationManager *objLocationManager;
     double latitude_UserLocation, longitude_UserLocation;
 }
+@property (weak, nonatomic) IBOutlet UIButton *report_Otlet;
+- (IBAction)report_Btn:(id)sender;
+@property (weak, nonatomic) IBOutlet UIView *reviewDownView;
+@property (weak, nonatomic) IBOutlet UIButton *reviewmoreButnOtlet;
+@property (weak, nonatomic) IBOutlet UILabel *reviewTitleLabel;
 - (IBAction)writeReviewButton:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *writeReviewOutlet;
 @property (weak, nonatomic) IBOutlet UIButton *bookTicketOutlet;

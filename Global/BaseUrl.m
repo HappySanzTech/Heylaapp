@@ -10,7 +10,7 @@
 
 @implementation BaseUrl
 
-NSString *const baseUrl = @"http://heylaapp.com/";
+NSString *const baseUrl = @"https://heylaapp.com/";
 
 
 @end

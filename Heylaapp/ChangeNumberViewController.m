@@ -37,7 +37,7 @@
     _confirm.clipsToBounds = YES;
 
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                          action:@selector(dismissKeyboard)];
+    action:@selector(dismissKeyboard)];
     
     [self.view addGestureRecognizer:tap];
 }
@@ -409,10 +409,11 @@
     else
     {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        
         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        
         NSString *newMobileNumber = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@",self.textfieldOne.text,self.textfieldTwo.text,self.textfieldthree.text,self.textfieldFour.text,self.textfieldFive.text,self.textfieldSix.text,self.textfieldSeven.text,self.textfieldEight.text,self.textfieldNine.text,self.textfieldTen.text];
+        
+        [[NSUserDefaults standardUserDefaults]setObject:newMobileNumber forKey:@"statemobile_no"];
+
         
         NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
         [parameters setObject:appDel.mobileNumber forKey:@"old_mobile_no"];

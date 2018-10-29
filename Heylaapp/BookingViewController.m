@@ -83,6 +83,10 @@
     plan_time_id = [[NSMutableArray alloc]init];
     event_id = [[NSMutableArray alloc]init];
     
+    self.eventDate.enabled = YES;
+    self.eventTime.enabled = YES;
+    self.eventPlan.enabled = YES;
+    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
@@ -123,6 +127,10 @@
          }
          else
          {
+             self.eventDate.enabled = NO;
+             self.eventTime.enabled = NO;
+             self.eventPlan.enabled = NO;
+             
              UIAlertController *alert= [UIAlertController
                                         alertControllerWithTitle:@"Heyla"
                                         message:msg
@@ -706,7 +714,7 @@
              if ([msg isEqualToString:@"Bookingprocess"] && [status isEqualToString:@"success"])
              {
                  [[NSUserDefaults standardUserDefaults]setObject:self->selected_Seat forKey:@"tickcount_arr"];
-                 [self performSegueWithIdentifier:@"to_AttendeesView" sender:self];
+                 [self performSegueWithIdentifier:@"to_bookingReview" sender:self];
              }
              else
              {
@@ -828,9 +836,17 @@
         NSNumber *number = [NSNumber numberWithInteger:value];
         int ans = [number intValue];
         number = [NSNumber numberWithInt:ans + 1];
+        
+     //   NSString *selected_seat = [NSString stringWithFormat:@"%@",number];
+        
         NSString *Count =[NSString stringWithFormat:@"%@",number];
+        int val = [appDel.ticlet_seat_available intValue];
+        NSNumber *num = [NSNumber numberWithInteger:val];
+        int seat_available = [num intValue];
+       
         NSLog(@"%@",appDel.ticlet_seat_available);
-        if (Count > appDel.ticlet_seat_available)
+       
+        if ([number intValue] > seat_available)
         {
             UIAlertController *alert= [UIAlertController
                                        alertControllerWithTitle:@"Heyla"

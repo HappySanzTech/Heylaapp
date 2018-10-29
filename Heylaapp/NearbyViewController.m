@@ -125,6 +125,7 @@
     end_time = [[NSMutableArray alloc]init];
     [listpickerView reloadAllComponents];
     [self loadUserLocation];
+    self.nearbyImageView.hidden = NO;
     self.tableView.hidden = YES;
 
 }
@@ -517,6 +518,7 @@
                  else
                  {
                      self.mapView.hidden = YES;
+                     self.nearbyImageView.hidden = YES;
                      self.tableView.hidden = NO;
                      [self.tableView reloadData];
                      
@@ -525,6 +527,7 @@
              else
              {
                  self.tableView.hidden = YES;
+                 self.nearbyImageView.hidden = NO;
                  UIAlertController *alert= [UIAlertController
                                             alertControllerWithTitle:@"Heyla"
                                             message:msg
@@ -704,7 +707,7 @@
 {
     button.hidden = YES;
     self.tipsLabel.text = @"";
-    NSArray *menuIcons = @[@"Plusicon",@"Listview", @"Mapview"];
+    NSArray *menuIcons = @[@"Plusicon",@"Listview",@"Mapview"];
     NSMutableArray *menus = [NSMutableArray array];
     CGSize itemSize = button.frame.size;
     for (NSString *icon in menuIcons)
@@ -773,11 +776,12 @@
 
                            }
                        }
-                        closeHandler:^{
+                        closeHandler:
+                       ^{
                              [self.actionMenu removeFromSuperview];
                              self.actionMenu = nil;
                              button.hidden = NO;
-                                    }];
+                        }];
     self.actionMenu.itemSpacing = 12;
     self.actionMenu.startPoint = button.center;
     if (button == self.nearbyOtlet)

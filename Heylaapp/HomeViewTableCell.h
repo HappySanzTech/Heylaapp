@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface HomeViewTableCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UIView *detailView;
+@property (weak, nonatomic) IBOutlet UILabel *adv_Label;
+@property (weak, nonatomic) IBOutlet UIView *adv_bgView;
 @property (strong, nonatomic) IBOutlet UILabel *eventName;
 @property (strong, nonatomic) IBOutlet UILabel *eventTime;
 @property (strong, nonatomic) IBOutlet UILabel *eventLocation;

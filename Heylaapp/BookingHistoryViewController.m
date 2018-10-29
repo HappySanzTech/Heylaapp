@@ -25,6 +25,10 @@
     NSMutableArray *show_date;
     NSMutableArray *show_time;
     NSMutableArray *total_amount;
+    NSMutableArray *day_arr;
+    NSMutableArray *month_arr;
+    NSMutableArray *fulldate;
+
 }
 @end
 
@@ -51,7 +55,13 @@
     show_date = [[NSMutableArray alloc]init];
     total_amount = [[NSMutableArray alloc]init];
     
-    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;       [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    day_arr = [[NSMutableArray alloc]init];
+    month_arr = [[NSMutableArray alloc]init];
+    fulldate = [[NSMutableArray alloc]init];
+
+    
+    appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
     [parameters setObject:appDel.user_Id forKey:@"user_id"];
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
@@ -111,9 +121,19 @@
                  NSDate *date = [[NSDate alloc] init];
                  date = [dateFormatter dateFromString:strshow_date];
                  // converting into our required date format
-                 [dateFormatter setDateFormat:@"EEEE, MMMM dd, yyyy"];
+                 [dateFormatter setDateFormat:@"MMM dd EEEE "];
                  NSString *reqDateString = [dateFormatter stringFromDate:date];
                  NSLog(@"date is %@", reqDateString);
+                 
+                 NSArray *items = [reqDateString componentsSeparatedByString:@" "];
+                 
+                 NSString *mon  = [items objectAtIndex:0];
+                 NSString *day  = [items objectAtIndex:2];
+                 NSString *_date  = [NSString stringWithFormat:@"%@%@",[items objectAtIndex:1],@"th"];
+                 
+                 [self->month_arr addObject:mon];
+                 [self->day_arr addObject:day];
+                 [self->fulldate addObject:reqDateString];
                  
                  [self->category_name addObject:strcategry_name];
                  [self->created_at addObject:strcreated_at];
@@ -126,7 +146,7 @@
                  [self->number_of_seats addObject:strnumber_of_seats];
                  [self->order_id addObject:strorder_id];
                  [self->plan_name addObject:strplan_name];
-                 [self->show_date addObject:reqDateString];
+                 [self->show_date addObject:_date];
                  [self->show_time addObject:strshow_time];
                  [self->total_amount addObject:strtotal_amount];
                  
@@ -191,6 +211,11 @@
     cell.dateLabel.text = [show_date objectAtIndex:indexPath.row];
     cell.timeLabel.text = [show_time objectAtIndex:indexPath.row];
     cell.locationLabel.text = [event_venue objectAtIndex:indexPath.row];
+    cell.num_seats.text = [number_of_seats objectAtIndex:indexPath.row];
+    cell.plan_name.text = [plan_name objectAtIndex:indexPath.row];
+    cell.dayLabel.text = [day_arr objectAtIndex:indexPath.row];
+    cell.monthLabel.text = [month_arr objectAtIndex:indexPath.row];
+
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -199,12 +224,14 @@
     
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDel.event_Name = [event_name objectAtIndex:indexPath.row];
-    appDel.event_StartDate = [show_date objectAtIndex:indexPath.row];
+    
+    appDel.event_StartDate = [fulldate objectAtIndex:indexPath.row];
     appDel.event_StartTime = [show_time objectAtIndex:indexPath.row];
     appDel.event_Address = [event_address objectAtIndex:indexPath.row];
     appDel.order_id = [order_id objectAtIndex:indexPath.row];
     appDel.plan_name = [plan_name objectAtIndex:indexPath.row];
     appDel.seat_count = [number_of_seats objectAtIndex:indexPath.row];
+    appDel.total_amount_tickets = [total_amount objectAtIndex:indexPath.row];
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Booking" bundle:nil];
     BookingHistoryDetailsViewController *myNewVC = (BookingHistoryDetailsViewController *)[storyboard instantiateViewControllerWithIdentifier:@"BookingHistoryDetailsViewController"];
@@ -212,8 +239,7 @@
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    return 245;
+    return 155;
 }
 - (IBAction)backBtn:(id)sender
 {

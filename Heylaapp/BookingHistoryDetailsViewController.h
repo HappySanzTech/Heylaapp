@@ -9,6 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @interface BookingHistoryDetailsViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>
+@property (weak, nonatomic) IBOutlet UILabel *dayLabel;
+@property (weak, nonatomic) IBOutlet UILabel *monthLabel;
+@property (weak, nonatomic) IBOutlet UILabel *totalAmount;
+@property (weak, nonatomic) IBOutlet UILabel *attendeLbl;
+- (IBAction)attendeceBtn:(id)sender;
+@property (weak, nonatomic) IBOutlet UIView *mainView;
 - (IBAction)backBtn:(id)sender;
 @property (strong, nonatomic) IBOutlet UILabel *eventName;
 @property (strong, nonatomic) IBOutlet UILabel *dateLabel;

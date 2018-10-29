@@ -10,7 +10,8 @@
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
 
-@interface SelectCityPageViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>
+@interface SelectCityPageViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIPickerViewDelegate,UIPickerViewDataSource>
+@property (weak, nonatomic) IBOutlet UITextField *countryTxtFiled;
 @property (weak, nonatomic) IBOutlet UIImageView *cityImage;
 @property (weak, nonatomic) IBOutlet UIImageView *heylaLogo;
 @property (weak, nonatomic) IBOutlet UILabel *locationTitle;

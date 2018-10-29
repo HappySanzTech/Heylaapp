@@ -22,10 +22,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     event_name = [[NSMutableArray alloc]init];
     event_venue = [[NSMutableArray alloc]init];
-    
     NSString *check = [[NSUserDefaults standardUserDefaults]objectForKey:@"LeaderBoardType"];
     self.navigationItem.title = check;
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -48,14 +46,12 @@
         [parameters setObject:appDel.user_Id forKey:@"user_id"];
         [parameters setObject:@"4" forKey:@"rule_id"];
         self.sideView.backgroundColor = [UIColor colorWithRed:02/255.0 green:155/255.0 blue:140/255.0 alpha:1.0];
-
     }
     else if ([check isEqualToString:@"Booking"])
     {
         [parameters setObject:appDel.user_Id forKey:@"user_id"];
         [parameters setObject:@"5" forKey:@"rule_id"];
         self.sideView.backgroundColor = [UIColor colorWithRed:238/255.0 green:127/255.0 blue:34/255.0 alpha:1.0];
-
     }
     
     AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
@@ -88,7 +84,7 @@
                  [self->event_venue addObject:strevent_venue];
 
              }
-             [self.tableView reloadData];
+                 [self.tableView reloadData];
          }
          else if ([msg isEqualToString:@"Sharing History"] && [status isEqualToString:@"success"])
          {
@@ -100,9 +96,8 @@
                  NSString *strevent_venue =  [dict objectForKey:@"event_venue"];
                  [self->event_name addObject:strevent_name];
                  [self->event_venue addObject:strevent_venue];
-                 
              }
-             [self.tableView reloadData];
+                 [self.tableView reloadData];
          }
          else if ([msg isEqualToString:@"Booking History"] && [status isEqualToString:@"success"])
          {
@@ -114,9 +109,8 @@
                  NSString *strevent_venue =  [dict objectForKey:@"event_venue"];
                  [self->event_name addObject:strevent_name];
                  [self->event_venue addObject:strevent_venue];
-                 
              }
-             [self.tableView reloadData];
+                 [self.tableView reloadData];
          }
          else if ([msg isEqualToString:@"Review History"] && [status isEqualToString:@"success"])
          {
@@ -128,9 +122,8 @@
                  NSString *strevent_venue =  [dict objectForKey:@"event_venue"];
                  [self->event_name addObject:strevent_name];
                  [self->event_venue addObject:strevent_venue];
-                 
              }
-             [self.tableView reloadData];
+                 [self.tableView reloadData];
          }
          else
          {
@@ -215,7 +208,7 @@
 }
 - (IBAction)backBtn:(id)sender
 {
-//    [self dismissViewControllerAnimated:YES completion:nil];
+//  [self dismissViewControllerAnimated:YES completion:nil];
     [self.navigationController popViewControllerAnimated:YES];
 }
 @end

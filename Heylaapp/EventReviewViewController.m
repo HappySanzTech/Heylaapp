@@ -17,7 +17,7 @@
     NSMutableArray *event_rating;
     NSMutableArray *_id;
     NSMutableArray *user_name;
-
+    NSString *aa;
 }
 @end
 
@@ -77,7 +77,7 @@
                  [self->user_name addObject:struser_name];
 
              }
-             [self.tableView reloadData];
+                 [self.tableView reloadData];
          }
          else
          {
@@ -102,6 +102,9 @@
      {
          NSLog(@"error: %@", error);
      }];
+    
+    self.tableView.estimatedRowHeight = 93;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
 }
 - (void)didReceiveMemoryWarning {
@@ -132,7 +135,11 @@
 {
     EventReviewTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     
+    cell.report_Outlet.tag = 1;
+    [cell.report_Outlet addTarget:self action:@selector(reportButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     cell.name.text = [user_name objectAtIndex:indexPath.row];
+    cell.name.numberOfLines = 0;
+    cell.status.numberOfLines = 0;
     cell.status.text = [comments objectAtIndex:indexPath.row];
     
     NSString *strEventRating = [event_rating objectAtIndex:indexPath.row];
@@ -143,7 +150,6 @@
         cell.thirdImage.image = [UIImage imageNamed:@"star icon"];
         cell.fourImage.image = [UIImage imageNamed:@"star icon"];
         cell.fifthImage.image = [UIImage imageNamed:@"star icon"];
-
     }
     else if ([strEventRating isEqualToString:@"1"])
     {
@@ -185,12 +191,74 @@
         cell.fourImage.image = [UIImage imageNamed:@"star icon_selected"];
         cell.fifthImage.image = [UIImage imageNamed:@"star icon_selected"];
     }
-    return cell;
+        return cell;
 }
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+-(void)reportButtonClicked:(UIButton*)sender
 {
-    return 93;
+    if (sender.tag == 1)
+    {
+        CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
+        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
+        NSString *review_id = [_id objectAtIndex:[indexPath row]];
+        
+        appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
+        [parameters setObject:review_id forKey:@"review_id"];
+        
+        AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+        manager.requestSerializer = [AFJSONRequestSerializer serializer];
+        [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        manager.responseSerializer.acceptableContentTypes = [manager.responseSerializer.acceptableContentTypes setByAddingObject:@"text/html"];
+        
+        NSString *report_abuse = @"apimain/report_abuse";
+        NSArray *components = [NSArray arrayWithObjects:baseUrl,report_abuse, nil];
+        NSString *api = [NSString pathWithComponents:components];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        [manager POST:api parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
+         {
+             
+             NSLog(@"%@",responseObject);
+             [MBProgressHUD hideHUDForView:self.view animated:YES];
+             NSString *msg = [responseObject objectForKey:@"msg"];
+             NSString *status = [responseObject objectForKey:@"status"];
+             NSLog(@"%@",msg);
+             
+             if ([status isEqualToString:@"success"])
+             {
+                 UIAlertController *alert= [UIAlertController
+                                            alertControllerWithTitle:@"Heyla"
+                                            message:msg
+                                            preferredStyle:UIAlertControllerStyleAlert];
+                 
+                 UIAlertAction* ok = [UIAlertAction
+                                      actionWithTitle:@"OK"
+                                      style:UIAlertActionStyleDefault
+                                      handler:^(UIAlertAction * action)
+                                      {
+                                          
+                                      }];
+                 [alert addAction:ok];
+                 [self presentViewController:alert animated:YES completion:nil];
+             }
+             else
+             {
+                 
+             }
+         }
+              failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
+         {
+             NSLog(@"error: %@", error);
+         }];
+    }
 }
+//-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    NSString *str = [comments objectAtIndex:indexPath.row];
+//    CGSize size = [str sizeWithFont:[UIFont fontWithName:@"muli" size:17] constrainedToSize:CGSizeMake(280, 999) lineBreakMode:NSLineBreakByWordWrapping];
+//    NSLog(@"%f",size.height);
+//    return size.height + 10;
+//}
 - (IBAction)backBtn:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];

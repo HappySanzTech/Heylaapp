@@ -16,7 +16,7 @@
     NSMutableArray *mobile_no;
     NSMutableArray *order_id;
     NSMutableArray *_id;
-    
+    NSString *check;
 }
 @end
 
@@ -33,13 +33,23 @@
     order_id = [[NSMutableArray alloc]init];
     _id = [[NSMutableArray alloc]init];
     
+    self.tableView.hidden = YES;
+    self.attendeLbl.hidden = YES;
+    
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
     self.eventName.text = appDel.event_Name;
-    self.dateLabel.text = appDel.event_StartDate;
+    NSArray *items = [appDel.event_StartDate componentsSeparatedByString:@" "];
+    NSString *mon  = [items objectAtIndex:0];
+    NSString *day  = [items objectAtIndex:2];
+    NSString *_date  = [NSString stringWithFormat:@"%@%@",[items objectAtIndex:1],@"th"];
+    self.dateLabel.text = _date;
+    self.monthLabel.text = mon;
+    self.dayLabel.text = day;
     self.timeLabel.text = appDel.event_StartTime;
     self.location.text = appDel.event_Address;
     self.attendeesCount.text = appDel.seat_count;
     self.ticketDetails.text = [NSString stringWithFormat:@"%@ - %@  %@",appDel.plan_name,appDel.seat_count,@"Tickets"];
+    self.totalAmount.text = [NSString stringWithFormat:@"%s %@ %@","Total Amount :",@"Rs.",appDel.total_amount_tickets];
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
@@ -110,6 +120,8 @@
      {
          NSLog(@"error: %@", error);
      }];
+    
+    check = @"0";
 }
 
 - (void)didReceiveMemoryWarning {
@@ -161,5 +173,22 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     BookingHistoryViewController *myNewVC = (BookingHistoryViewController *)[storyboard instantiateViewControllerWithIdentifier:@"BookingHistoryViewController"];
     [self.navigationController pushViewController:myNewVC animated:YES];
+}
+- (IBAction)attendeceBtn:(id)sender
+{
+    if ([check isEqualToString:@"0"])
+    {
+        self.tableView.hidden = NO;
+        check = @"1";
+        self.attendeLbl.hidden = NO;
+
+    }
+    else
+    {
+        self.tableView.hidden = YES;
+        check = @"0";
+        self.attendeLbl.hidden = YES;
+
+    }
 }
 @end

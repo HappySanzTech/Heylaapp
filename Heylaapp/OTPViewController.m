@@ -34,6 +34,8 @@
     _textfiledThree.delegate = self;;
     _textfieldFour.delegate = self;
     
+    [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"from_otp"];
+    
     [[NSUserDefaults standardUserDefaults]setObject:@"signOut" forKey:@"status"];
 
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
@@ -295,6 +297,7 @@
                  if ([msg isEqualToString:@"Verification Successfully"] && [status isEqualToString:@"Success"])
                  {
                      self->appDel.user_Id = [responseObject objectForKey:@"user_id"];
+                     [[NSUserDefaults standardUserDefaults]setObject:self->appDel.user_Id forKey:@"stat_user_id"];
                      NSLog(@"%@",self->appDel.user_Id);
 
                      NSString *View = [[NSUserDefaults standardUserDefaults]objectForKey:@"view_key"];

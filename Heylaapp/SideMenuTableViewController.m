@@ -63,7 +63,8 @@
         cell.userImageView.clipsToBounds = YES;
         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
         cell.UserName.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"statFull_Name"];
-
+        cell.cityName.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"selected_city_prof"];
+        
         NSLog(@"%@",appDel.login_type);
         if ([appDel.login_type isEqualToString:@"FB"])
         {
@@ -72,6 +73,7 @@
             NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:[[NSUserDefaults standardUserDefaults]objectForKey:@"picture_Url"]]];
             [weakCell.userImageView setImageWithURLRequest:request placeholderImage:placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image)
              {
+//                 weakCell.userImageView.hidden = YES;
                  weakCell.userImageView.image = image;
                  weakCell.userImageView.layer.cornerRadius = cell.userImageView.frame.size.width / 2;
                  weakCell.userImageView.clipsToBounds = YES;
@@ -95,6 +97,7 @@
             NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:[[NSUserDefaults standardUserDefaults]objectForKey:@"picture_Url"]]];
             [weakCell.userImageView setImageWithURLRequest:request placeholderImage:placeholderImage success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image)
              {
+ //                weakCell.userImageView.hidden = YES;
                  weakCell.userImageView.image = image;
                  weakCell.userImageView.layer.cornerRadius = cell.userImageView.frame.size.width / 2;
                  weakCell.userImageView.clipsToBounds = YES;
@@ -423,7 +426,7 @@
                                    preferredStyle:UIAlertControllerStyleAlert];
         
         UIAlertAction *ok = [UIAlertAction
-                             actionWithTitle:@"OK"
+                             actionWithTitle:@"YES"
                              style:UIAlertActionStyleDefault
                              handler:^(UIAlertAction * action)
                              {
@@ -452,7 +455,7 @@
                                  [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"country_id_key"];
                                  [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"state_id_key"];
                                  [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"city_id_key"];
-                                 [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"new_Letter_Key"];
+                                 [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"new_Letter"];
                                  [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"statFull_Name"];
                                  [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"statUser_Name"];
 
@@ -460,7 +463,7 @@
                              }];
         
         UIAlertAction *cancel = [UIAlertAction
-                                 actionWithTitle:@"Cancel"
+                                 actionWithTitle:@"NO"
                                  style:UIAlertActionStyleDefault
                                  handler:^(UIAlertAction * action)
                                  {

@@ -26,7 +26,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {    
-    [self registerForRemoteNotifications];
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
     NSLog( @"### running FB sdk version: %@", [FBSDKSettings sdkVersion] );
     NSLog(@"%@",@"Check 2");
     NSString *splash = [[NSUserDefaults standardUserDefaults]objectForKey:@"showSplash"];

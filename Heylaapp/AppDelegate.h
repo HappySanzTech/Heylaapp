@@ -104,6 +104,7 @@
 @property (strong, nonatomic) NSString *reviewUsername;
 @property (strong, nonatomic) NSString *reviewEventName;
 @property (strong, nonatomic) NSString *totalTickets;
+@property (strong, nonatomic) NSString *total_amount_tickets;
 
 
 @property (nonatomic, strong) UINavigationController *navController;

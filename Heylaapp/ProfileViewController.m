@@ -41,7 +41,6 @@
     NSString *strGender;
     NSString *newLetterResult;
     NSString *imageName;
-    
     NSString *strcountry_id;
     NSString *strstate_id;
     NSString *strcity_id;
@@ -73,7 +72,21 @@
     _state.delegate = self;
     _city.delegate = self;
     
-    self.profImageView.layer.cornerRadius = self.profImageView.frame.size.width / 2;
+    NSString *str = [[NSUserDefaults standardUserDefaults]objectForKey:@"from_otp"];
+    if ([str isEqualToString:@"YES"])
+    {
+        [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"from_otp"];
+        self.navigationItem.hidesBackButton = YES;
+    }
+    else
+    {
+        [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"from_otp"];
+        self.navigationItem.hidesBackButton = NO;
+        
+    }
+    
+//    self.profImageView.hidden = YES;
+//    self.imageBtnOtlet.enabled = NO;
     self.profImageView.clipsToBounds = YES;
     NSLog(@"%@",appDel.login_type);
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -105,9 +118,9 @@
 
              UIGraphicsEndImageContext();
          } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error) {
-             
+
              NSLog(@"%@",error);
-             
+
          }];
     }
     _save.layer.cornerRadius = 5.0;
@@ -131,6 +144,7 @@
 
     datePicker=[[UIDatePicker alloc]init];
     datePicker.datePickerMode=UIDatePickerModeDate;
+    datePicker.maximumDate=[NSDate date];
     toolBar=[[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 44)];
     [toolBar setTintColor:[UIColor grayColor]];
     UIBarButtonItem *doneBtn=[[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(ShowSelectedDate)];
@@ -237,7 +251,14 @@
         
     self.fullName.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"statFull_Name"];
     self.userName.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"statUser_Name"];
-    self.dobTextFiled.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"dob"];
+    NSString *dob = [[NSUserDefaults standardUserDefaults]objectForKey:@"dob"];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init]; // here we create NSDateFormatter object for change the Format of date..
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"]; //// here set format of date which is in your output date (means above str with format)
+    NSDate *date = [dateFormatter dateFromString:dob]; // here you can fetch date from string with define format
+    dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"dd-MM-yyyy"];// here set format which you want...
+    NSString *convertedString = [dateFormatter stringFromDate:date];
+    self.dobTextFiled.text = convertedString;
     self.occupation.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"occupation"];
     self.genderTexfiled.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"gender"];
     self.addressLine.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"addressLine"];
@@ -256,7 +277,7 @@
     {
         strcountry_id = @"";
     }
-     if (!strstate_id.length)
+    if (!strstate_id.length)
     {
         strstate_id = @"";
     }
@@ -272,20 +293,16 @@
     {
         [_newsLetter setSelected:NO];
         newsLetterFlag = @"0";
-        [[NSUserDefaults standardUserDefaults]setObject:@"N" forKey:@""@"new_Letter"];
-
+        [[NSUserDefaults standardUserDefaults]setObject:@"N" forKey:@"new_Letter"];
     }
     else
     {
-        [_newsLetter setSelected:NO];
+        [_newsLetter setSelected:YES];
         newsLetterFlag = @"1";
-        [[NSUserDefaults standardUserDefaults]setObject:@"N" forKey:@""@"new_Letter"];
-
+        [[NSUserDefaults standardUserDefaults]setObject:@"Y" forKey:@"new_Letter"];
     }
-
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                                          action:@selector(dismissKeyboard)];
-    
+    action:@selector(dismissKeyboard)];
     [self.view addGestureRecognizer:tap];
 }
 #pragma mark - UIPickerViewDataSource
@@ -354,7 +371,7 @@
             return city_Name[row];
         }
     }
-    return nil;
+        return nil;
 }
 
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
@@ -422,7 +439,7 @@
     if([self.dobTextFiled isFirstResponder])
     {
     NSDateFormatter *formatter=[[NSDateFormatter alloc]init];
-    [formatter setDateFormat:@"YYYY-MM-dd"];
+    [formatter setDateFormat:@"dd-MM-YYYY"];
     self.dobTextFiled.text=[NSString stringWithFormat:@"%@",[formatter stringFromDate:datePicker.date]];
     [self.dobTextFiled resignFirstResponder];
         
@@ -687,7 +704,6 @@
     PECropViewController *controller = [[PECropViewController alloc] init];
     controller.delegate = self;
     controller.image = self->_chosenImage;
-    
     UIImage *image = self.chosenImage;
     CGFloat width = image.size.width;
     CGFloat height = image.size.height;
@@ -698,15 +714,12 @@
                                           length);
     
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
-    
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
         navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
     }
-    
-    [self presentViewController:navigationController animated:YES completion:NULL];
-    
+        [self presentViewController:navigationController animated:YES completion:NULL];
 }
-
 - (void)cropViewController:(PECropViewController *)controller didFinishCroppingImage:(UIImage *)croppedImage transform:(CGAffineTransform)transform cropRect:(CGRect)cropRect
 {
     [controller dismissViewControllerAnimated:YES completion:NULL];
@@ -725,7 +738,6 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
     {
     }
-    
     [controller dismissViewControllerAnimated:YES completion:NULL];
 }
 - (IBAction)newsLetterBtn:(id)sender
@@ -734,13 +746,13 @@
     {
         [_newsLetter setSelected:YES];
         newsLetterFlag = @"1";
-        [[NSUserDefaults standardUserDefaults]setObject:@"Y" forKey:@""@"new_Letter_Key"];
+        [[NSUserDefaults standardUserDefaults]setObject:@"Y" forKey:@"new_Letter"];
     }
     else
     {
         [_newsLetter setSelected:NO];
         newsLetterFlag = @"0";
-        [[NSUserDefaults standardUserDefaults]setObject:@"N" forKey:@"new_Letter_Key"];
+        [[NSUserDefaults standardUserDefaults]setObject:@"N" forKey:@"new_Letter"];
     }
 }
 - (IBAction)saveBtn:(id)sender
@@ -838,8 +850,10 @@
         [[NSUserDefaults standardUserDefaults]setObject:strcountry_id forKey:@"country_id"];
         [[NSUserDefaults standardUserDefaults]setObject:strstate_id forKey:@"state_id"];
         [[NSUserDefaults standardUserDefaults]setObject:strcity_id forKey:@"city_id"];
-        [[NSUserDefaults standardUserDefaults]setObject:strnews_letter forKey:@"new_Letter"];
-
+        NSString *srrNewsletter = [[NSUserDefaults standardUserDefaults]objectForKey:@"new_Letter"];
+        [[NSUserDefaults standardUserDefaults]setObject:srrNewsletter forKey:@"new_Letter"];
+        NSLog(@"%@",srrNewsletter);
+        
         NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
         [parameters setObject:appDel.user_Id forKey:@"user_id"];
         [parameters setObject:self.fullName.text forKey:@"full_name"];
@@ -854,7 +868,7 @@
         [parameters setObject:strstate_id forKey:@"state_id"];
         [parameters setObject:strcity_id forKey:@"city_id"];
         [parameters setObject:self.pincode.text forKey:@"zip_code"];
-        [parameters setObject:strnews_letter forKey:@"news_letter"];
+        [parameters setObject:srrNewsletter forKey:@"news_letter"];
 
         AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
         manager.requestSerializer = [AFJSONRequestSerializer serializer];
@@ -874,9 +888,33 @@
 
              if ([msg isEqualToString:@"Profile Updated"] && [status isEqualToString:@"success"])
              {
-                 [self performSegueWithIdentifier:@"to_selectCity" sender:self];
-
-
+                 NSString *str = [[NSUserDefaults standardUserDefaults]objectForKey:@"From_page"];
+                 
+                 if ([str isEqualToString:@"city"])
+                 {
+                     [self performSegueWithIdentifier:@"to_selectCity" sender:self];
+                 }
+                 else
+                 {
+                     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+                     UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"NavigationController"];
+                     [navigationController setViewControllers:@[[storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"]]];
+                     
+                     SideMenuMainViewController *sideMenuMainViewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"SideMenuMainViewController"]; //or
+                     sideMenuMainViewController.rootViewController = navigationController;
+                     [sideMenuMainViewController setupWithType:0];
+                     self.window.rootViewController = navigationController;
+                     [self.window makeKeyAndVisible];
+                     
+                     UIWindow *window = UIApplication.sharedApplication.delegate.window;
+                     window.rootViewController = sideMenuMainViewController;
+                     
+                     [UIView transitionWithView:window
+                                       duration:0.3
+                                        options:UIViewAnimationOptionTransitionCrossDissolve
+                                     animations:nil
+                                     completion:nil];
+                 }
              }
              else
              {
@@ -916,28 +954,22 @@
     }
     else
     {
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-
+//      [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        NSString *url = [NSString stringWithFormat:@"%@/%@",@"http://heylaapp.com/apimain/profilePictureUpload",appDel.user_Id];
-        
+        NSString *url = [NSString stringWithFormat:@"%@/%@",@"https://heylaapp.com/apimain/profilePictureUpload",appDel.user_Id];
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
         [request setURL:[NSURL URLWithString:url]];
         [request setHTTPMethod:@"POST"];
-        
         NSString *boundary = @"---------------------------14737809831466499882746641449";
-        
         NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
         [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
-        
         NSMutableData *body = [NSMutableData data];
         [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithString:[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"user_pic\"; filename=\"%@\"\r\n", @"473.png"]] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithString:[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"user_pic\";filename=\"%@\"\r\n",@"473.png"]] dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
         [body appendData:[NSData dataWithData:image]];
         [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
         [request setHTTPBody:body];
-        
         NSURLSession *session = [NSURLSession sharedSession];
         NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request
                                                     completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
@@ -956,15 +988,10 @@
                                                   NSLog(@"%@%@",result,img);
                                                   self->appDel.picture_url = img;                                                  
                                                   [[NSUserDefaults standardUserDefaults]setObject:img forKey:@"picture_Url"];
-
                                               }
                                           }];
-        
         [dataTask resume];
-
     }
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
-
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)theTextField
 {
@@ -1073,7 +1100,7 @@
                      [self->listpickerView selectRow:0 inComponent:0 animated:YES];
 
                  }
-                 [self.city becomeFirstResponder];
+                     [self.city becomeFirstResponder];
              }
              else
              {
@@ -1147,7 +1174,6 @@
     
                  NSLog(@"%@",responseObject);
                  [MBProgressHUD hideHUDForView:self.view animated:YES];
-    
                  NSString *msg = [responseObject objectForKey:@"msg"];
                  NSString *status = [responseObject objectForKey:@"status"];
     
@@ -1167,8 +1193,6 @@
                          [self->state_Name addObject:str_stateName];
                          [self->state_id addObject:str_stateid];
                          [self->listpickerView selectRow:0 inComponent:0 animated:YES];
-
-    
                      }
                      [self.state becomeFirstResponder];
                  }

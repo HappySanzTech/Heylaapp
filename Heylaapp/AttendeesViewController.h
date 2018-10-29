@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface AttendeesViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate,UIScrollViewDelegate>
+//- (IBAction)skipButton:(id)sender;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 - (IBAction)backBtn:(id)sender;
 - (IBAction)payNowbtn:(id)sender;

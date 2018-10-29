@@ -21,7 +21,6 @@
     [super viewDidLoad];
     self.dailyPointsView.layer.cornerRadius = 10.0;
     appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
     [parameters setObject:appDel.user_Id forKey:@"user_id"];
@@ -54,13 +53,11 @@
                  NSDictionary *dict = [Data objectAtIndex:i];
                  strcons_login_days = [dict objectForKey:@"cons_login_days"];
                  strlogin_date = [dict objectForKey:@"login_date"];
-                 
              }
              if ([strcons_login_days isEqualToString:@"1"])
              {
                  self.dateOneImgView.image = [UIImage imageNamed:@"Pointsselect"];
                  self.dateOneStarImg.image = [UIImage imageNamed:@"Star"];
-
              }
              else if ([strcons_login_days isEqualToString:@"2"])
              {
@@ -110,8 +107,8 @@
          NSLog(@"error: %@", error);
      }];
 }
-
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

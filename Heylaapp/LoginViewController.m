@@ -34,7 +34,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+        
     [self.navigationController setNavigationBarHidden:YES animated:YES];
     _login.layer.cornerRadius = 8;
     _login.clipsToBounds = YES;
@@ -59,7 +59,7 @@
     swipeleft.direction=UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:swipeleft];
     UISwipeGestureRecognizer * swiperight=[[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(swiperight:)];
-    swiperight.direction=UISwipeGestureRecognizerDirectionRight;
+    swiperight.direction = UISwipeGestureRecognizerDirectionRight;
     [self.view addGestureRecognizer:swiperight];
     UIToolbar* numberToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 50)];
     numberToolbar.barStyle = UIBarStyleBlackTranslucent;
@@ -460,16 +460,114 @@
     NSString *emailRegEx = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,10}";
     NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegEx];
     appDel.mobileNumber = self.SignUpMobileNo.text;
+    
     NSString *password = self.signUpPassword.text;
-
-    if ([self.SignUpUserName.text isEqualToString:@""])
+    
+    if (![_SignUpUserName.text isEqualToString:@""])
     {
-        [_SignUpUserName showErrorWithText:@"username cannot be empty"];
-    }
-    else if ([emailTest evaluateWithObject:self.SignUpUserName.text] == NO)
-    {
-        [_SignUpUserName showErrorWithText:@"Enter valid email address"];
-        return;
+        if ([emailTest evaluateWithObject:self.SignUpUserName.text] == NO)
+        {
+            [_SignUpUserName showErrorWithText:@"Enter valid email address"];
+        }
+        else if ([self.SignUpMobileNo.text isEqualToString:@""])
+        {
+            [_SignUpMobileNo showErrorWithText:@"mobilenumber cannot be empty"];
+        }
+        else if (appDel.mobileNumber.length != 10)
+        {
+            [_SignUpMobileNo showErrorWithText:@"enter valid mobile number."];
+        }
+        else if ([self.signUpPassword.text isEqualToString:@""])
+        {
+            [_signUpPassword showErrorWithText:@"password cannot be empty"];
+        }
+        else if (password.length < 6)
+        {
+            [_signUpPassword showErrorWithText:@"password should contain atleast 6 characters"];
+        }
+        else
+        {
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            NSString *deviceToken = [[NSUserDefaults standardUserDefaults]objectForKey:@"deviceToken_Key"];
+            [[NSUserDefaults standardUserDefaults]setObject:appDel.mobileNumber forKey:@"statemobile_no"];
+            [[NSUserDefaults standardUserDefaults]setObject:self.SignUpUserName.text forKey:@"statemail_id"];
+            NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
+            [parameters setObject:self.SignUpUserName.text forKey:@"email_id"];
+            [parameters setObject:appDel.mobileNumber forKey:@"mobile_no"];
+            [parameters setObject:password forKey:@"password"];
+            [parameters setObject:deviceToken forKey:@"gcm_key"];
+            [parameters setObject:@"2" forKey:@"mobile_type"];
+            
+            AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+            manager.requestSerializer = [AFJSONRequestSerializer serializer];
+            [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            manager.responseSerializer.acceptableContentTypes = [manager.responseSerializer.acceptableContentTypes setByAddingObject:@"text/html"];
+            NSString *signUp = @"apimain/signup";
+            NSArray *components = [NSArray arrayWithObjects:baseUrl,signUp, nil];
+            NSString *api = [NSString pathWithComponents:components];
+            
+            [manager POST:api parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
+             {
+                 NSLog(@"%@",responseObject);
+                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                 NSString *msg = [responseObject objectForKey:@"msg"];
+                 NSString *status = [responseObject objectForKey:@"status"];
+                 
+                 if ([msg isEqualToString:@"Signup Successfully"] && [status isEqualToString:@"Success"])
+                 {
+                     [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"statFull_Name"];
+                     [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"statUser_Name"];
+                     [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"dob"];
+                     [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"occupation"];
+                     [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"gender"];
+                     [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"addressLine"];
+                     [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"addressLineTwo"];
+                     [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"addressLineThree"];
+                     [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"country"];
+                     [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"state"];
+                     [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"city"];
+                     [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"pincode"];
+                     [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"country_id"];
+                     [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"state_id"];
+                     [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"city_id"];
+                     [[NSUserDefaults standardUserDefaults]setObject:@"" forKey:@"new_Letter"];
+                     NSString *log_Type = @"";
+                     [[NSUserDefaults standardUserDefaults]setObject:log_Type forKey:@"login_type"];
+                     self->appDel.login_type = [[NSUserDefaults standardUserDefaults]objectForKey:@"login_type"];
+                     self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                     self->appDel.user_type = @"1";
+                     [[NSUserDefaults standardUserDefaults]setObject:@"1" forKey:@"stat_user_type"];
+                     [[NSUserDefaults standardUserDefaults]setObject:@"signIn" forKey:@"status"];
+                     OTPViewController *oTPViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"OTPViewController"];
+                     [self presentViewController:oTPViewController animated:NO completion:nil];
+                     UINavigationController *navigationController = [[UINavigationController alloc]initWithRootViewController:oTPViewController];
+                     [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"for_Alert"];
+                     [self.navigationController pushViewController:navigationController animated:YES];
+                 }
+                 else
+                 {
+                     UIAlertController *alert= [UIAlertController
+                                                alertControllerWithTitle:@"Heyla"
+                                                message:msg
+                                                preferredStyle:UIAlertControllerStyleAlert];
+                     
+                     UIAlertAction *ok = [UIAlertAction
+                                          actionWithTitle:@"OK"
+                                          style:UIAlertActionStyleDefault
+                                          handler:^(UIAlertAction * action)
+                                          {
+                                              
+                                          }];
+                     
+                     [alert addAction:ok];
+                     [self presentViewController:alert animated:YES completion:nil];
+                 }
+             }
+                  failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
+             {
+                 NSLog(@"error: %@", error);
+             }];
+        }
     }
     else if ([self.SignUpMobileNo.text isEqualToString:@""])
     {
@@ -491,11 +589,13 @@
     {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         NSString *deviceToken = [[NSUserDefaults standardUserDefaults]objectForKey:@"deviceToken_Key"];
+        [[NSUserDefaults standardUserDefaults]setObject:appDel.mobileNumber forKey:@"statemobile_no"];
+        [[NSUserDefaults standardUserDefaults]setObject:self.SignUpUserName.text forKey:@"statemail_id"];
         NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
         [parameters setObject:self.SignUpUserName.text forKey:@"email_id"];
         [parameters setObject:appDel.mobileNumber forKey:@"mobile_no"];
         [parameters setObject:password forKey:@"password"];
-        [parameters setObject:@"shgdasdksdgkjashdkahd" forKey:@"gcm_key"];
+        [parameters setObject:deviceToken forKey:@"gcm_key"];
         [parameters setObject:@"2" forKey:@"mobile_type"];
 
         AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
@@ -573,15 +673,15 @@
 {
     if ([signUpPasswordEyeFlag isEqualToString:@"0"])
     {
-        self.signEyeImageView.image = [UIImage imageNamed:@"hide"];
+        self.signEyeImageView.image = [UIImage imageNamed:@"unhide"];
         signUpPasswordEyeFlag = @"1";
-        self.signUpPassword.secureTextEntry = YES;
+        self.signUpPassword.secureTextEntry = NO;
     }
     else
     {
-        self.signEyeImageView.image = [UIImage imageNamed:@"unhide"];
+        self.signEyeImageView.image = [UIImage imageNamed:@"hide"];
         signUpPasswordEyeFlag = @"0";
-        self.signUpPassword.secureTextEntry = NO;
+        self.signUpPassword.secureTextEntry =  YES;
     }
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)theTextField
@@ -596,7 +696,7 @@
     }
     else if (theTextField == self.SignUpUserName)
     {
-        [_SignUpMobileNo becomeFirstResponder];
+        [theTextField resignFirstResponder];
     }
     else if (theTextField == self.SignUpMobileNo)
     {
@@ -604,7 +704,7 @@
     }
     else if (theTextField == self.signUpPassword)
     {
-        [theTextField resignFirstResponder];
+        [_SignUpUserName becomeFirstResponder];
     }
     return YES;
 }
@@ -621,7 +721,6 @@
         self.signInImageView.image = [UIImage imageNamed:@"unhide"];
         signInPasswordEyeFlag = @"0";
         self.signInPassword.secureTextEntry = NO;
-        
     }
 }
 - (IBAction)googleBtn:(id)sender
@@ -676,7 +775,7 @@
             NSMutableDictionary *parameters = [[NSMutableDictionary alloc]init];
             [parameters setObject:self.signInUserName.text forKey:@"username"];
             [parameters setObject:self.signInPassword.text forKey:@"password"];
-            [parameters setObject:@"shgdasdksdgkjashdkahd" forKey:@"gcm_key"];
+            [parameters setObject:@"sdjhksjdhkjsdhksdjfhkdj" forKey:@"gcm_key"];
             [parameters setObject:@"2" forKey:@"mobile_type"];
             AFHTTPSessionManager *manager = [[AFHTTPSessionManager alloc]initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
             manager.requestSerializer = [AFJSONRequestSerializer serializer];
@@ -688,7 +787,6 @@
         
             [manager POST:api parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
                  {
-        
                      NSLog(@"%@",responseObject);
                      self->appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
                      [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -723,7 +821,7 @@
                          self->appDel.user_role = [dict objectForKey:@"user_role"];
                          self->appDel.user_role_name = [dict objectForKey:@"user_role_name"];
                          self->appDel.zip = [dict objectForKey:@"zip"];
-                         NSString *emailId = [dict objectForKey:@"user_name"];
+                         NSString *emailId = [dict objectForKey:@"email_id"];
                          self->appDel.email_id = [[NSUserDefaults standardUserDefaults]objectForKey:@"statemail_id"];
                          NSString *mobile_no = [dict objectForKey:@"mobile_no"];
                          self->appDel.mobile_no = [[NSUserDefaults standardUserDefaults]objectForKey:@"statemobile_no"];
@@ -755,6 +853,7 @@
                          [[NSUserDefaults standardUserDefaults]setObject:self->appDel.country_id forKey:@"country_id"];
                          [[NSUserDefaults standardUserDefaults]setObject:self->appDel.state_id forKey:@"state_id"];
                          [[NSUserDefaults standardUserDefaults]setObject:self->appDel.city_id forKey:@"city_id"];
+                         [[NSUserDefaults standardUserDefaults]setObject:self->appDel.newsletter_status forKey:@"new_Letter"];
                          [[NSUserDefaults standardUserDefaults]setObject:@"YES" forKey:@"for_Alert"];
                          [[NSUserDefaults standardUserDefaults]setObject:@"NO" forKey:@"from_sideMenu"];
                          [self performSegueWithIdentifier:@"to_countryPage" sender:self];

@@ -70,4 +70,7 @@
 #import "SideMenuTableViewCell.h"
 #import "SettingsTableViewCell.h"
 #import "BlogViewController.h"
+#import "PointsViewController.h"
+#import "PointsTableViewCell.h"
+
 #endif /* heyla_pch */

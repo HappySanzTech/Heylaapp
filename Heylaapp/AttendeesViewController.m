@@ -97,7 +97,7 @@
         
         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
         
-        cell.name.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"statUser_Name"];
+        cell.name.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"statFull_Name"];
         
         [nameArr addObject:cell.name.text ];
 
@@ -155,7 +155,6 @@
     else if (theTextField.tag == 2)
     {
         [cell.mobNum becomeFirstResponder];
-        
     }
     else if (theTextField.tag == 3)
     {
@@ -188,61 +187,53 @@
     {
         AttendeesTableViewCell *cell = (AttendeesTableViewCell*)textField.superview.superview;
         NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-        
         [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:TRUE];
     }
-    
     return YES;
 }
-
 - (IBAction)backBtn:(id)sender
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"NavigationController"];
-    [navigationController setViewControllers:@[[storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"]]];
-    SideMenuMainViewController *sideMenuMainViewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"SideMenuMainViewController"]; //or
-    sideMenuMainViewController.rootViewController = navigationController;
-    [sideMenuMainViewController setupWithType:0];
-    self.window.rootViewController = navigationController;
-    [self.window makeKeyAndVisible];
-    UIWindow *window = UIApplication.sharedApplication.delegate.window;
-    window.rootViewController = sideMenuMainViewController;
-    
-    [UIView transitionWithView:window
-                      duration:0.3
-                       options:UIViewAnimationOptionTransitionCrossDissolve
-                    animations:nil
-                    completion:nil];
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//    UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"NavigationController"];
+//    [navigationController setViewControllers:@[[storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"]]];
+//    SideMenuMainViewController *sideMenuMainViewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"SideMenuMainViewController"]; //or
+//    sideMenuMainViewController.rootViewController = navigationController;
+//    [sideMenuMainViewController setupWithType:0];
+//    self.window.rootViewController = navigationController;
+//    [self.window makeKeyAndVisible];
+//    UIWindow *window = UIApplication.sharedApplication.delegate.window;
+//    window.rootViewController = sideMenuMainViewController;
+//
+//    [UIView transitionWithView:window
+//                      duration:0.3
+//                       options:UIViewAnimationOptionTransitionCrossDissolve
+//                    animations:nil
+//                    completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
+
 }
 
 - (IBAction)payNowbtn:(id)sender
 {
     __block NSString *check = nil;
-    
     NSString *strName;
     NSString *stremail;
     NSString *strMob_no;
-
+    
     for (int i = 0; i < [seats count]; i++)
     {
-       
+        
         @try
         {
             strName = [nameArr objectAtIndex:i];
-            
             stremail = [emailArr objectAtIndex:i];
-            
             strMob_no = [mobArr objectAtIndex:i];
         }
         @catch (NSException *exception)
         {
-          
             strName =@"";
-            
             stremail =@"";
-
             strMob_no =@"";
-
         }
         
         appDel = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -263,7 +254,6 @@
         
         [manager POST:api parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
          {
-             
              NSLog(@"%@",responseObject);
              NSString *msg = [responseObject objectForKey:@"msg"];
              check = [responseObject objectForKey:@"msg"];
@@ -271,23 +261,37 @@
              if ([msg isEqualToString:@"Attendees Added"] && [status isEqualToString:@"success"])
              {
                  NSLog(@"%@",check);
-//                 if ([check isEqualToString:@"Attendees Added"])
-//                 {
-//                     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-//                     ReviewTicketBookingController *reviewTicketBookingController = (ReviewTicketBookingController *)[storyboard instantiateViewControllerWithIdentifier:@"ReviewTicketBookingController"];
-//                     [self.navigationController pushViewController:reviewTicketBookingController animated:YES];
-//                 }
+                 //if ([check isEqualToString:@"Attendees Added"])
+                 //{
+                 //UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+                 //ReviewTicketBookingController *reviewTicketBookingController = (ReviewTicketBookingController *)[storyboard instantiateViewControllerWithIdentifier:@"ReviewTicketBookingController"];
+                 //[self.navigationController pushViewController:reviewTicketBookingController animated:YES];
+                 //}
              }
-             
          }
-              failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
+            failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error)
          {
              NSLog(@"error: %@", error);
          }];
     }
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-     ReviewTicketBookingController *reviewTicketBookingController = (ReviewTicketBookingController *)[storyboard instantiateViewControllerWithIdentifier:@"ReviewTicketBookingController"];
-     [self.navigationController pushViewController:reviewTicketBookingController animated:YES];
+    UINavigationController *navigationController = [storyboard instantiateViewControllerWithIdentifier:@"NavigationController"];
+    [navigationController setViewControllers:@[[storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"]]];
+    
+    SideMenuMainViewController *sideMenuMainViewController = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"SideMenuMainViewController"]; //or
+    sideMenuMainViewController.rootViewController = navigationController;
+    [sideMenuMainViewController setupWithType:0];
+    self.window.rootViewController = navigationController;
+    [self.window makeKeyAndVisible];
+    
+    UIWindow *window = UIApplication.sharedApplication.delegate.window;
+    window.rootViewController = sideMenuMainViewController;
+    
+    [UIView transitionWithView:window
+                      duration:0.3
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:nil
+                    completion:nil];
 }
 //-(void)navigation_NextView
 //{

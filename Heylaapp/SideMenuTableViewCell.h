@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface SideMenuTableViewCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *cityName;
 @property (weak, nonatomic) IBOutlet UIButton *profilePageBtn;
 @property (weak, nonatomic) IBOutlet UIImageView *userImageView;
 @property (weak, nonatomic) IBOutlet UILabel *UserName;

@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PaymentsSDK.h"
 
-@interface ReviewTicketBookingController : UIViewController
+@interface ReviewTicketBookingController : UIViewController<PGTransactionDelegate,NSURLSessionDelegate>
+@property (weak, nonatomic) IBOutlet UILabel *sessionLabel;
 @property (weak, nonatomic) IBOutlet UIView *mainView;
 @property (strong, nonatomic) IBOutlet UILabel *totalTickets;
 @property (strong, nonatomic) IBOutlet UILabel *internetFee;
@@ -32,4 +34,6 @@
 @property (strong, nonatomic) IBOutlet UITextField *redirectUrl;
 @property (strong, nonatomic) IBOutlet UITextField *cancelUrl;
 @property (strong, nonatomic) IBOutlet UITextField *rsaKeyUrl;
+@property(strong,nonatomic) UIWindow *window;
+
 @end

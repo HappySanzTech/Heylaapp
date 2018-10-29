@@ -12,6 +12,7 @@
 @interface ProfileViewController : UIViewController<UITextFieldDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate,UIActionSheetDelegate,UIPickerViewDelegate,UIPickerViewDataSource,PECropViewControllerDelegate>
 {
 }
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *backOutlet;
 @property (strong, nonatomic) IBOutlet UITextField *genderTexfiled;
 - (IBAction)cityBtn:(id)sender;
 - (IBAction)stateBtn:(id)sender;
@@ -36,4 +37,6 @@
 @property (strong, nonatomic) IBOutlet UITextField *userName;
 @property (strong, nonatomic) IBOutlet UITextField *addressLineTwo;
 @property (strong, nonatomic) IBOutlet UIButton *imageBtnOtlet;
+@property (strong, nonatomic) UIWindow *window;
+
 @end
